@@ -5,19 +5,17 @@ require "roda/spy_alley_application/version"
 Gem::Specification.new do |spec|
   spec.name          = "roda-spy_alley_application"
   spec.version       = Roda::SpyAlleyApplication::VERSION
-  spec.authors       = ["colin"]
-  spec.email         = ["H2597@token.co.jp"]
+  spec.authors       = ["Colin Horner"]
+  spec.email         = ["colin.a.horner@gmail.com"]
 
-  spec.summary       = %q{TODO: Write a short summary, because RubyGems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = "Application login for roda-spy_alley"
+  spec.description   = "Carries non-persistence abstract game login for roda-spy_alley"
+  #spec.homepage      = "TODO: Put your gem's website or public repo URL here."
   spec.license       = "MIT"
 
-  spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
-
-  spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = "TODO: Put your gem's public repo URL here."
-  spec.metadata["changelog_uri"] = "TODO: Put your gem's CHANGELOG.md URL here."
+  #spec.metadata["homepage_uri"] = spec.homepage
+  #spec.metadata["source_code_uri"] = "TODO: Put your gem's public repo URL here."
+  #spec.metadata["changelog_uri"] = "TODO: Put your gem's CHANGELOG.md URL here."
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
