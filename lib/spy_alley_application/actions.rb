@@ -1,14 +1,14 @@
 module SpyAlleyApplication
   module Actions
-    def roll(player_model:, change_orders:)
-      die_roll = die.roll
+    def roll(player_model:, change_orders:, roll_die:)
+      die_roll = roll_die.()
 
-      change_orders.add_die_roll
+      change_orders.add_die_roll(
         player: {game: player_model.game, seat: player_model.seat},
         rolled: die_roll
       )
 
-      move_options_for(player_model: player_model, change_orders: change_orders, distance: die_roll)
+      die_roll
     end
 
     def use_move_card(player_model:, change_orders:, card_to_use:)
@@ -17,10 +17,10 @@ module SpyAlleyApplication
         card_to_use: card_to_use
       )
 
-      move_options_for(player_model: player_model, change_orders: change_orders, distance: card_to_use)
+      card_to_use
     end
 
-    def move(player_model: change_orders:, space_to_move:)
+    def move(player_model:, change_orders:, space_to_move:)
       money_per_lap = 15
 
       change_orders.add_move_action(
@@ -36,7 +36,7 @@ module SpyAlleyApplication
         )
       end
 
-      execute_action[space_to_move].(player_model: player_model, change_orders: change_orders)
+      space_to_move
     end
 
     def pass(player_model:, change_orders:)
@@ -54,7 +54,7 @@ module SpyAlleyApplication
       end
       change_orders.subtract_money_action(
         player: {game: player_model.game, seat: player_model.seat},
-        amount:  total_cost
+        amount:  total_cost,
         paid_to: :bank
       )
       change_orders.add_action(
@@ -91,7 +91,7 @@ module SpyAlleyApplication
       )
       if guess.eql?(target_player_model.spy_identity)
         change_orders.add_action(result: {guess_correct: true})
-        change_orders.eliminate_player_action
+        change_orders.eliminate_player_action(
           player: {game: target_player_model.game, seat: target_player_model.seat},
         )
         change_orders.add_money_action(
@@ -133,7 +133,7 @@ module SpyAlleyApplication
 
     def choose_spy_identity(player_model:, change_orders:, identity_chosen:)
       change_order.choose_new_spy_identity_action(
-        player: {game: target_player_model.game, seat: target_player_model.seat},
+        player: {game: player_model.game, seat: player_model.seat},
         identity_chosen: identity_chosen
       )
     end

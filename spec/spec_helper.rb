@@ -1,5 +1,6 @@
 require "bundler/setup"
 require "roda/spy_alley_application"
+require 'spy_alley_application/actions'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
