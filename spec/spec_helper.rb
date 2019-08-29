@@ -10,6 +10,10 @@ class PlayerMock
   def seat
     1
   end
+
+  def location
+    '1'
+  end
 end
 
 class ChangeOrdersMock
@@ -17,17 +21,17 @@ class ChangeOrdersMock
   end
   def add_use_move_card(player:, card_to_use:)
   end
-  def move(player_model:, change_orders:, space_to_move:)
+  def add_move_action(player:, space:)
   end
-  def pass(player_model:, change_orders:)
+  def add_money_action(player:, amount:, reason:)
   end
-  def buy_equipment(player_model:, change_orders:, equipment_to_buy:)
+  def subtract_money_action(player:, amount:, paid_to:)
   end
-  def confiscate_materials(player_model:, change_orders:, target_player_model:, equipment_to_confiscate:)
+  def add_pass_action
   end
-  def make_accusation(player_model:, change_orders:, target_player_model:, guess:, free_guess:)
+  def add_equipment_action(player:, equipment:)
   end
-  def choose_spy_identity(player_model:, change_orders:, identity_chosen:)
+  def add_action(**action)
   end
 end
 
@@ -46,7 +50,7 @@ class Count
       end
 
       def initialize(*args)
-        @called = {}
+        @called = Hash.new{|h, k| h[k] = 0}
         super(*args)
       end
 

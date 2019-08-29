@@ -62,7 +62,7 @@ module SpyAlleyApplication
         equipment_to_buy: equipment_to_buy,
         result: {total_amount_paid: "#{total_cost} to bank"}
       )
-      change_orders
+      equipment_to_buy
     end
 
     def confiscate_materials(player_model:, change_orders:, target_player_model:, equipment_to_confiscate:)
