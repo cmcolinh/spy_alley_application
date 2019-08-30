@@ -17,6 +17,9 @@ class PlayerMock
 end
 
 class ChangeOrdersMock
+  def initialize
+    @money_subtracted = 0
+  end
   def add_die_roll(player:, rolled:)
   end
   def add_use_move_card(player:, card_to_use:)
@@ -26,12 +29,17 @@ class ChangeOrdersMock
   def add_money_action(player:, amount:, reason:)
   end
   def subtract_money_action(player:, amount:, paid_to:)
+    @money_subtracted += amount
   end
   def add_pass_action
   end
   def add_equipment_action(player:, equipment:)
   end
   def add_action(**action)
+  end
+
+  def money_subtracted
+    @money_subtracted.dup
   end
 end
 

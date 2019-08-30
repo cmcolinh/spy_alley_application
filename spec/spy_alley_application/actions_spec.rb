@@ -1,11 +1,11 @@
-# fr+ozen_string_literal: true
+# frozen_string_literal: true
 
 include SpyAlleyApplication::Actions
 
 RSpec.describe SpyAlleyApplication::Actions do
   let(:player, &->{PlayerMock::new})
   let(:change_orders, &->{ChangeOrdersMock::new})
-  
+
   describe '#roll' do
     let(:roll_die, &->{->{1}})
     let(:calling_method) {
@@ -75,20 +75,105 @@ RSpec.describe SpyAlleyApplication::Actions do
   end
 
   describe '#buy_equipment' do
-    define_method(:purchase_price, &->{{'russian password' => 1, 'russian codebook' => 5}})
+    define_method(:purchase_price, &->{{'american codebook' => 5, 'russian codebook' => 5}})
     describe 'when buying one item' do
       let(:calling_method) {
         buy_equipment(
           player_model: player,
           change_orders: change_orders,
-          equipment_to_buy: ['russian password']
+          equipment_to_buy: ['russian codebook']
         )
       }
 
       it 'returns the equipment input' do
-        expect(calling_method).to eql(['russian password'])
+        expect(calling_method).to eql(['russian codebook'])
+      end
+
+      it 'calls change_orders#add_equipment_action once' do
+        buy_equipment(
+          player_model: player,
+          change_orders: change_orders,
+          equipment_to_buy: ['russian codebook']
+        )
+	expect(change_orders.times_called[:add_equipment_action]).to eql(1)
+      end
+
+      it 'calls change_orders#subtract_money_action once' do
+        buy_equipment(
+          player_model: player,
+          change_orders: change_orders,
+          equipment_to_buy: ['russian codebook']
+        )
+	expect(change_orders.times_called[:subtract_money_action]).to eql(1)
+      end
+
+      it 'debits the correct price for the item purchased' do
+        buy_equipment(
+          player_model: player,
+          change_orders: change_orders,
+          equipment_to_buy: ['russian codebook'] # cost is 5, per the purchase price chart above
+        )
+        expect(change_orders.money_subtracted).to eql(5)
+      end
+
+      it 'calls change_orders#add_action once' do
+        buy_equipment(
+          player_model: player,
+          change_orders: change_orders,
+          equipment_to_buy: ['russian codebook']
+        )
+	expect(change_orders.times_called[:add_action]).to eql(1)
+      end
+    end
+    describe 'when buying two items' do
+       let(:calling_method) {
+         buy_equipment(
+           player_model: player,
+           change_orders: change_orders,
+           equipment_to_buy: ['russian codebook', 'american codebook']
+         )
+        }
+
+        it 'returns the equipment input' do
+        expect(calling_method).to eql(['russian codebook', 'american codebook'])
+      end
+
+      it 'calls change_orders#add_equipment_action twice' do
+        buy_equipment(
+          player_model: player,
+          change_orders: change_orders,
+          equipment_to_buy: ['russian codebook', 'american codebook']
+        )
+	expect(change_orders.times_called[:add_equipment_action]).to eql(2)
+      end
+
+      it 'calls change_orders#subtract_money_action once' do
+        buy_equipment(
+          player_model: player,
+          change_orders: change_orders,
+          equipment_to_buy: ['russian codebook', 'american codebook']
+        )
+	expect(change_orders.times_called[:subtract_money_action]).to eql(1)
+      end
+
+      it 'debits the correct price for the item purchased' do
+        buy_equipment(
+          player_model: player,
+          change_orders: change_orders,
+          equipment_to_buy: ['russian codebook', 'american codebook'] # cost is 5 each, per the purchase price chart above
+        )
+        expect(change_orders.money_subtracted).to eql(10)
+      end
+
+      it 'calls change_orders#add_action once' do
+        buy_equipment(
+          player_model: player,
+          change_orders: change_orders,
+          equipment_to_buy: ['russian codebook', 'american codebook']
+        )
+	expect(change_orders.times_called[:add_action]).to eql(1)
       end
     end
   end
 end
-    
+

@@ -46,6 +46,7 @@ module SpyAlleyApplication
     def buy_equipment(player_model:, change_orders:, equipment_to_buy:)
       total_cost = 0
       Array(equipment_to_buy).each do |equipment|
+	equipment = equipment[0] if equipment.is_a?(Array)
         change_orders.add_equipment_action(
           player: {game: player_model.game, seat: player_model.seat},
           equipment: equipment
