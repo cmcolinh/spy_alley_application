@@ -11,14 +11,62 @@ class PlayerMock
     1
   end
 
+  def money
+    50
+  end
+
   def location
     '1'
+  end
+
+  def spy_identity
+    'french'
+  end
+
+  def equipment
+    ['spanish password', 'spanish codebook']
+  end
+
+  def wild_cards
+    0
+  end
+end
+
+class TargetPlayerMock
+  def game
+    1
+  end
+
+  def seat
+    2
+  end
+
+  def money
+    5
+  end
+
+  def location
+    '1'
+  end
+
+  def spy_identity
+    'german'
+  end
+
+  def equipment
+    ['russian codebook']
+  end
+
+  def wild_cards
+    1
   end
 end
 
 class ChangeOrdersMock
   def initialize
+    @money_added      = 0
     @money_subtracted = 0
+    @target           = {}
   end
   def add_die_roll(player:, rolled:)
   end
@@ -27,19 +75,34 @@ class ChangeOrdersMock
   def add_move_action(player:, space:)
   end
   def add_money_action(player:, amount:, reason:)
+    @money_added += amount
+    @target[:add_money_action] = player[:seat]
   end
   def subtract_money_action(player:, amount:, paid_to:)
     @money_subtracted += amount
+    @target[:subtract_money_action] = player[:seat]
   end
   def add_pass_action
   end
   def add_equipment_action(player:, equipment:)
+    @target[:add_equipment_action] = player[:seat]
+  end
+  def subtract_equipment_action(player:, equipment:)
+    @target[:subtract_equipment_action] = player[:seat]
   end
   def add_action(**action)
   end
-
+  def eliminate_player_action(player:)
+    @target[:eliminate_player_action] = player[:seat]
+  end
+  def money_added
+    @money_added.dup
+  end
   def money_subtracted
     @money_subtracted.dup
+  end
+  def target
+    @target.dup
   end
 end
 
@@ -74,7 +137,7 @@ RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"
 
-  # Disable RSpec exposing methods globally on `Module` and `main`
+  # disable RSpec exposing methods globally on `Module` and `main`
   config.disable_monkey_patching!
 
   config.expect_with :rspec do |c|

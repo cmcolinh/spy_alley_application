@@ -4,6 +4,7 @@ include SpyAlleyApplication::Actions
 
 RSpec.describe SpyAlleyApplication::Actions do
   let(:player, &->{PlayerMock::new})
+  let(:target_player, &->{TargetPlayerMock::new})
   let(:change_orders, &->{ChangeOrdersMock::new})
 
   describe '#roll' do
@@ -156,7 +157,7 @@ RSpec.describe SpyAlleyApplication::Actions do
 	expect(change_orders.times_called[:subtract_money_action]).to eql(1)
       end
 
-      it 'debits the correct price for the item purchased' do
+      it 'debits the correct price for the items purchased' do
         buy_equipment(
           player_model: player,
           change_orders: change_orders,
@@ -175,5 +176,173 @@ RSpec.describe SpyAlleyApplication::Actions do
       end
     end
   end
-end
+  describe '#confiscate_materials' do
+    define_method(:confiscation_price, &->{{'russian codebook' => 5, 'wild card' => 50}})
+    let(:calling_method) {
+      confiscate_materials(
+        player_model: player,
+        change_orders: change_orders,
+        target_player_model: target_player,
+        equipment_to_confiscate: 'russian codebook'
+      )
+    }
+    it 'returns the equipment confiscated' do
+      expect(calling_method).to eq('russian codebook')
+    end
 
+    it 'calls change_orders#add_equipment_action once' do
+      confiscate_materials(
+        player_model: player,
+        change_orders: change_orders,
+        target_player_model: target_player,
+        equipment_to_confiscate: 'russian codebook'
+      )
+      expect(change_orders.times_called[:add_equipment_action]).to eql(1)
+    end
+
+    it 'calls change_orders#subtract_money_action once' do
+      confiscate_materials(
+        player_model: player,
+        change_orders: change_orders,
+        target_player_model: target_player,
+        equipment_to_confiscate: 'russian codebook'
+      )
+      expect(change_orders.times_called[:subtract_money_action]).to eql(1)
+    end
+
+    it 'calls change_orders#subtract_equipment_action once' do
+      confiscate_materials(
+        player_model: player,
+        change_orders: change_orders,
+        target_player_model: target_player,
+        equipment_to_confiscate: 'russian codebook'
+      )
+      expect(change_orders.times_called[:subtract_equipment_action]).to eql(1)
+    end
+
+    it 'calls change_orders#add_money_action once' do
+      confiscate_materials(
+        player_model: player,
+        change_orders: change_orders,
+        target_player_model: target_player,
+        equipment_to_confiscate: 'russian codebook'
+      )
+      expect(change_orders.times_called[:add_money_action]).to eql(1)
+    end
+
+    it 'calls change_orders#add_action once' do
+      confiscate_materials(
+        player_model: player,
+        change_orders: change_orders,
+        target_player_model: target_player,
+        equipment_to_confiscate: 'russian codebook'
+      )
+      expect(change_orders.times_called[:add_action]).to eql(1)
+    end
+
+
+    it 'targets the correct player with change_orders#add_equipment_action' do
+      confiscate_materials(
+        player_model: player,
+        change_orders: change_orders,
+        target_player_model: target_player,
+        equipment_to_confiscate: 'russian codebook'
+      )
+      expect(change_orders.target[:add_equipment_action]).to eql(player.seat)
+    end
+
+    it 'targets the correct player with change_orders#subtract_money_action' do
+      confiscate_materials(
+        player_model: player,
+        change_orders: change_orders,
+        target_player_model: target_player,
+        equipment_to_confiscate: 'russian codebook'
+      )
+      expect(change_orders.target[:subtract_money_action]).to eql(player.seat)
+    end
+
+    it 'targets the correct player with change_orders#subtract_equipment_action' do
+      confiscate_materials(
+        player_model: player,
+        change_orders: change_orders,
+        target_player_model: target_player,
+        equipment_to_confiscate: 'russian codebook'
+      )
+      expect(change_orders.target[:subtract_equipment_action]).to eql(target_player.seat)
+    end
+
+    it 'targets the correct player with change_orders#add_money_action' do
+      confiscate_materials(
+        player_model: player,
+        change_orders: change_orders,
+        target_player_model: target_player,
+        equipment_to_confiscate: 'russian codebook'
+      )
+      expect(change_orders.target[:add_money_action]).to eql(target_player.seat)
+    end
+  end
+
+  describe '#make_accusation' do
+    describe 'free guess' do
+      describe 'when guess is correct' do
+        let(:calling_method) {
+          make_accusation(
+            player_model: player,
+            change_orders: change_orders,
+            target_player_model: target_player,
+            guess: guess,
+            free_guess?: true
+          )
+        }
+        let(:guess, &->{'german'})
+        it 'returns true for a successful guess' do
+          expect(calling_method).to be true
+        end
+
+        it 'calls change_orders#add_money_action once' do
+          make_accusation(
+            player_model: player,
+            change_orders: change_orders,
+            target_player_model: target_player,
+            guess: guess,
+            free_guess?: true
+          )
+          expect(change_orders.times_called[:add_money_action]).to eql 1
+        end
+
+        it 'adds the exact amount of money that the target player had' do
+          money = target_player.money
+          make_accusation(
+            player_model: player,
+            change_orders: change_orders,
+            target_player_model: target_player,
+            guess: guess,
+            free_guess?: true
+          )
+          expect(change_orders.money_added).to eql money
+        end
+
+        it 'calls change_orders#add_equipment_action twice, for the two pieces of equipment the' +
+          ' eliminated player has that the eliminating player does not' do
+
+          make_accusation(
+            player_model: player,
+            change_orders: change_orders,
+            target_player_model: target_player,
+            guess: guess,
+            free_guess?: true
+          )
+          expect(change_orders.time_called[:add_equipment_acton]).to eql 1
+        end
+
+        it 'calls change_orders#add_wild_card once for each wild card the eliminated player has' do
+          make_accusation(
+            player_model: player,
+            change_orders: change_orders,
+            target_player_model: target_player,
+            guess: guess,
+            free_guess?: true
+          )
+    end
+  end
+end

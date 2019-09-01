@@ -67,24 +67,37 @@ module SpyAlleyApplication
     end
 
     def confiscate_materials(player_model:, change_orders:, target_player_model:, equipment_to_confiscate:)
-      price = confiscation_price[equipment]
+      price = confiscation_price[equipment_to_confiscate]
       change_orders.add_equipment_action(
         player: {game: player_model.game, seat: player_model.seat},
-        equipment: equipment
+        equipment: equipment_to_confiscate
+      )
+      change_orders.subtract_money_action(
+        player: {game: player_model.game, seat: player_model.seat},
+        amount:  price,
+        paid_to: :"seat_#{target_player_model.seat}"
       )
       change_orders.subtract_equipment_action(
         player: {game: target_player_model.game, seat: target_player_model.seat},
-        equipment: equipment
+        equipment: equipment_to_confiscate
+      )
+      change_orders.add_money_action(
+        player: {game: target_player_model.game, seat: target_player_model.seat},
+        amount: price,
+        reason: 'equipment confiscated'
       )
       change_orders.add_action(
         player_action:             'confiscate_materials',
         player_to_confiscate_from: target_player_model.seat,
         equipment_to_confiscate:   equipment_to_confiscate
       )
-      change_orders
+      equipment_to_confiscate
     end
 
-    def make_accusation(player_model:, change_orders:, target_player_model:, guess:, free_guess:)
+    def make_accusation(o = {})
+      player_model, change_orders, target_player_model, guess, free_guess = [
+        o[:player_model], o[:change_orders], o[:target_player_model], o[:guess], o[:free_guess?]
+      ]
       change_orders.add_action(
         action:           'make_accusation',
         player_to_accuse: "seat_#{target_player_model.seat}",
@@ -108,6 +121,7 @@ module SpyAlleyApplication
             )
           end
         end
+        return true
       elsif !free_guess
         change_orders.eliminate_player_action(
           player: {game: player_model.game, seat: player_model.seat},
@@ -130,10 +144,11 @@ module SpyAlleyApplication
           player_accused: {game: player_model.game, seat: player_model.seat}
         )
       end
+      return false
     end
 
     def choose_spy_identity(player_model:, change_orders:, identity_chosen:)
-      change_order.choose_new_spy_identity_action(
+      change_orders.choose_new_spy_identity_action(
         player: {game: player_model.game, seat: player_model.seat},
         identity_chosen: identity_chosen
       )
