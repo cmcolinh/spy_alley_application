@@ -332,7 +332,7 @@ RSpec.describe SpyAlleyApplication::Actions do
             guess: guess,
             free_guess?: true
           )
-          expect(change_orders.time_called[:add_equipment_acton]).to eql 1
+          expect(change_orders.times_called[:add_equipment_action]).to eql 2
         end
 
         it 'calls change_orders#add_wild_card once for each wild card the eliminated player has' do
@@ -343,6 +343,9 @@ RSpec.describe SpyAlleyApplication::Actions do
             guess: guess,
             free_guess?: true
           )
+	  expect(change_orders.times_called[:add_wild_card_action]).to eql 2
+	end
+      end
     end
   end
 end

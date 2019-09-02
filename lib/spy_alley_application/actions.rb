@@ -46,7 +46,7 @@ module SpyAlleyApplication
     def buy_equipment(player_model:, change_orders:, equipment_to_buy:)
       total_cost = 0
       Array(equipment_to_buy).each do |equipment|
-	equipment = equipment[0] if equipment.is_a?(Array)
+        equipment = equipment[0] if equipment.is_a?(Array)
         change_orders.add_equipment_action(
           player: {game: player_model.game, seat: player_model.seat},
           equipment: equipment
@@ -68,18 +68,27 @@ module SpyAlleyApplication
 
     def confiscate_materials(player_model:, change_orders:, target_player_model:, equipment_to_confiscate:)
       price = confiscation_price[equipment_to_confiscate]
-      change_orders.add_equipment_action(
-        player: {game: player_model.game, seat: player_model.seat},
-        equipment: equipment_to_confiscate
-      )
+      if equipment_to_confiscate.eql? 'wild card'
+        change_orders.add_wild_card_action(
+          player: {game: player_model.game, seat: player_model.seat}
+        )
+        change_orders.subtract_wild_card_action(
+          player: {game: target_player_model.game, seat: target_player_model.seat}
+        )
+      else
+        change_orders.add_equipment_action(
+          player: {game: player_model.game, seat: player_model.seat},
+          equipment: equipment_to_confiscate
+        )
+        change_orders.subtract_equipment_action(
+          player: {game: target_player_model.game, seat: target_player_model.seat},
+          equipment: equipment_to_confiscate
+        )
+      end
       change_orders.subtract_money_action(
         player: {game: player_model.game, seat: player_model.seat},
         amount:  price,
         paid_to: :"seat_#{target_player_model.seat}"
-      )
-      change_orders.subtract_equipment_action(
-        player: {game: target_player_model.game, seat: target_player_model.seat},
-        equipment: equipment_to_confiscate
       )
       change_orders.add_money_action(
         player: {game: target_player_model.game, seat: target_player_model.seat},
@@ -106,13 +115,18 @@ module SpyAlleyApplication
       if guess.eql?(target_player_model.spy_identity)
         change_orders.add_action(result: {guess_correct: true})
         change_orders.eliminate_player_action(
-          player: {game: target_player_model.game, seat: target_player_model.seat},
+          player: {game: target_player_model.game, seat: target_player_model.seat}
         )
         change_orders.add_money_action(
           player: {game: player_model.game, seat: player_model.seat},
           amount: target_player_model.money,
           reason: 'eliminating opponent'
         )
+        (1..target_player_model.wild_cards).each do |wild_card|
+          change_orders.add_wild_card_action(
+            player: {game: target_player_model.game, seat: target_player_model.seat}
+          )
+        end
         target_player_model.equipment.each do |equipment|
           if !player_model.equipment.include?(equipment)
             change_orders.add_equipment_action(

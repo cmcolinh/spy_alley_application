@@ -24,7 +24,7 @@ class PlayerMock
   end
 
   def equipment
-    ['spanish password', 'spanish codebook']
+    ['spanish password', 'spanish codebook', 'french key']
   end
 
   def wild_cards
@@ -54,11 +54,11 @@ class TargetPlayerMock
   end
 
   def equipment
-    ['russian codebook']
+    ['russian codebook', 'russian codebook', 'french key']
   end
 
   def wild_cards
-    1
+    2
   end
 end
 

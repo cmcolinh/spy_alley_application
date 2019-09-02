@@ -126,6 +126,14 @@ module SpyAlleyApplication
       ).push(ActionHashElement.new(action_hash))
     end
 
+    def add_wild_card_action(player:)
+       AddWildCard::new(player: player)
+    end
+
+    def subtract_wild_card_action(player:)
+       SubtractWildCard::new(player: player)
+    end
+
     def add_move_options(options:)
       @changes.push(
         NextActionOptions.new(
@@ -133,8 +141,6 @@ module SpyAlleyApplication
         )
       )
     end
-
-    
 
     class DieRoll
       extend Dry::Initializer
@@ -200,6 +206,16 @@ module SpyAlleyApplication
     class IncorrectFreeGuess
       extend Dry::Initializer
       option :player_accused, type: Dry::Types::Strict::Hash
+    end
+
+    class AddWildCard
+      extend Dry::Initializer
+      option :player, type: Dry::Types::Strict::Hash
+    end
+
+    class SubtractWildCard
+      extend Dry::Initializer
+      option :player, type: Dry::Types::Strict::Hash
     end
 
     class ActionHashElement
