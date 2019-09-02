@@ -345,6 +345,17 @@ RSpec.describe SpyAlleyApplication::Actions do
           )
 	  expect(change_orders.times_called[:add_wild_card_action]).to eql 2
 	end
+
+        it 'calls change_orders#add_move_card once for each move card the eliminated player has' do
+          make_accusation(
+            player_model: player,
+            change_orders: change_orders,
+            target_player_model: target_player,
+            guess: guess,
+            free_guess?: true
+          )
+          expect(change_orders.times_called[:add_move_card_action]).to eql 3
+        end
       end
     end
   end

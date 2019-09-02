@@ -127,6 +127,7 @@ module SpyAlleyApplication
             player: {game: target_player_model.game, seat: target_player_model.seat}
           )
         end
+        
         target_player_model.equipment.each do |equipment|
           if !player_model.equipment.include?(equipment)
             change_orders.add_equipment_action(
@@ -165,6 +166,13 @@ module SpyAlleyApplication
       change_orders.choose_new_spy_identity_action(
         player: {game: player_model.game, seat: player_model.seat},
         identity_chosen: identity_chosen
+      )
+    end
+
+    def add_move_card(player_model:, change_orders:, card_to_add:)
+      change_orders.add_move_card_action(
+        player: {game: player_model.game, seat: player_model.seat},
+        card_to_add: card_to_add
       )
     end
   end

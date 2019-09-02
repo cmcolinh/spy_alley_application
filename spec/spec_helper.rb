@@ -30,6 +30,10 @@ class PlayerMock
   def wild_cards
     0
   end
+
+  def move_cards
+    {1 => 0, 2 => 0, 3 => 0, 4 => 1, 5 => 0, 6 => 1}
+  end
 end
 
 class TargetPlayerMock
@@ -60,6 +64,10 @@ class TargetPlayerMock
   def wild_cards
     2
   end
+
+  def move_cards
+    {1 => 2, 2 => 0, 3 => 0, 4 => 1, 5 => 0, 6 => 0}
+  end
 end
 
 class ChangeOrdersMock
@@ -69,6 +77,8 @@ class ChangeOrdersMock
     @target           = {}
   end
   def add_die_roll(player:, rolled:)
+  end
+  def add_move_card_action(player:, card_to_add:)
   end
   def add_use_move_card(player:, card_to_use:)
   end
@@ -94,6 +104,10 @@ class ChangeOrdersMock
   end
   def eliminate_player_action(player:)
     @target[:eliminate_player_action] = player[:seat]
+  end
+  def add_wild_card_action(player:)
+  end
+  def subtract_wild_card_action(player:)
   end
   def money_added
     @money_added.dup
