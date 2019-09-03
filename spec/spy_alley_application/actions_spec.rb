@@ -283,8 +283,26 @@ RSpec.describe SpyAlleyApplication::Actions do
   end
 
   describe '#make_accusation' do
+    let(:eliminating_player, &->{nil})
+    let(:eliminated_player,  &->{nil})
+    define_method(:eliminate_player) do |options={}|
+      eliminating_player = options[:player_model].seat
+      eliminated_player  = options[:target_player_model].seat
+    end
     describe 'free guess' do
+      let(:calling_method) {
+        make_accusation(
+          player_model: player,
+          change_orders: change_orders,
+          target_player_model: target_player,
+          guess: 'german',
+          free_guess?: true
+        )
+      }
       describe 'when guess is correct' do
+        it 'returns true to indicate a correct guess' do
+          expect(calling_method).to eql(true)
+        end
       end
     end
   end

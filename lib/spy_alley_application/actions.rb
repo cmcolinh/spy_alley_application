@@ -103,10 +103,11 @@ module SpyAlleyApplication
       equipment_to_confiscate
     end
 
-    def make_accusation(o = {})
-      player_model, change_orders, target_player_model, guess, free_guess = [
-        o[:player_model], o[:change_orders], o[:target_player_model], o[:guess], o[:free_guess?]
-      ]
+    def make_accusation(options = {})
+      fields = [:player_model, :change_orders, :target_player_model, :guess, :free_guess?]
+      raise 'missing fields' if (fields - options.keys).size > 0
+      raise 'extra fields'   if (options.keys - fields).size > 0
+      player_model, change_orders, target_player_model, guess, free_guess = fields.map{|k| options[k]}
       change_orders.add_action(
         action:           'make_accusation',
         player_to_accuse: "seat_#{target_player_model.seat}",
