@@ -114,50 +114,21 @@ module SpyAlleyApplication
       )
       if guess.eql?(target_player_model.spy_identity)
         change_orders.add_action(result: {guess_correct: true})
-        change_orders.eliminate_player_action(
-          player: {game: target_player_model.game, seat: target_player_model.seat}
+        eliminate_player(
+          player_model:        player_model,
+          target_player_model: target_player_model,
+          change_orders:       change_orders
         )
-        change_orders.add_money_action(
-          player: {game: player_model.game, seat: player_model.seat},
-          amount: target_player_model.money,
-          reason: 'eliminating opponent'
-        )
-        (1..target_player_model.wild_cards).each do |wild_card|
-          change_orders.add_wild_card_action(
-            player: {game: target_player_model.game, seat: target_player_model.seat}
-          )
-        end
-        
-        target_player_model.equipment.each do |equipment|
-          if !player_model.equipment.include?(equipment)
-            change_orders.add_equipment_action(
-              player: {game: player_model.game, seat: player_model.seat},
-              equipment: equipment
-            )
-          end
-        end
         return true
       elsif !free_guess
-        change_orders.eliminate_player_action(
-          player: {game: player_model.game, seat: player_model.seat},
+        change_orders.add_action(result: {guess_correct: false})
+        eliminate_player(
+          player_model:        target_player_model,
+          target_player_model: player_model,
+          change_orders:       change_orders
         )
-        change_orders.add_money_action(
-          player: {game: target_player_model.game, seat: player_model.seat},
-          amount: player_model.money,
-          reason: 'eliminating opponent'
-        )
-        player_model.equipment.each do |equipment|
-          if !target_player_model.equipment.include?(equipment)
-            change_orders.add_equipment_action(
-              player: {game: target_player_model.game, seat: target_player_model.seat},
-              equipment: equipment
-            )
-          end
-        end
       else
-        change_orders.add_incorrect_free_guess_action(
-          player_accused: {game: player_model.game, seat: player_model.seat}
-        )
+        change_orders.add_action(result: {guess_correct: false})
       end
       return false
     end
@@ -168,13 +139,5 @@ module SpyAlleyApplication
         identity_chosen: identity_chosen
       )
     end
-
-    def add_move_card(player_model:, change_orders:, card_to_add:)
-      change_orders.add_move_card_action(
-        player: {game: player_model.game, seat: player_model.seat},
-        card_to_add: card_to_add
-      )
-    end
   end
 end
-

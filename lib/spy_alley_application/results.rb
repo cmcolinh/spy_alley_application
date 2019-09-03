@@ -49,5 +49,31 @@ module SpyAlleyApplication
         end
       end
     end
+
+    def eliminate_player(player_model:, change_orders:, target_player_model:)
+      change_orders.eliminate_player_action(
+        player: {game: target_player_model.game, seat: target_player_model.seat}
+      )
+      change_orders.add_money_action(
+        player: {game: player_model.game, seat: player_model.seat},
+        amount: target_player_model.money,
+        reason: 'eliminating opponent'
+      )
+      (1..target_player_model.wild_cards).each do |wild_card|
+        change_orders.add_wild_card_action(
+          player: {game: target_player_model.game, seat: target_player_model.seat}
+        )
+      end
+
+      target_player_model.equipment.each do |equipment|
+        if !player_model.equipment.include?(equipment)
+          change_orders.add_equipment_action(
+            player: {game: player_model.game, seat: player_model.seat},
+            equipment: equipment
+          )
+        end
+      end
+    end
   end
 end
+
