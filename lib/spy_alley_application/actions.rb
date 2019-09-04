@@ -108,6 +108,7 @@ module SpyAlleyApplication
       raise 'missing fields' if (fields - options.keys).size > 0
       raise 'extra fields'   if (options.keys - fields).size > 0
       player_model, change_orders, target_player_model, guess, free_guess = fields.map{|k| options[k]}
+
       change_orders.add_action(
         action:           'make_accusation',
         player_to_accuse: "seat_#{target_player_model.seat}",
@@ -131,7 +132,7 @@ module SpyAlleyApplication
       else
         change_orders.add_action(result: {guess_correct: false})
       end
-      return false
+      false
     end
 
     def choose_spy_identity(player_model:, change_orders:, identity_chosen:)
@@ -139,6 +140,7 @@ module SpyAlleyApplication
         player: {game: player_model.game, seat: player_model.seat},
         identity_chosen: identity_chosen
       )
+      identity_chosen
     end
   end
 end

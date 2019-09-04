@@ -105,6 +105,8 @@ class ChangeOrdersMock
   def eliminate_player_action(player:)
     @target[:eliminate_player_action] = player[:seat]
   end
+  def choose_new_spy_identity_action(player:, identity_chosen:)
+  end
   def add_wild_card_action(player:)
   end
   def subtract_wild_card_action(player:)

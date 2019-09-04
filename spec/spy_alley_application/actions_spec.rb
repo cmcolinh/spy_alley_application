@@ -218,28 +218,119 @@ RSpec.describe SpyAlleyApplication::Actions do
       eliminating_player[:seat] = options[:player_model].seat
       eliminated_player[:seat]  = options[:target_player_model].seat
     end
-    describe 'free guess' do
-      let(:calling_method) do
-        -> do
-          make_accusation(
-            player_model: player,
-            change_orders: change_orders,
-            target_player_model: target_player,
-            guess: 'german',
-            free_guess?: true
-          )
-        end
+    let(:making_guess) do
+      ->(correct:, free_guess:) do
+        make_accusation(
+          player_model: player,
+          change_orders: change_orders,
+          target_player_model: target_player,
+          guess: correct ? 'german' : 'spanish',
+          free_guess?: free_guess
+        )
       end
+    end
+    describe 'free guess' do
       describe 'when guess is correct' do
         it 'returns true to indicate a correct guess' do
-          expect(calling_method.()).to eql(true)
+          expect(making_guess.(correct: true, free_guess: true)).to eql(true)
         end
 
         it 'targets the target player for elimination' do
-          calling_method.()
-          expect(eliminated_player[:seat]).to eql(2)
+          making_guess.(correct: true, free_guess: true)
+          expect(eliminated_player[:seat]).to eql 2
+        end
+
+        it 'targets the guessing player as an eliminator' do
+          making_guess.(correct: true, free_guess: true)
+          expect(eliminating_player[:seat]).to eql 1
+        end
+
+        it 'calls change_orders#add_action twice' do
+          making_guess.(correct: true, free_guess: true)
+          expect(change_orders.times_called[:add_action]).to eql 2
         end
       end
+      describe 'when guess is incorrect' do
+        it 'returns false to indicate an incorrect guess' do
+          expect(making_guess.(correct: false, free_guess: true)).to eql(false)
+        end
+
+        it 'does not target a player for elimination' do
+          making_guess.(correct: false, free_guess: true)
+          expect(eliminated_player[:seat]).to be nil
+        end
+
+        it 'does not target any player as an eliminator' do
+          making_guess.(correct: false, free_guess: true)
+          expect(eliminating_player[:seat]).to be nil
+        end
+
+        it 'calls change_orders#add_action twice' do
+          making_guess.(correct: false, free_guess: true)
+          expect(change_orders.times_called[:add_action]).to eql 2
+        end
+      end
+    end
+    describe 'non free guess' do
+      describe 'when guess is correct' do
+        it 'returns true to indicate a correct guess' do
+          expect(making_guess.(correct: true, free_guess: false)).to eql(true)
+        end
+
+        it 'targets the target player for elimination' do
+          making_guess.(correct: true, free_guess: false)
+          expect(eliminated_player[:seat]).to eql 2
+        end
+
+        it 'targets the guessing player as an eliminator' do
+          making_guess.(correct: true, free_guess: false)
+          expect(eliminating_player[:seat]).to eql 1
+        end
+
+        it 'calls change_orders#add_action twice' do
+          making_guess.(correct: true, free_guess: false)
+          expect(change_orders.times_called[:add_action]).to eql 2
+        end
+      end
+      describe 'when guess is incorrect' do
+        it 'returns false to indicate an incorrect guess' do
+          expect(making_guess.(correct: false, free_guess: false)).to eql(false)
+        end
+
+        it 'targets the guessing player for elimination' do
+          making_guess.(correct: false, free_guess: false)
+          expect(eliminated_player[:seat]).to eql 1
+        end
+
+        it 'targets the target player as an eliminator' do
+          making_guess.(correct: false, free_guess: false)
+          expect(eliminating_player[:seat]).to eql 2
+        end
+
+        it 'calls change_orders#add_action twice' do
+          making_guess.(correct: false, free_guess: false)
+          expect(change_orders.times_called[:add_action]).to eql 2
+        end
+      end
+    end
+  end
+
+  describe '#choose_new_spy_identity' do
+    let(:calling_method) do
+      -> do
+        choose_spy_identity(
+          player_model: player,
+          change_orders: change_orders,
+          identity_chosen: 'russian'
+        )
+      end
+    end
+    it 'returns the identity chosen' do
+      expect(calling_method.()).to eql 'russian'
+    end
+    it 'calls change_orders#choose_new_spy_identity_action once' do
+      calling_method.()
+      expect(change_orders.times_called[:choose_new_spy_identity_action]).to eql 1
     end
   end
 end
