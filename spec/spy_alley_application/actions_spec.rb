@@ -78,230 +78,166 @@ RSpec.describe SpyAlleyApplication::Actions do
   describe '#buy_equipment' do
     define_method(:purchase_price, &->{{'american codebook' => 5, 'russian codebook' => 5}})
     describe 'when buying one item' do
-      let(:calling_method) {
-        buy_equipment(
-          player_model: player,
-          change_orders: change_orders,
-          equipment_to_buy: ['russian codebook']
-        )
-      }
+      let(:calling_method) do
+        -> do
+          buy_equipment(
+            player_model: player,
+            change_orders: change_orders,
+            equipment_to_buy: ['russian codebook']
+          )
+        end
+      end
 
       it 'returns the equipment input' do
-        expect(calling_method).to eql(['russian codebook'])
+        expect(calling_method.()).to eql(['russian codebook'])
       end
 
       it 'calls change_orders#add_equipment_action once' do
-        buy_equipment(
-          player_model: player,
-          change_orders: change_orders,
-          equipment_to_buy: ['russian codebook']
-        )
-	expect(change_orders.times_called[:add_equipment_action]).to eql(1)
+        calling_method.()
+        expect(change_orders.times_called[:add_equipment_action]).to eql(1)
       end
 
       it 'calls change_orders#subtract_money_action once' do
-        buy_equipment(
-          player_model: player,
-          change_orders: change_orders,
-          equipment_to_buy: ['russian codebook']
-        )
-	expect(change_orders.times_called[:subtract_money_action]).to eql(1)
+        calling_method.()
+        expect(change_orders.times_called[:subtract_money_action]).to eql(1)
       end
 
       it 'debits the correct price for the item purchased' do
-        buy_equipment(
-          player_model: player,
-          change_orders: change_orders,
-          equipment_to_buy: ['russian codebook'] # cost is 5, per the purchase price chart above
-        )
+        calling_method.()
         expect(change_orders.money_subtracted).to eql(5)
       end
 
       it 'calls change_orders#add_action once' do
-        buy_equipment(
-          player_model: player,
-          change_orders: change_orders,
-          equipment_to_buy: ['russian codebook']
-        )
-	expect(change_orders.times_called[:add_action]).to eql(1)
+        calling_method.()
+        expect(change_orders.times_called[:add_action]).to eql(1)
       end
     end
     describe 'when buying two items' do
-       let(:calling_method) {
-         buy_equipment(
-           player_model: player,
-           change_orders: change_orders,
-           equipment_to_buy: ['russian codebook', 'american codebook']
-         )
-        }
+      let(:calling_method) do
+        -> do
+          buy_equipment(
+            player_model: player,
+            change_orders: change_orders,
+            equipment_to_buy: ['russian codebook', 'american codebook']
+          )
+        end
+      end
 
-        it 'returns the equipment input' do
-        expect(calling_method).to eql(['russian codebook', 'american codebook'])
+      it 'returns the equipment input' do
+        expect(calling_method.()).to eql(['russian codebook', 'american codebook'])
       end
 
       it 'calls change_orders#add_equipment_action twice' do
-        buy_equipment(
-          player_model: player,
-          change_orders: change_orders,
-          equipment_to_buy: ['russian codebook', 'american codebook']
-        )
-	expect(change_orders.times_called[:add_equipment_action]).to eql(2)
+        calling_method.()
+        expect(change_orders.times_called[:add_equipment_action]).to eql(2)
       end
 
       it 'calls change_orders#subtract_money_action once' do
-        buy_equipment(
-          player_model: player,
-          change_orders: change_orders,
-          equipment_to_buy: ['russian codebook', 'american codebook']
-        )
-	expect(change_orders.times_called[:subtract_money_action]).to eql(1)
+        calling_method.()
+        expect(change_orders.times_called[:subtract_money_action]).to eql(1)
       end
 
       it 'debits the correct price for the items purchased' do
-        buy_equipment(
-          player_model: player,
-          change_orders: change_orders,
-          equipment_to_buy: ['russian codebook', 'american codebook'] # cost is 5 each, per the purchase price chart above
-        )
+        calling_method.()
         expect(change_orders.money_subtracted).to eql(10)
       end
 
       it 'calls change_orders#add_action once' do
-        buy_equipment(
-          player_model: player,
-          change_orders: change_orders,
-          equipment_to_buy: ['russian codebook', 'american codebook']
-        )
-	expect(change_orders.times_called[:add_action]).to eql(1)
+        calling_method.()
+        expect(change_orders.times_called[:add_action]).to eql(1)
       end
     end
   end
   describe '#confiscate_materials' do
     define_method(:confiscation_price, &->{{'russian codebook' => 5, 'wild card' => 50}})
-    let(:calling_method) {
-      confiscate_materials(
-        player_model: player,
-        change_orders: change_orders,
-        target_player_model: target_player,
-        equipment_to_confiscate: 'russian codebook'
-      )
-    }
+    let(:calling_method) do
+      -> do 
+        confiscate_materials(
+          player_model: player,
+          change_orders: change_orders,
+          target_player_model: target_player,
+          equipment_to_confiscate: 'russian codebook'
+        )
+      end
+    end
     it 'returns the equipment confiscated' do
-      expect(calling_method).to eq('russian codebook')
+      expect(calling_method.()).to eq('russian codebook')
     end
 
     it 'calls change_orders#add_equipment_action once' do
-      confiscate_materials(
-        player_model: player,
-        change_orders: change_orders,
-        target_player_model: target_player,
-        equipment_to_confiscate: 'russian codebook'
-      )
+      calling_method.()
       expect(change_orders.times_called[:add_equipment_action]).to eql(1)
     end
 
     it 'calls change_orders#subtract_money_action once' do
-      confiscate_materials(
-        player_model: player,
-        change_orders: change_orders,
-        target_player_model: target_player,
-        equipment_to_confiscate: 'russian codebook'
-      )
+      calling_method.()
       expect(change_orders.times_called[:subtract_money_action]).to eql(1)
     end
 
     it 'calls change_orders#subtract_equipment_action once' do
-      confiscate_materials(
-        player_model: player,
-        change_orders: change_orders,
-        target_player_model: target_player,
-        equipment_to_confiscate: 'russian codebook'
-      )
+      calling_method.()
       expect(change_orders.times_called[:subtract_equipment_action]).to eql(1)
     end
 
     it 'calls change_orders#add_money_action once' do
-      confiscate_materials(
-        player_model: player,
-        change_orders: change_orders,
-        target_player_model: target_player,
-        equipment_to_confiscate: 'russian codebook'
-      )
+      calling_method.()
       expect(change_orders.times_called[:add_money_action]).to eql(1)
     end
 
     it 'calls change_orders#add_action once' do
-      confiscate_materials(
-        player_model: player,
-        change_orders: change_orders,
-        target_player_model: target_player,
-        equipment_to_confiscate: 'russian codebook'
-      )
+      calling_method.()
       expect(change_orders.times_called[:add_action]).to eql(1)
     end
 
 
     it 'targets the correct player with change_orders#add_equipment_action' do
-      confiscate_materials(
-        player_model: player,
-        change_orders: change_orders,
-        target_player_model: target_player,
-        equipment_to_confiscate: 'russian codebook'
-      )
+      calling_method.()
       expect(change_orders.target[:add_equipment_action]).to eql(player.seat)
     end
 
     it 'targets the correct player with change_orders#subtract_money_action' do
-      confiscate_materials(
-        player_model: player,
-        change_orders: change_orders,
-        target_player_model: target_player,
-        equipment_to_confiscate: 'russian codebook'
-      )
+      calling_method.()
       expect(change_orders.target[:subtract_money_action]).to eql(player.seat)
     end
 
     it 'targets the correct player with change_orders#subtract_equipment_action' do
-      confiscate_materials(
-        player_model: player,
-        change_orders: change_orders,
-        target_player_model: target_player,
-        equipment_to_confiscate: 'russian codebook'
-      )
+      calling_method.()
       expect(change_orders.target[:subtract_equipment_action]).to eql(target_player.seat)
     end
 
     it 'targets the correct player with change_orders#add_money_action' do
-      confiscate_materials(
-        player_model: player,
-        change_orders: change_orders,
-        target_player_model: target_player,
-        equipment_to_confiscate: 'russian codebook'
-      )
+      calling_method.()
       expect(change_orders.target[:add_money_action]).to eql(target_player.seat)
     end
   end
 
   describe '#make_accusation' do
-    let(:eliminating_player, &->{nil})
-    let(:eliminated_player,  &->{nil})
+    let(:eliminating_player, &->{{}})
+    let(:eliminated_player,  &->{{}})
     define_method(:eliminate_player) do |options={}|
-      eliminating_player = options[:player_model].seat
-      eliminated_player  = options[:target_player_model].seat
+      eliminating_player[:seat] = options[:player_model].seat
+      eliminated_player[:seat]  = options[:target_player_model].seat
     end
     describe 'free guess' do
-      let(:calling_method) {
-        make_accusation(
-          player_model: player,
-          change_orders: change_orders,
-          target_player_model: target_player,
-          guess: 'german',
-          free_guess?: true
-        )
-      }
+      let(:calling_method) do
+        -> do
+          make_accusation(
+            player_model: player,
+            change_orders: change_orders,
+            target_player_model: target_player,
+            guess: 'german',
+            free_guess?: true
+          )
+        end
+      end
       describe 'when guess is correct' do
         it 'returns true to indicate a correct guess' do
-          expect(calling_method).to eql(true)
+          expect(calling_method.()).to eql(true)
+        end
+
+        it 'targets the target player for elimination' do
+          calling_method.()
+          expect(eliminated_player[:seat]).to eql(2)
         end
       end
     end
