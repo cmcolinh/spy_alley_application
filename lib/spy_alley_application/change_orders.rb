@@ -7,6 +7,16 @@ module SpyAlleyApplication
       @changes = []
     end
 
+    def changes
+      @changes.map{|e| e.dup}
+    end
+
+    def get_action_hash
+      action_node = nil
+      @changes.delete_if{|v| action_node = v if v.is_a?(ActionHashElement)}
+      return action_node&.action_hash || {}
+    end
+
     def add_die_roll(player:, rolled:)
       action_hash = get_action_hash
       action_hash[:player_action] = 'roll'
@@ -17,7 +27,7 @@ module SpyAlleyApplication
           player: player,
           rolled: rolled
         )
-      ).push(ActionHashElement.new(action_hash))
+      ).push(ActionHashElement.new(action_hash: action_hash))
     end
 
     def add_use_move_card(player_card:, card_to_use:)
@@ -92,7 +102,7 @@ module SpyAlleyApplication
         action_hash[:result] ||= {}
         action_hash[:result].merge!(action_to_add_as_hash[:result])
       end
-      action_hash.merge!(action.to_add_as_hash.reject{|k, v| k.eql?(:result)})
+      action_hash.merge!(action_to_add_as_hash.reject{|k, v| k.eql?(:result)})
 
       @changes.push(ActionHashElement.new(action_hash))
     end
@@ -140,7 +150,7 @@ module SpyAlleyApplication
           option: {move: {space: options}}
         )
       )
-    end
+    end 
 
     class DieRoll
       extend Dry::Initializer
