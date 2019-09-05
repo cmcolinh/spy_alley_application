@@ -1,3 +1,6 @@
+require 'dry/initializer'
+require 'dry/types'
+
 module SpyAlleyApplication
   class ChangeOrders
     def initialize
@@ -16,9 +19,6 @@ module SpyAlleyApplication
         )
       ).push(ActionHashElement.new(action_hash))
     end
-
-    def add_move_card(player:, card_to_add:)
-      
 
     def add_use_move_card(player_card:, card_to_use:)
       action_hash = get_action_hash
@@ -144,83 +144,93 @@ module SpyAlleyApplication
 
     class DieRoll
       extend Dry::Initializer
-      option :player, type: Dry::Types::Strict::Hash
-      option :rolled, type: Dry::Types::Strict::Integer::constrained(included_in?: (1..6))
+      option :player, type: Dry::Types['strict.hash']
+      option :rolled, type: Dry::Types['strict.integer'].constrained(included_in: (1..6))
     end
 
     class AddMoveCard
       extend Dry::Initializer
-      option :player,      type: Dry::Types::Strict::Hash
-      option :card_to_add, type: Dry::Types::Strict::Integer::constrained(included_in?: (1..6))
+      option :player,      type: Dry::Types['strict.hash']
+      option :card_to_add, type: Dry::Types['strict.integer'].constrained(included_in: (1..6))
     end
 
     class UseMoveCard
       extend Dry::Initializer
-      option :player,      type: Dry::Types::Strict::Hash
-      option :card_to_use, type: Dry::Types::Strict::Integer::constrained(included_in?: (1..6))
+      option :player,      type: Dry::Types['strict.hash']
+      option :card_to_use, type: Dry::Types['strict.integer'].constrained(included_in: (1..6))
     end
 
     class DrawTopMoveCard
     end
 
     class PlaceCardAtBottomOfMoveCardDeck
-      extend: Dry::Initializer
-      option :card, type: Dry::Types::Strict::Integer::constrained(included_in?: (1..6))
+      extend Dry::Initializer
+      option :card, type: Dry::Types['strict.integer'].constrained(included_in: (1..6))
     end
 
     class MoveAction
       extend Dry::Initializer
-      option :player,        type: Dry::Types::Strict::Hash
-      option :space_to_move, type: Dry::Types::Strict::Integer(included_in?: all_spaces)
+      option :player,        type: Dry::Types['strict.hash']
+      option :space_to_move, type: Dry::Types['strict.integer'].constrained(included_in: (0..32))
     end
 
     class AddMoney
       extend Dry::Initializer
-      option :player, type: Dry::Types::Strict::Hash
-      option :amount, type: Dry::Types::Strict::Integer::constrained(gt?: 0)
+      option :player, type: Dry::Types['strict.hash']
+      option :amount, type: Dry::Types['strict.integer'].constrained(gt: 0)
     end
 
     class SubtractMoney
       extend Dry::Initializer
-      option :player, type: Dry::Types::Strict::Hash
-      option :amount, type: Dry::Types::Strict::Integer::constrained(gt?: 0)
+      option :player, type: Dry::Types['strict.hash']
+      option :amount, type: Dry::Types['strict.integer'].constrained(gt: 0)
     end
 
     class AddEquipment
       extend Dry::Initializer
-      option :player,    type: Dry::Types::Strict::Hash
-      option :equipment, type: Dry::Types::Strict::String::constrained(included_in: all_equipment)
+      all_equipment = []
+      nationalities = %w(french german spanish italian american russian)
+      equipment     = %w(password disguise codebook key)
+      nationalities.each{|n| equipment.each{|e| all_equipment.push("#{n} #{e}")}}
+      
+      option :player,    type: Dry::Types['strict.hash']
+      option :equipment, type: Dry::Types['strict.string'].constrained(included_in: all_equipment)
     end
 
     class SubtractEquipment
       extend Dry::Initializer
-      option :player,    type: Dry::Types::Strict::Hash
-      option :equipment, type: Dry::Types::Strict::String::constrained(included_in: all_equipment)
+      all_equipment = []
+      nationalities = %w(french german spanish italian american russian)
+      equipment     = %w(password disguise codebook key)
+      nationalities.each{|n| equipment.each{|e| all_equipment.push("#{n} #{e}")}}
+      
+      option :player,    type: Dry::Types['strict.hash']
+      option :equipment, type: Dry::Types['strict.string'].constrained(included_in: all_equipment)
     end
 
     class EliminatePlayer
       extend Dry::Initializer
-      option :player, type: Dry::Types::Strict::Hash
+      option :player, type: Dry::Types['strict.hash']
     end
 
     class IncorrectFreeGuess
       extend Dry::Initializer
-      option :player_accused, type: Dry::Types::Strict::Hash
+      option :player_accused, type: Dry::Types['strict.hash']
     end
 
     class AddWildCard
       extend Dry::Initializer
-      option :player, type: Dry::Types::Strict::Hash
+      option :player, type: Dry::Types['strict.hash']
     end
 
     class SubtractWildCard
       extend Dry::Initializer
-      option :player, type: Dry::Types::Strict::Hash
+      option :player, type: Dry::Types['strict.hash']
     end
 
     class ActionHashElement
       extend Dry::Initializer
-      option :action_hash, type: Dry::Types::Strict::Hash
+      option :action_hash, type: Dry::Types['strict.hash']
     end
   end
 end    
