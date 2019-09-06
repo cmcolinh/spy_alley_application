@@ -11,6 +11,10 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
         change_orders.get_action_hash
       end
     end
+    it 'returns a hash representation of the ActionHashElement node' do
+      expect(calling_method.()).to eql({player_action: 'roll'})
+    end
+
     it 'removes the action_hash node from @changes' do
       expect{calling_method.()}.to change{change_orders.changes.length}.by(-1)
     end
