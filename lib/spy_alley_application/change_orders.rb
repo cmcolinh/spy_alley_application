@@ -30,7 +30,7 @@ module SpyAlleyApplication
       ).push(ActionHashElement.new(action_hash: action_hash))
     end
 
-    def add_use_move_card(player_card:, card_to_use:)
+    def add_use_move_card(player:, card_to_use:)
       action_hash = get_action_hash
       action_hash[:player_action] = 'use_move_card'
       action_hash[:card_to_use]   = card_to_use
@@ -42,7 +42,7 @@ module SpyAlleyApplication
         )
       ).push(
         PlaceCardAtBottomOfMoveCardDeck.new(card: card_to_use)
-      ).push(ActionHashElement.new(action_hash))
+      ).push(ActionHashElement.new(action_hash: action_hash))
     end
 
     def add_move_action(player:, space:)
@@ -55,12 +55,12 @@ module SpyAlleyApplication
           player: player,
           space_to_move: space
         )
-      ).push(ActionHashElement.new(action_hash))
+      ).push(ActionHashElement.new(action_hash: action_hash))
     end
 
     def add_money_action(player:, amount:, reason:)
       action_hash = get_action_hash
-      action_hash[:result] ||= []
+      action_hash[:result] ||= {}
       action_hash[:result][:collect] = "$#{amount} for #{reason}"
 
       @changes.push(
@@ -68,7 +68,7 @@ module SpyAlleyApplication
           player: player,
           amount: amount
         )
-      ).push(ActionHashElement.new(action_hash))
+      ).push(ActionHashElement.new(action_hash: action_hash))
     end
 
     def subtract_money_action(player:, amount:, paid_to:)
@@ -84,7 +84,7 @@ module SpyAlleyApplication
       action_hash = get_action_hash
       action_hash[:player_action] = 'pass'
 
-      @changes.push(ActionHashElement.new(action_hash))
+      @changes.push(ActionHashElement.new(action_hash: action_hash))
     end
 
     def add_equipment_action(player:, equipment:)
@@ -104,7 +104,7 @@ module SpyAlleyApplication
       end
       action_hash.merge!(action_to_add_as_hash.reject{|k, v| k.eql?(:result)})
 
-      @changes.push(ActionHashElement.new(action_hash))
+      @changes.push(ActionHashElement.new(action_hash: action_hash))
     end
 
     def subtract_equipment_action(player:, equipment:)
@@ -120,28 +120,12 @@ module SpyAlleyApplication
       @changes.push(EliminatePlayer.new(player: player))
     end
 
-    def incorrect_free_guess_action(player_accused:)
-      action_hash = get_action_hash
-      seat        = player_accused[:seat]
-      action_hash[:action]           = 'make_accusation'
-      action_hash[:player_to_accuse] = "seat_#{seat}"
-      
-      action_hash[:result] ||= {}
-      action_hash[:result][:guess_correct] = false
-      @changes.push(
-        IncorrectFreeGuess.new(
-          player_accused: player_accused,
-          seat:           seat
-        )
-      ).push(ActionHashElement.new(action_hash))
-    end
-
     def add_wild_card_action(player:)
-       AddWildCard::new(player: player)
+      @changes.push(AddWildCard::new(player: player))
     end
 
     def subtract_wild_card_action(player:)
-       SubtractWildCard::new(player: player)
+      @changes.push(SubtractWildCard::new(player: player))
     end
 
     def add_move_options(options:)
@@ -241,6 +225,11 @@ module SpyAlleyApplication
     class ActionHashElement
       extend Dry::Initializer
       option :action_hash, type: Dry::Types['strict.hash']
+    end
+
+    class NextActionOptions
+      extend Dry::Initializer
+      option :option, type: Dry::Types['strict.hash']
     end
   end
 end    
