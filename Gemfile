@@ -4,3 +4,4 @@ source "https://rubygems.org"
 gemspec
 gem 'dry-initializer'
 gem 'dry-types'
+gem 'dry-validation'

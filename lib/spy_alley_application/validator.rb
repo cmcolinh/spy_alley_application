@@ -1,4 +1,4 @@
-include 'dry/validation'
+require 'dry/validation'
 
 module SpyAlleyApplication
   class Validator

@@ -2,6 +2,7 @@ require "bundler/setup"
 require "roda/spy_alley_application"
 require 'spy_alley_application/actions'
 require 'spy_alley_application/change_orders'
+require 'spy_alley_application/validator'
 
 class PlayerMock
   def game
