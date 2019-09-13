@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
-RSpec.describe SpyAlleyApplication::Validator::RollNoMoveCardValidator do
+RSpec.describe SpyAlleyApplication::Validator::RollOrMoveCardValidator do
   describe '#call' do
     describe 'non-admin' do
       let(:validate){
-        SpyAlleyApplication::Validator::RollNoMoveCardValidator::new(
+        SpyAlleyApplication::Validator::RollOrMoveCardValidator::new(
           roll_options:            nil,
           accusation_targets:      ['seat_2', 'seat_3'],
-          accusable_nationalities: %w(french german spanish italian american russian)
+          accusable_nationalities: %w(french german spanish italian american russian),
+          move_card_options:       [1, 2, 3]
         )
       }
       describe 'choosing to roll' do
@@ -31,6 +32,10 @@ RSpec.describe SpyAlleyApplication::Validator::RollNoMoveCardValidator do
 
         it 'will fail if you choose to roll, and nationality is set' do
           expect(validate.(player_action: 'roll', nationality: 'french')).to be_failure
+        end
+
+        it 'will fail if you choose to roll, and card_to_use is set' do
+          expect(validate.(player_action: 'roll', card_to_use: 1)).to be_failure
         end
 
         it 'will fail if you choose to roll and try to set the result without being an admin' do
@@ -100,12 +105,13 @@ RSpec.describe SpyAlleyApplication::Validator::RollNoMoveCardValidator do
       end
     end
 
-    describe 'non-admin' do
+    describe 'admin' do
       let(:validate){
-        SpyAlleyApplication::Validator::RollNoMoveCardValidator::new(
+        SpyAlleyApplication::Validator::RollOrMoveCardValidator::new(
           roll_options:            :permit_choose_result,
           accusation_targets:      ['seat_2', 'seat_3'],
-          accusable_nationalities: %w(french german spanish italian american russian)
+          accusable_nationalities: %w(french german spanish italian american russian),
+          move_card_options:       [1, 2, 3]
         )
       }
       describe 'choosing to roll' do
@@ -129,6 +135,10 @@ RSpec.describe SpyAlleyApplication::Validator::RollNoMoveCardValidator do
 
         it 'will fail if you choose to roll, and nationality is set' do
           expect(validate.(player_action: 'roll', nationality: 'french')).to be_failure
+        end
+
+        it 'will fail if you choose to roll, and card_to_use is set' do
+          expect(validate.(player_action: 'roll', card_to_use: 1)).to be_failure
         end
 
         it 'will successfully validate if you choose to roll and try to set the result as an admin' do
