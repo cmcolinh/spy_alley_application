@@ -103,6 +103,60 @@ RSpec.describe SpyAlleyApplication::Validator::RollOrMoveCardValidator do
           ).to be_failure
         end
       end
+
+      describe 'choosing to use move card' do
+        it 'will validate correctly when choosing to use move card with a valid option' do
+          expect(validate.(player_action: 'use_move_card', card_to_use: 1)).to be_success
+        end
+
+        it 'will fail if you attempt to use move card without specifying a card to use' do
+          expect(validate.(player_action: 'use_move_card')).to be_failure
+        end
+
+        it 'will fail if you attempt to use move card while specifying an invalid move card' do
+          expect(validate.(player_action: 'use_move_card', card_to_use: 7)).to be_failure
+        end
+
+        it 'will fail if you attempt to use move card while specifying a nationality' do
+          expect(
+            validate.(
+              player_action: 'use_move_card',
+              card_to_use:   1,
+              nationality:   'french'
+            )
+          ).to be_failure
+        end
+
+        it 'will fail if you attempt to use move card while specifying a player to accuse' do
+          expect(
+            validate.(
+              player_action:    'use_move_card',
+              card_to_use:      1,
+              player_to_accuse: 'seat_2'
+            )
+          ).to be_failure
+        end
+
+        it 'will fail if you attempt to use move card while specifying a player to accuse' do
+          expect(
+            validate.(
+              player_action:    'use_move_card',
+              card_to_use:      1,
+              player_to_accuse: 'seat_2'
+            )
+          ).to be_failure
+        end
+
+        it 'will fail if you attempt to use move card while trying to set the result' do
+          expect(
+            validate.(
+              player_action: 'use_move_card',
+              card_to_use:   1,
+              choose_result: 1
+            )
+          ).to be_failure
+        end
+      end
     end
 
     describe 'admin' do
@@ -202,6 +256,60 @@ RSpec.describe SpyAlleyApplication::Validator::RollOrMoveCardValidator do
               player_to_accuse: 'seat_2',
               nationality:      'french',
               choose_result:    5
+            )
+          ).to be_failure
+        end
+      end
+
+      describe 'choosing to use move card' do
+        it 'will validate correctly when choosing to use move card with a valid option' do
+          expect(validate.(player_action: 'use_move_card', card_to_use: 1)).to be_success
+        end
+
+        it 'will fail if you attempt to use move card without specifying a card to use' do
+          expect(validate.(player_action: 'use_move_card')).to be_failure
+        end
+
+        it 'will fail if you attempt to use move card while specifying an invalid move card' do
+          expect(validate.(player_action: 'use_move_card', card_to_use: 7)).to be_failure
+        end
+
+        it 'will fail if you attempt to use move card while specifying a nationality' do
+          expect(
+            validate.(
+              player_action: 'use_move_card',
+              card_to_use:   1,
+              nationality:   'french'
+            )
+          ).to be_failure
+        end
+
+        it 'will fail if you attempt to use move card while specifying a player to accuse' do
+          expect(
+            validate.(
+              player_action:    'use_move_card',
+              card_to_use:      1,
+              player_to_accuse: 'seat_2'
+            )
+          ).to be_failure
+        end
+
+        it 'will fail if you attempt to use move card while specifying a player to accuse' do
+          expect(
+            validate.(
+              player_action:    'use_move_card',
+              card_to_use:      1,
+              player_to_accuse: 'seat_2'
+            )
+          ).to be_failure
+        end
+
+        it 'will fail if you attempt to use move card while trying to set the result' do
+          expect(
+            validate.(
+              player_action: 'use_move_card',
+              card_to_use:   1,
+              choose_result: 1
             )
           ).to be_failure
         end
