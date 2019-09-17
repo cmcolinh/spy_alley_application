@@ -4,6 +4,7 @@ require 'dry/validation'
 require 'spy_alley_application/validator/roll_no_move_card_validator'
 require 'spy_alley_application/validator/roll_or_move_card_validator'
 require 'spy_alley_application/validator/buy_equipment_validator.rb'
+require 'spy_alley_application/validator/move_validator.rb'
 
 module SpyAlleyApplication
   class Validator
@@ -60,19 +61,6 @@ module SpyAlleyApplication
         return ChooseNewIdentityValidator::new(nationality_options: accept_choose_new_identity)
       end
       raise "set option list #{options_set} invalid!!!!"
-    end
-
-    class MoveValidator < Dry::Validation::Contract
-      extend Dry::Initializer
-      option :space_options
-
-      params do
-        required(:player_action).filled(:string, eql?: 'move')
-        required(:space).filled(:string)
-      end
-      rule(:space) do
-        key.failure({text: 'not a valid space to move to', status: 422}) if values[:player_action].eql?('move') && !space_options.include?(values[:space])
-      end
     end
 
     class SpyEliminatorValidator < Dry::Validation::Contract
