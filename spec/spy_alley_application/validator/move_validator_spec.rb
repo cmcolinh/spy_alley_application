@@ -7,7 +7,7 @@ RSpec.describe SpyAlleyApplication::Validator::MoveValidator do
         space_options: ['18', '2s']
       )
     }
-    it 'will validate correctly when simply choosing to pass' do
+    it 'will validate correctly when choosing to move to a valid location' do
       expect(validate.(player_action: 'move', space: '18')).to be_success
     end
 

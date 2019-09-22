@@ -3,6 +3,7 @@ require 'roda/spy_alley_application'
 require 'spy_alley_application/actions'
 require 'spy_alley_application/change_orders'
 require 'spy_alley_application/validator'
+require 'spy_alley_application/action_creator'
 
 class PlayerMock
   def game
