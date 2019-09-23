@@ -39,10 +39,6 @@ module SpyAlleyApplication
       space_to_move
     end
 
-    def pass(player_model:, change_orders:)
-      change_orders.add_pass_action
-    end
-
     def buy_equipment(player_model:, change_orders:, equipment_to_buy:)
       total_cost = 0
       Array(equipment_to_buy).each do |equipment|

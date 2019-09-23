@@ -68,86 +68,6 @@ RSpec.describe SpyAlleyApplication::Actions do
     end
   end
 
-  describe '#pass' do
-    it 'calls change_orders#add_pass_action' do
-      pass(player_model: player, change_orders: change_orders)
-      expect(change_orders.times_called[:add_pass_action]).to eq(1)
-    end
-  end
-
-  describe '#buy_equipment' do
-    define_method(:purchase_price, &->{{'american codebook' => 5, 'russian codebook' => 5}})
-    describe 'when buying one item' do
-      let(:calling_method) do
-        -> do
-          buy_equipment(
-            player_model: player,
-            change_orders: change_orders,
-            equipment_to_buy: ['russian codebook']
-          )
-        end
-      end
-
-      it 'returns the equipment input' do
-        expect(calling_method.()).to eql(['russian codebook'])
-      end
-
-      it 'calls change_orders#add_equipment_action once' do
-        calling_method.()
-        expect(change_orders.times_called[:add_equipment_action]).to eql(1)
-      end
-
-      it 'calls change_orders#subtract_money_action once' do
-        calling_method.()
-        expect(change_orders.times_called[:subtract_money_action]).to eql(1)
-      end
-
-      it 'debits the correct price for the item purchased' do
-        calling_method.()
-        expect(change_orders.money_subtracted).to eql(5)
-      end
-
-      it 'calls change_orders#add_action once' do
-        calling_method.()
-        expect(change_orders.times_called[:add_action]).to eql(1)
-      end
-    end
-    describe 'when buying two items' do
-      let(:calling_method) do
-        -> do
-          buy_equipment(
-            player_model: player,
-            change_orders: change_orders,
-            equipment_to_buy: ['russian codebook', 'american codebook']
-          )
-        end
-      end
-
-      it 'returns the equipment input' do
-        expect(calling_method.()).to eql(['russian codebook', 'american codebook'])
-      end
-
-      it 'calls change_orders#add_equipment_action twice' do
-        calling_method.()
-        expect(change_orders.times_called[:add_equipment_action]).to eql(2)
-      end
-
-      it 'calls change_orders#subtract_money_action once' do
-        calling_method.()
-        expect(change_orders.times_called[:subtract_money_action]).to eql(1)
-      end
-
-      it 'debits the correct price for the items purchased' do
-        calling_method.()
-        expect(change_orders.money_subtracted).to eql(10)
-      end
-
-      it 'calls change_orders#add_action once' do
-        calling_method.()
-        expect(change_orders.times_called[:add_action]).to eql(1)
-      end
-    end
-  end
   describe '#confiscate_materials' do
     define_method(:confiscation_price, &->{{'russian codebook' => 5, 'wild card' => 50}})
     let(:calling_method) do
@@ -334,3 +254,4 @@ RSpec.describe SpyAlleyApplication::Actions do
     end
   end
 end
+
