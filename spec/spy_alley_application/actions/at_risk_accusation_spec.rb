@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe SpyAlleyApplication::Actions::FreeAccusationAction do
+RSpec.describe SpyAlleyApplication::Actions::AtRiskAccusationAction do
   let(:player_model,        &->{PlayerMock::new})
   let(:target_player_model, &->{TargetPlayerMock::new})
   let(:change_orders, &->{ChangeOrdersMock::new})
@@ -14,7 +14,7 @@ RSpec.describe SpyAlleyApplication::Actions::FreeAccusationAction do
     let(:eliminating_player, &->{{}})
     let(:eliminated_player,  &->{{}})
     let(:make_accusation) do
-      SpyAlleyApplication::Actions::FreeAccusationAction::new(eliminate_player: eliminate_player)
+      SpyAlleyApplication::Actions::AtRiskAccusationAction::new(eliminate_player: eliminate_player)
     end
     let(:making_guess) do
       ->(correct:) do
@@ -25,8 +25,7 @@ RSpec.describe SpyAlleyApplication::Actions::FreeAccusationAction do
           action_hash: {
             player_action:    'make_accusation',
             player_to_accuse: 'seat_2',
-            nationality:      correct ? 'german' : 'spanish',
-            free_accusation:  true
+            nationality:      correct ? 'german' : 'spanish'
           }
         )
       end
@@ -56,14 +55,14 @@ RSpec.describe SpyAlleyApplication::Actions::FreeAccusationAction do
         expect(making_guess.(correct: false)).to eql(false)
       end
 
-      it 'does not target a player for elimination' do
+      it 'targets the guessing player for elimination' do
         making_guess.(correct: false)
-        expect(eliminated_player[:seat]).to be nil
+        expect(eliminated_player[:seat]).to eql 1
       end
 
-      it 'does not target any player as an eliminator' do
+      it 'targets the target player as an eliminator' do
         making_guess.(correct: false)
-        expect(eliminating_player[:seat]).to be nil
+        expect(eliminating_player[:seat]).to eql 2
       end
 
       it 'calls change_orders#add_action twice' do
@@ -73,3 +72,4 @@ RSpec.describe SpyAlleyApplication::Actions::FreeAccusationAction do
     end
   end
 end
+

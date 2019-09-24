@@ -99,38 +99,6 @@ module SpyAlleyApplication
       equipment_to_confiscate
     end
 
-    def make_accusation(options = {})
-      fields = [:player_model, :change_orders, :target_player_model, :guess, :free_guess?]
-      raise 'missing fields' if (fields - options.keys).size > 0
-      raise 'extra fields'   if (options.keys - fields).size > 0
-      player_model, change_orders, target_player_model, guess, free_guess = fields.map{|k| options[k]}
-
-      change_orders.add_action(
-        action:           'make_accusation',
-        player_to_accuse: "seat_#{target_player_model.seat}",
-        nationality:      guess
-      )
-      if guess.eql?(target_player_model.spy_identity)
-        change_orders.add_action(result: {guess_correct: true})
-        eliminate_player(
-          player_model:        player_model,
-          target_player_model: target_player_model,
-          change_orders:       change_orders
-        )
-        return true
-      elsif !free_guess
-        change_orders.add_action(result: {guess_correct: false})
-        eliminate_player(
-          player_model:        target_player_model,
-          target_player_model: player_model,
-          change_orders:       change_orders
-        )
-      else
-        change_orders.add_action(result: {guess_correct: false})
-      end
-      false
-    end
-
     def choose_spy_identity(player_model:, change_orders:, identity_chosen:)
       change_orders.choose_new_spy_identity_action(
         player: {game: player_model.game, seat: player_model.seat},

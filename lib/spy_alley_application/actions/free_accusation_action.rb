@@ -10,7 +10,7 @@ module SpyAlleyApplication
       option :eliminate_player, default: ->{SpyAlleyApplication::Results::EliminatePlayerResult::new}
       
       def call(change_orders:, player_model:, target_player_model:, action_hash:)
-        guess_correct = action_hash[:guess].eql?(target_player_model.spy_identity)
+        guess_correct = action_hash[:nationality].eql?(target_player_model.spy_identity)
         change_orders.add_action(action_hash.dup)
 
         if guess_correct
@@ -28,3 +28,4 @@ module SpyAlleyApplication
     end
   end
 end
+
