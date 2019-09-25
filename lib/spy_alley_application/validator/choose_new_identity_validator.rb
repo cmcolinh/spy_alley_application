@@ -9,10 +9,10 @@ module SpyAlleyApplication
       option :nationality_options
       params do
         required(:player_action).filled(:string, eql?: 'choose_spy_identity')
-        optional(:nationality).filled(:string)
+        required(:nationality).filled(:string)
       end
       rule(:nationality) do
-        key.failure({text: 'not a valid nationality', status: 422}) if values[:player_action].eql?('choose_spy_identity') && !nationality_options.include?(values[:nationality])
+        key.failure({text: 'not a valid nationality', status: 422}) if !nationality_options.include?(values[:nationality])
       end
     end
   end

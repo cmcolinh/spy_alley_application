@@ -130,24 +130,4 @@ RSpec.describe SpyAlleyApplication::Actions do
       expect(change_orders.target[:add_money_action]).to eql(target_player.seat)
     end
   end
-
-  describe '#choose_new_spy_identity' do
-    let(:calling_method) do
-      -> do
-        choose_spy_identity(
-          player_model: player,
-          change_orders: change_orders,
-          identity_chosen: 'russian'
-        )
-      end
-    end
-    it 'returns the identity chosen' do
-      expect(calling_method.()).to eql 'russian'
-    end
-    it 'calls change_orders#choose_new_spy_identity_action once' do
-      calling_method.()
-      expect(change_orders.times_called[:choose_new_spy_identity_action]).to eql 1
-    end
-  end
 end
-

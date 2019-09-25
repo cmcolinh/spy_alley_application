@@ -98,13 +98,5 @@ module SpyAlleyApplication
       )
       equipment_to_confiscate
     end
-
-    def choose_spy_identity(player_model:, change_orders:, identity_chosen:)
-      change_orders.choose_new_spy_identity_action(
-        player: {game: player_model.game, seat: player_model.seat},
-        identity_chosen: identity_chosen
-      )
-      identity_chosen
-    end
   end
 end
