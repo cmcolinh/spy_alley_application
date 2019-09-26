@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 module SpyAlleyApplication
-  module Results
-    class FinishedLap
-    end
+  class ResultCreator
   end
 end
