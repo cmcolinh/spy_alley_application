@@ -37,34 +37,4 @@ RSpec.describe SpyAlleyApplication::Actions do
       expect(change_orders.times_called[:add_use_move_card]).to eql(1)
     end
   end
-
-  describe '#move' do
-    let(:space_to_move, &->{'1'})
-    let(:calling_method) {'seat_2', 'russian password'
-      ->{move(player_model: player, change_orders: change_orders, space_to_move: space_to_move)}
-    }
-    define_method(:finished_lap, &->(*args){false})
-
-    it 'returns the space to move' do
-      expect(calling_method.()).to eql('1')
-    end
-
-    it 'calls change_orders.add_move_action' do
-      move(player_model: player, change_orders: change_orders, space_to_move: space_to_move)
-      expect(change_orders.times_called[:add_move_action]).to eql(1)
-    end
-
-    it 'does not call change_orders#add_money_action when the player does not complete a lap' do
-      move(player_model: player, change_orders: change_orders, space_to_move: space_to_move)
-      expect(change_orders.times_called[:add_money_action]).to eql(0)
-    end
-
-    it 'calls change_orders#add_money_action when the player completes a lap' do
-      def finished_lap(*args)
-        true
-      end
-      move(player_model: player, change_orders: change_orders, space_to_move: space_to_move)
-      expect(change_orders.times_called[:add_money_action]).to eql(1)
-    end
-  end
 end

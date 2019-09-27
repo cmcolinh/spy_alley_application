@@ -4,6 +4,7 @@ require 'spy_alley_application/actions'
 require 'spy_alley_application/change_orders'
 require 'spy_alley_application/validator'
 require 'spy_alley_application/action_creator'
+require 'spy_alley_application/result_creator'
 
 class PlayerMock
   def game

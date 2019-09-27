@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-include 'dry/initializer'
+require 'dry/initializer'
+require 'spy_alley_application/results/move_result'
 
 module SpyAlleyApplication
   module Actions
@@ -11,6 +12,7 @@ module SpyAlleyApplication
       def call(player_model:, change_orders:, action_hash:, target_player_model: nil)
         money_per_lap = 15
         space_to_move = action_hash[:space]
+        puts space_to_move
         change_orders.add_move_action(
           player: {game: player_model.game, seat: player_model.seat},
           space: space_to_move
@@ -21,6 +23,7 @@ module SpyAlleyApplication
           action_hash:   action_hash,
           space_to_move: space_to_move
         )
+        space_to_move
       end
     end
   end

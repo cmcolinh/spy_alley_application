@@ -7,6 +7,7 @@ require 'spy_alley_application/actions/at_risk_accusation_action'
 require 'spy_alley_application/actions/free_accusation_action'
 require 'spy_alley_application/actions/confiscate_materials_action'
 require 'spy_alley_application/actions/choose_identity_action'
+require 'spy_alley_application/actions/move_action'
 
 module SpyAlleyApplication
   class ActionCreator
