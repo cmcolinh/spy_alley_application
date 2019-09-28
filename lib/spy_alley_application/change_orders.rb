@@ -30,6 +30,20 @@ module SpyAlleyApplication
       ).push(ActionHashElement.new(action_hash: action_hash))
     end
 
+    def add_admin_die_roll(player:, result_chosen:)
+      action_hash = get_action_hash
+      action_hash[:player_action] = 'roll'
+      action_hash[:rolled]        = result_chosen
+      action_hash[:admin_set?]    = true
+
+      @changes.push(
+        AdminDieRoll.new(
+          player:        player,
+          result_chosen: result_chosen
+        )
+      ).push(ActionHashElement.new(action_hash: action_hash))
+    end
+
     def add_use_move_card(player:, card_to_use:)
       action_hash = get_action_hash
       action_hash[:player_action] = 'use_move_card'
@@ -140,6 +154,12 @@ module SpyAlleyApplication
       extend Dry::Initializer
       option :player, type: Dry::Types['strict.hash']
       option :rolled, type: Dry::Types['strict.integer'].constrained(included_in: (1..6))
+    end
+
+    class AdminDieRoll
+      extend Dry::Initializer
+      option :player,        type: Dry::Types['strict.hash']
+      option :result_chosen, type: Dry::Types['strict.integer'].constrained(included_in: (1..6))
     end
 
     class AddMoveCard

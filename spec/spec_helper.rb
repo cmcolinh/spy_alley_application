@@ -82,6 +82,8 @@ class ChangeOrdersMock
   end
   def add_die_roll(player:, rolled:)
   end
+  def add_admin_die_roll(player:, result_chosen:)
+  end
   def add_move_card_action(player:, card_to_add:)
   end
   def add_use_move_card(player:, card_to_use:)

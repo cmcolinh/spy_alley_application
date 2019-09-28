@@ -47,6 +47,36 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
     end
   end
 
+  describe '#add_admin_die_roll' do
+    let(:calling_method) do
+      -> do
+        change_orders.add_admin_die_roll(
+          player: {game: 1, seat: 1},
+          result_chosen: 1
+        )
+      end
+    end
+    it 'adds two total nodes' do
+      expect{calling_method.()}.to change{change_orders.changes.length}.by(2)
+    end
+
+    it 'adds one AdminDieRoll element' do
+      expect{calling_method.()}.to(
+        change do
+          change_orders.changes.select do |e|
+            e.is_a? SpyAlleyApplication::ChangeOrders::AdminDieRoll
+          end.length
+        end.by(1)
+      )
+    end
+
+    it 'will not allow a number other than one through six to be chosen' do
+      expect{change_orders.add_admin_die_roll(player: {game: 1, seat: 1}, result_chosen: 7)}.to(
+        raise_error(Dry::Types::ConstraintError)
+      )
+    end
+  end
+
   describe '#add_use_move_card' do
     let(:calling_method) do
       -> do
