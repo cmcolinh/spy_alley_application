@@ -5,6 +5,7 @@ module SpyAlleyApplication
     class MoveDistanceResult
       class MoveOptions
         def call(location:, move_distance:)
+          []
         end
       end
     end
