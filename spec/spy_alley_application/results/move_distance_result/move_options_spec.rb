@@ -7,7 +7,7 @@ RSpec.describe SpyAlleyApplication::Results::MoveDistanceResult::MoveOptions do
     SpyAlleyApplication::Results::MoveDistanceResult::MoveOptions::new
   end
   describe "first nine spaces on the board, as well as squares '15', '16', and '17' are straightforward" do
-    (0..8).to_a + (15..17).to_a.each do |location|
+    ((0..8).to_a + (15..17).to_a).each do |location|
       describe "from location '#{location}'" do
         (1..6).each do |distance|
           it "correctly moves to space '#{location + distance}' when moving #{distance} spaces" do
