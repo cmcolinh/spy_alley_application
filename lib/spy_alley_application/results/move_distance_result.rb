@@ -9,11 +9,14 @@ module SpyAlleyApplication
     class MoveDistanceResult
       extend Dry::Initializer
       option :move_options_from, default: ->{SpyAlleyApplication::Results::MoveDistanceResult::MoveOptions::new}
+      option :get_move_option_result, default: -> do
+        ->(options){SpyAlleyApplication::Results::MoveOptionResult::new(options)}
+      end
       option :get_move_result, default: ->{SpyAlleyApplication::Results::MoveResult::new}
       def call(player_model:, change_orders:, action_hash:, move_distance:)
         move_options = move_options_from.(location: player_model.location, move_distance: move_distance)
         if move_options.length > 1
-          SpyAlleyApplication::Results::MoveOptionResult::new(
+          get_move_option_result.(
             player_model:  player_model,
             change_orders: change_orders,
             action_hash:   action_hash,
