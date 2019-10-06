@@ -4,7 +4,9 @@ module SpyAlleyApplication
   module Results
     class MoveDistanceResult
       class MoveOptionsResult
-        def call(player_model:, change_orders:, action_hash:, move_options:)
+        def call(change_orders:, move_options:)
+          change_orders.add_move_options(options: move_options)
+          move_options
         end
       end
     end

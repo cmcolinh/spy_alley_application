@@ -116,6 +116,8 @@ class ChangeOrdersMock
   end
   def subtract_wild_card_action(player:)
   end
+  def add_move_options(options:)
+  end
   def money_added
     @money_added.dup
   end
