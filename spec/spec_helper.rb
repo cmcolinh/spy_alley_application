@@ -1,4 +1,5 @@
 require 'bundler/setup'
+require 'dry/initializer'
 require 'roda/spy_alley_application'
 require 'spy_alley_application/change_orders'
 require 'spy_alley_application/validator'
@@ -6,37 +7,15 @@ require 'spy_alley_application/action_creator'
 require 'spy_alley_application/result_creator'
 
 class PlayerMock
-  def game
-    1
-  end
-
-  def seat
-    1
-  end
-
-  def money
-    50
-  end
-
-  def location
-    '1'
-  end
-
-  def spy_identity
-    'french'
-  end
-
-  def equipment
-    ['spanish password', 'spanish codebook', 'french key']
-  end
-
-  def wild_cards
-    0
-  end
-
-  def move_cards
-    {1 => 0, 2 => 0, 3 => 0, 4 => 1, 5 => 0, 6 => 1}
-  end
+  extend Dry::Initializer
+  option :game, default: ->{1}
+  option :seat, default: ->{1}
+  option :money, default: ->{50}
+  option :location, default: ->{'1'}
+  option :spy_identity, default: ->{'french'}
+  option :equipment, default: ->{['spanish password', 'spanish codebook', 'french key']}
+  option :wild_cards, default: ->{0}
+  option :move_cards, default: ->{{1 => 0, 2 => 0, 3 => 0, 4 => 1, 5 => 0, 6 => 1}}
 end
 
 class TargetPlayerMock
