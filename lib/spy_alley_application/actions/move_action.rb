@@ -17,10 +17,11 @@ module SpyAlleyApplication
           space: space_to_move
         )
         move_result.(
-          player_model:  player_model,
-          change_orders: change_orders,
-          action_hash:   action_hash,
-          space_to_move: space_to_move
+          player_model:        player_model,
+          change_orders:       change_orders,
+          action_hash:         action_hash,
+          target_player_model: target_player_model,
+          space_to_move:       space_to_move
         )
         space_to_move
       end

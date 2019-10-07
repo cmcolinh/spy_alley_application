@@ -23,7 +23,7 @@ RSpec.describe SpyAlleyApplication::Results::MoveDistanceResult do
     }
   end
   let(:get_move_distance_result) do
-    ->(opts:, gmor:, gmr:) do
+    ->(opts:) do
       SpyAlleyApplication::Results::MoveDistanceResult::new(
         move_options_from: ->(options){opts},
         get_move_options_result: get_move_options_result,
@@ -33,11 +33,7 @@ RSpec.describe SpyAlleyApplication::Results::MoveDistanceResult do
   end
   describe '#call' do
     it 'calls get_move_options_result if move_options_from returns multiple locations' do
-      get_move_distance_result.(
-        opts: ['16', '2s'],
-        gmor: get_move_options_result,
-        gmr:  get_move_result
-      ).call(
+      get_move_distance_result.(opts: ['16', '2s']).call(
         player_model: player_model,
         change_orders: change_orders,
         action_hash: action_hash,
@@ -47,11 +43,7 @@ RSpec.describe SpyAlleyApplication::Results::MoveDistanceResult do
     end
 
     it 'does not call get_move_result if move_options_from returns multiple locations' do
-      get_move_distance_result.(
-        opts: ['16', '2s'],
-        gmor: get_move_options_result,
-        gmr:  get_move_result
-      ).call(
+      get_move_distance_result.(opts: ['16', '2s']).call(
         player_model: player_model,
         change_orders: change_orders,
         action_hash: action_hash,
@@ -61,11 +53,7 @@ RSpec.describe SpyAlleyApplication::Results::MoveDistanceResult do
     end
 
     it 'calls get_move_result if move_options_from returns a single location' do
-      get_move_distance_result.(
-        opts: ['18'],
-        gmor: get_move_options_result,
-        gmr:  get_move_result
-      ).call(
+      get_move_distance_result.(opts: ['18']).call(
         player_model: player_model,
         change_orders: change_orders,
         action_hash: action_hash,
@@ -75,11 +63,7 @@ RSpec.describe SpyAlleyApplication::Results::MoveDistanceResult do
     end
 
     it 'does not call get_move_options_result if move_options_from returns a single location' do
-      get_move_distance_result.(
-        opts: ['0'],
-        gmor: get_move_options_result,
-        gmr:  get_move_result
-      ).call(
+      get_move_distance_result.(opts: ['0']).call(
         player_model: player_model,
         change_orders: change_orders,
         action_hash: action_hash,

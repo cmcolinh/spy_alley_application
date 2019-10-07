@@ -6,7 +6,7 @@ RSpec.describe SpyAlleyApplication::Results::MoveDistanceResult::MoveOptionsResu
   let(:action_hash, &->{{player_action: 'roll'}})
   let(:get_result, &->{SpyAlleyApplication::Results::MoveDistanceResult::MoveOptionsResult::new})
   describe '#call' do
-    it 'returns thae move options input' do
+    it 'returns the move options as is from input' do
       expect(
         get_result.(move_options:  ['15', '1s'], change_orders: change_orders)
       ).to match_array(%w(15 1s))
