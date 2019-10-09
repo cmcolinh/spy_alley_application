@@ -153,7 +153,6 @@ RSpec.describe SpyAlleyApplication::ResultCreator do
       end
       it 'is set to give the player 10 money' do
         expect(create_result.(space_to_move: '7').money).to eql 10
-ion
       end
     end
     describe "landing on space '9'" do
@@ -179,6 +178,125 @@ ion
         end
         it 'has a buy limit of 1' do
           expect(create_result.(space_to_move: '9').buy_limit).to eql 1
+        end
+      end
+    end
+    describe "landing on space '10'" do
+      let(:all_keys, &->{all_equipment.filter{|e| e.include?('key')}})
+      describe 'when player has no money' do
+        let(:player_model, &->{PlayerMock::new(money: 0, equipment: [])})
+        it 'returns a SpyAlleyApplication::Results::NoActionResult' do
+          expect(create_result.(space_to_move: '10')).to be_a SpyAlleyApplication::Results::NoActionResult
+        end
+      end
+      describe 'when player has enough to buy, but already owns all of the keys' do
+        let(:player_model, &->{PlayerMock::new(money: 30, equipment: all_keys)})
+        it 'returns a SpyAlleyApplication::Results::NoActionResult' do
+          expect(create_result.(space_to_move: '10')).to be_a SpyAlleyApplication::Results::NoActionResult
+        end
+      end
+      describe 'when player has enough money to buy some keys, but not all unowned keys' do
+        let(:player_model, &->{PlayerMock::new(money: 100, equipment: [])})
+        it 'returns a SpyAlleyApplication::Results:BuyEquipmentOption' do
+          expect(create_result.(space_to_move: '10')).to be_a SpyAlleyApplication::Results::BuyEquipmentOption
+        end
+        it 'has the option to buy any key' do
+          expect(create_result.(space_to_move: '10').equipment_to_buy).to match_array(all_keys)
+        end
+        it 'has a buy limit of 3 due to money' do
+          expect(create_result.(space_to_move: '10').buy_limit).to eql 3
+        end
+      end
+      describe 'when player has enough money to buy all keys, but some are already owned' do
+        let(:player_model, &->{PlayerMock::new(
+          money: 200,
+          equipment: ['french key', 'german key', 'spanish key']
+        )})
+        it 'returns a SpyAlleyApplication::Results:BuyEquipmentOption' do
+          expect(create_result.(space_to_move: '10')).to be_a SpyAlleyApplication::Results::BuyEquipmentOption
+        end
+        it 'has the option only to buy only unowned keys' do
+          expect(create_result.(space_to_move: '10').equipment_to_buy).to
+            match_array(['italian key', 'american key', 'russian key'])
+        end
+        it 'has a buy limit of 3 due to owning the other three already' do
+          expect(create_result.(space_to_move: '10').buy_limit).to eql 3
+        end
+      end
+      describe 'when player has enough money to buy all keys, and none are owned' do
+        let(:player_model, &->{PlayerMock::new(money: 200, equipment: [])})
+        it 'returns a SpyAlleyApplication::Results:BuyEquipmentOption' do
+          expect(create_result.(space_to_move: '10')).to be_a SpyAlleyApplication::Results::BuyEquipmentOption
+        end
+        it 'has the option only to buy any key' do
+          expect(create_result.(space_to_move: '10').equipment_to_buy).to match_array(all_keys)
+        end
+        it 'has a buy limit of 6' do
+          expect(create_result.(space_to_move: '10').buy_limit).to eql 6
+        end
+      end
+    end
+    describe "landing on space '11'" do
+      describe 'when player has no money' do
+        let(:player_model, &->{PlayerMock::new(money: 0, equipment: [])})
+        it 'returns a SpyAlleyApplication::Results::NoActionResult' do
+          expect(create_result.(space_to_move: '11')).to be_a SpyAlleyApplication::Results::NoActionResult
+        end
+      end
+      describe 'when player has money, but already has the spanish password' do
+        let(:player_model, &->{PlayerMock::new(money: 0, equipment: ['spanish password'])})
+        it 'returns a SpyAlleyApplication::Results::NoActionResult' do
+          expect(create_result.(space_to_move: '11')).to be_a SpyAlleyApplication::Results::NoActionResult
+        end
+      end
+      describe 'when player has money, and does not have the spanish password' do
+        let(:player_model, &->{PlayerMock::new(money: 1, equipment: ['spanish codebook'])})
+        it 'returns a SpyAlleyApplication::Results:BuyEquipmentOption' do
+          expect(create_result.(space_to_move: '11')).to be_a SpyAlleyApplication::Results::BuyEquipmentOption
+        end
+        it 'has the option only to buy the spanish password' do
+          expect(create_result.(space_to_move: '11').equipment_to_buy).to match_array(['spanish password'])
+        end
+        it 'has a buy limit of 1' do
+          expect(create_result.(space_to_move: '11').buy_limit).to eql 1
+        end
+      end
+    end
+    describe "landing on space '12'" do
+      let(:player_model, &->{PlayerMock::new})
+      it 'returns a SpyAlleyApplication::Results::DrawMoveCard' do
+        expect(create_result.(space_to_move: '12')).to be_a SpyAlleyApplication::Results::DrawMoveCard
+      end
+    end
+    describe "landing on space '13'" do
+      let(:all_passwords, &->{all_equipment.filter{|e| e.include?('password')}})
+      let(:all_disguises, &->{all_equipment.filter{|e| e.include?('disguise')}})
+      let(:all_codebooks, &->{all_equipment.filter{|e| e.include?('codebook')}})
+      let(:all_keys, &->{all_equipment.filter{|e| e.include?('key')}})
+      describe 'when player has no money' do
+        let(:player_model, &->{PlayerMock::new(money: 0, equipment: [])})
+        it 'returns a SpyAlleyApplication::Results::NoActionResult' do
+          expect(create_result.(space_to_move: '11')).to be_a SpyAlleyApplication::Results::NoActionResult
+        end
+      end
+      describe 'when player has enough money for a password, but nothing else' do
+        describe 'when player has all passwords already' do
+          let(:player_model, &->{PlayerMock::new(money: 4, equipment: all_passwords)})
+          it 'returns a SpyAlleyApplication::Results:BuyEquipmentOption' do
+            expect(create_result.(space_to_move: '11')).to be_a SpyAlleyApplication::Results::BuyEquipmentOption
+          end
+          it 'has the option to buy any spanish password' do
+            expect(create_result.(space_to_move: '11').equipment_to_buy).to match_array(all_passwords)
+          end
+          it 'has a buy limit of 1' do
+            expect(create_result.(space_to_move: '11').buy_limit).to eql 1
+          end
+        end
+        describe 'when player has no passwords' do
+          let(:player_model, &->{PlayerMock::new(money: 1, equipment: [])})
+          it 'returns a SpyAlleyApplication::Results::NoActionResult' do
+            expect(create_result.(space_to_move: '11')).to be_a SpyAlleyApplication::Results::NoActionResult
+          end
         end
       end
     end
