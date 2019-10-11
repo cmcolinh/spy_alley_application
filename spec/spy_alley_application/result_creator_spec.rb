@@ -63,7 +63,7 @@ RSpec.describe SpyAlleyApplication::ResultCreator do
     describe "landing on space '9'" do
       it "returns a SpyAlleyApplication::Results::BuyEquipment::ItalianPassword when landing on space '9'" do
         expect(create_result.(space_to_move: '9')).to(
-          be_a(SpyAlleyApplication::Results::BuyEquipment::AmericanPassword))
+          be_a(SpyAlleyApplication::Results::BuyEquipment::ItalianPassword))
       end
     end
     describe "landing on space '10'" do
@@ -129,7 +129,7 @@ RSpec.describe SpyAlleyApplication::ResultCreator do
     describe "landing on space '21'" do
       it "returns a SpyAlleyApplication::Results::BuyEquipment::FrenchPassword when landing on space '21'" do
         expect(create_result.(space_to_move: '21')).to(
-          be_a(SpyAlleyApplication::BuyEquipment::FrenchPassword))
+          be_a(SpyAlleyApplication::Results::BuyEquipment::FrenchPassword))
       end
     end
     describe "landing on space '22'" do
@@ -140,7 +140,7 @@ RSpec.describe SpyAlleyApplication::ResultCreator do
     describe "landing on space '23'" do
       it "returns a SpyAlleyApplication::Results::BuyEquipment::BlackMarket when landing on space '23'" do
         expect(create_result.(space_to_move: '23')).to(
-          be_a(SpyAlleyApplication::BuyEquipment::BlackMarket))
+          be_a(SpyAlleyApplication::Results::BuyEquipment::BlackMarket))
       end
     end
     describe "landing on space '1s'" do
