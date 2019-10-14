@@ -97,6 +97,8 @@ class ChangeOrdersMock
   end
   def add_move_options(options:)
   end
+  def add_buy_equipment_option(equipment:, limit:)
+  end
   def money_added
     @money_added.dup
   end

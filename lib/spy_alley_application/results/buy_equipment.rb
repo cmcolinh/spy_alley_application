@@ -13,7 +13,11 @@ require 'spy_alley_application/results/buy_equipment/black_market'
 
 module SpyAlleyApplication
   module Results
-    class ConfiscateMaterials
+    class BuyEquipment
+      def call(change_orders:, purchase_options:, purchase_limit:)
+        change_orders.add_buy_equipment_option(equipment: purchase_options, limit: purchase_limit)
+        true # will be same player's turn again
+      end
     end
   end
 end

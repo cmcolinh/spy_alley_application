@@ -144,11 +144,25 @@ module SpyAlleyApplication
 
     def add_move_options(options:)
       @changes.push(
-        NextActionOptions.new(
+        NextActionOptions::new(
           option: {move: {space: options}}
         )
       )
     end 
+
+    def add_buy_equipment_option(equipment:, limit:)
+      @changes.push(NextActionOptions::new(option: {pass: true}))
+      @changes.push(
+        NextActionOptions::new(
+          option: {
+            buy_equipment: {
+              equipment_to_buy: equipment,
+              buy_limit: limit
+            }
+          }
+        )
+      )
+    end
 
     class DieRoll
       extend Dry::Initializer

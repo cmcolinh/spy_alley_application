@@ -395,4 +395,20 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
       )
     end     
   end
+
+  describe '#add_buy_equipment_option' do
+    let(:calling_method){->{change_orders.add_buy_equipment_option(equipment: ['russian password'], limit: 1)}}
+
+    it 'adds two total nodes' do
+      expect{calling_method.()}.to change{change_orders.changes.length}.by(2)
+    end
+
+    it 'adds two NextActionOptions elements' do
+      expect{calling_method.()}.to(
+        change{change_orders.changes.select do |e|
+          e.is_a?(SpyAlleyApplication::ChangeOrders::NextActionOptions)
+        end.length}.by(2)
+      )
+    end
+  end
 end
