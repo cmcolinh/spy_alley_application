@@ -137,6 +137,18 @@ class Count
 end
 Count.enable(ChangeOrdersMock)
 
+class CallableStub
+  def initialize
+    @called_with = {}
+  end
+  def call(options={})
+    @called_with = options
+  end
+  def called_with
+    @called_with.dup
+  end
+end
+
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"

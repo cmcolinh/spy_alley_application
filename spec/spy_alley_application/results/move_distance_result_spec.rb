@@ -1,17 +1,5 @@
 # frozen_string_literal: true
 
-class CallableStub
-  def initialize
-    @called_with = {}
-  end
-  def call(options={})
-    @called_with = options
-  end
-  def called_with
-    @called_with.dup
-  end
-end
-
 RSpec.describe SpyAlleyApplication::Results::MoveDistanceResult do
   let(:player_model, &->{PlayerMock::new})
   let(:change_orders, &->{ChangeOrdersMock::new})
