@@ -30,7 +30,7 @@ RSpec.describe SpyAlleyApplication::Results::BuyEquipment::RussianPassword do
     expect(buy_equipment.called_with).to eql({})
   end
   it 'calls do_nothing if the player already has the russian password' do
-    player_model = PlayerMock::new(money: 0, equipment: ['russian password', 'french password'])
+    player_model = PlayerMock::new(money: 1, equipment: ['russian password', 'french password'])
     buy_russian_password.(
       player_model: player_model,
       change_orders: change_orders,
@@ -39,7 +39,7 @@ RSpec.describe SpyAlleyApplication::Results::BuyEquipment::RussianPassword do
     expect(do_nothing.called_with).not_to eql({})
   end
   it 'does not call buy_equipment if the player already has the russian password' do
-    player_model = PlayerMock::new(money: 0, equipment: ['russian password'])
+    player_model = PlayerMock::new(money: 1, equipment: ['russian password'])
     buy_russian_password.(
       player_model: player_model,
       change_orders: change_orders,
@@ -56,8 +56,8 @@ RSpec.describe SpyAlleyApplication::Results::BuyEquipment::RussianPassword do
     )
     expect(do_nothing.called_with).to eql({})
   end
-  it 'does calls buy_equipment offering to buy russian password if the player has money " +
-    "and does not have the russian password' do
+  it 'does calls buy_equipment offering to buy russian password if the player has money ' +
+    'and does not have the russian password' do
 
     player_model = PlayerMock::new(money: 5, equipment: [])
     buy_russian_password.(
@@ -67,8 +67,8 @@ RSpec.describe SpyAlleyApplication::Results::BuyEquipment::RussianPassword do
     )
     expect(buy_equipment.called_with[:purchase_options]).to match_array(['russian password'])
   end
-  it 'does calls buy_equipment giving a buy limit of 1 if the player has money " +
-    "and does not have the russian password' do
+  it 'does calls buy_equipment giving a buy limit of 1 if the player has money ' +
+    'and does not have the russian password' do
 
     player_model = PlayerMock::new(money: 5, equipment: [])
     buy_russian_password.(
