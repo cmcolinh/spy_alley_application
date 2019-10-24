@@ -21,7 +21,7 @@ module SpyAlleyApplication
             buy_equipment.(
               change_orders: change_orders,
               purchase_options: @@all_codebooks - player_model.equipment,
-              purchase_limit: [player_model.money / 15, (@@all_codebooks - player_model.equipment).length].max
+              purchase_limit: [player_model.money / 15, (@@all_codebooks - player_model.equipment).length].min
             )
           end
         end

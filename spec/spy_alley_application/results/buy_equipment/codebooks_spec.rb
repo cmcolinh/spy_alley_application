@@ -136,7 +136,7 @@ RSpec.describe SpyAlleyApplication::Results::BuyEquipment::Codebooks do
       change_orders: change_orders,
       action_hash:  action_hash
     )
-    expect(buy_equipment.called_with[:purchase_limit]).to eql(3)
+    expect(buy_equipment.called_with[:purchase_limit]).to eql(5)
   end
   it 'does calls buy_equipment giving a buy limit of 6 if the player has at least 90 money ' +
     'and does not have any codebooks' do
@@ -147,7 +147,7 @@ RSpec.describe SpyAlleyApplication::Results::BuyEquipment::Codebooks do
       change_orders: change_orders,
       action_hash:  action_hash
     )
-    expect(buy_equipment.called_with[:purchase_limit]).to eql(3)
+    expect(buy_equipment.called_with[:purchase_limit]).to eql(6)
   end
   it 'does calls buy_equipment giving a buy limit of 1 if the player has enough money to buy all ' +
     'of the codebooks, but is only missing one of them' do
