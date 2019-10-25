@@ -130,7 +130,7 @@ RSpec.describe SpyAlleyApplication::Results::BuyEquipment::Keys do
   it 'does calls buy_equipment giving a buy limit of 5 if the player has between 150 and 179 money ' +
     'and is missing at least five keys' do
 
-    player_model = PlayerMock::new(money: 25, equipment: ['french password'])
+    player_model = PlayerMock::new(money: 179, equipment: ['french password'])
     buy_keys.(
       player_model: player_model,
       change_orders: change_orders,

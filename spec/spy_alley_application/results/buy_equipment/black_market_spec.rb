@@ -6,7 +6,7 @@ RSpec.describe SpyAlleyApplication::Results::BuyEquipment::BlackMarket do
   let(:do_nothing, &->{CallableStub::new})
   let(:buy_equipment, &->{CallableStub::new})
   let(:black_market) do
-    SpyAlleyApplication::Results::BuyEquipment::Keys::new(
+    SpyAlleyApplication::Results::BuyEquipment::BlackMarket::new(
       do_nothing: do_nothing,
       buy_equipment: buy_equipment
     )

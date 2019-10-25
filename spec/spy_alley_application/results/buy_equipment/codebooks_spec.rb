@@ -68,9 +68,9 @@ RSpec.describe SpyAlleyApplication::Results::BuyEquipment::Codebooks do
     expect(buy_equipment.called_with).to eql({})
   end
   it 'does calls buy_equipment offering to buy any of the unowned codebooks if the player has ' +
-    'at least 5 money and does not own all of the codebooks' do
+    'at least 15 money and does not own all of the codebooks' do
 
-    player_model = PlayerMock::new(money: 5, equipment: ['french codebook', 'german codebook'])
+    player_model = PlayerMock::new(money: 15, equipment: ['french codebook', 'german codebook'])
     buy_codebooks.(
       player_model: player_model,
       change_orders: change_orders,
