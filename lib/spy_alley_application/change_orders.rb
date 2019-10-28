@@ -152,16 +152,16 @@ module SpyAlleyApplication
 
     def add_buy_equipment_option(equipment:, limit:)
       @changes.push(NextActionOptions::new(option: {pass: true}))
-      @changes.push(
-        NextActionOptions::new(
-          option: {
-            buy_equipment: {
-              equipment_to_buy: equipment,
-              buy_limit: limit
+      @changes.push(AddMoveCard::new(
             }
           }
         )
       )
+    end
+
+    def add_draw_top_move_card(player:, top_move_card:)
+      @changes.push(DrawTopMoveCard::new)
+      @changes.push(
     end
 
     class DieRoll
