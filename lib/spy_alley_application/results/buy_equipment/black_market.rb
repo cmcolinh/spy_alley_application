@@ -17,7 +17,7 @@ module SpyAlleyApplication
         option :do_nothing, default: ->{SpyAlleyApplication::Results::NoActionResult::new}
         option :buy_equipment, default: ->{SpyAlleyApplication::Results::BuyEquipment::new}
 
-        def call(player_model:, change_orders:, action_hash:, target_player_model: nil)
+        def call(player_model:, change_orders:, action_hash:, target_player_model: nil, decks_model: nil)
           equipment = []
           case player_model.money
           when 0

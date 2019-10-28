@@ -13,7 +13,7 @@ module SpyAlleyApplication
           end.to_h
         end.reduce({}, :merge)
       }
-      def call(player_model:, change_orders:, action_hash:, target_player_model: nil)
+      def call(player_model:, change_orders:, action_hash:, target_player_model: nil, decks_model: nil)
         total_cost = 0
         Array(action_hash[:equipment_to_buy]).each do |equipment|
           equipment = equipment[0] if equipment.is_a?(Array)
