@@ -411,4 +411,35 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
       )
     end
   end
+
+  describe '#add_draw_top_move_card' do
+    let(:calling_method) do
+      -> do
+        change_orders.add_draw_top_move_card(
+          player:        {game: 1, seat: 1},
+          top_move_card: 1
+        )
+      end
+    end
+
+    it 'adds two total nodes' do
+      expect{calling_method.()}.to change{change_orders.changes.length}.by(2)
+    end
+
+    it 'adds one DrawTopMoveCard element' do
+      expect{calling_method.()}.to(
+        change{change_orders.changes.select do |e|
+          e.is_a?(SpyAlleyApplication::ChangeOrders::DrawTopMoveCard)
+        end.length}.by(1)
+      )
+    end
+
+    it 'adds one AddMoveCard element' do
+      expect{calling_method.()}.to(
+        change{change_orders.changes.select do |e|
+          e.is_a?(SpyAlleyApplication::ChangeOrders::AddMoveCard)
+        end.length}.by(1)
+      )
+    end
+  end
 end
