@@ -22,5 +22,5 @@ RSpec.describe SpyAlleyApplication::Results::DrawMoveCard do
         ).to be false
       end
     end
-
-    
+  end
+end

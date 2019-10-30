@@ -112,9 +112,8 @@ end
 
 class DecksModelMock
   extend Dry::Initializer
-  option top_move_card, default: 1
+  option :top_move_card, default: ->{1}
 end
-
 
 class Count
   @@initialized ||= []
