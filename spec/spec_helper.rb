@@ -56,6 +56,7 @@ class ChangeOrdersMock
   def initialize
     @money_added      = 0
     @money_subtracted = 0
+    @top_move_card    = 0
     @target           = {}
   end
   def add_die_roll(player:, rolled:)
@@ -99,6 +100,9 @@ class ChangeOrdersMock
   end
   def add_buy_equipment_option(equipment:, limit:)
   end
+  def add_draw_top_move_card(player:, top_move_card:)
+    @top_move_card = top_move_card
+  end
   def money_added
     @money_added.dup
   end
@@ -107,6 +111,9 @@ class ChangeOrdersMock
   end
   def target
     @target.dup
+  end
+  def top_move_card
+    @top_move_card.dup
   end
 end
 

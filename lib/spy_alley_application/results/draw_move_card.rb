@@ -13,7 +13,7 @@ module SpyAlleyApplication
             top_move_card: decks_model.top_move_card
           )
         end
-        false # the current player's turn will *not* continue*
+        false # the current player's turn will *not* continue
       end
     end
   end
