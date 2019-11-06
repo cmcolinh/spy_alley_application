@@ -169,6 +169,15 @@ module SpyAlleyApplication
       @changes.push(AddMoveCard::new(player: player, card_to_add: top_move_card))
     end
 
+    def add_draw_top_free_gift_card(player:, top_free_gift_card:)
+      @changes.push(DrawTopFreeGiftCard::new)
+      if top_free_gift_card.eql?('wild card')
+        add_wild_card_action(player: player)
+      else
+        @changes.push(PlaceCardAtBottomOfFreeGiftCardDeck::new(card: top_free_gift_card))
+      end
+    end
+
     class DieRoll
       extend Dry::Initializer
       option :player, type: Dry::Types['strict.hash']
@@ -199,6 +208,18 @@ module SpyAlleyApplication
     class PlaceCardAtBottomOfMoveCardDeck
       extend Dry::Initializer
       option :card, type: Dry::Types['strict.integer'].constrained(included_in: (1..6))
+    end
+
+    class DrawTopFreeGiftCard
+    end
+
+    class PlaceCardAtBottomOfFreeGiftCardDeck
+      all_cards = %w(french german spanish italian american russian).map do |nationality|
+        %w(password disguise codebook key).map{|equipment| "#{nationality} #{equipment}"}
+      end.flatten
+
+      extend Dry::Initializer
+      option :card, type: Dry::Types['strict.string'].constrained(included_in: all_cards)
     end
 
     class MoveAction

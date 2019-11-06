@@ -442,4 +442,59 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
       )
     end
   end
+
+  describe '#add_draw_top_free_gift_card' do
+    describe 'card is a wild card' do
+      let(:calling_method) do
+        -> do
+          change_orders.add_draw_top_free_gift_card(
+            player:        {game: 1, seat: 1},
+            top_free_gift_card: 'wild card'
+          )
+        end
+      end
+
+      it 'adds one DrawTopFreeGiftCard element' do
+        expect{calling_method.()}.to(
+          change{change_orders.changes.select do |e|
+            e.is_a?(SpyAlleyApplication::ChangeOrders::DrawTopFreeGiftCard)
+          end.length}.by(1)
+        )
+      end
+
+      it 'adds one AddWildCard element' do
+        expect{calling_method.()}.to(
+          change{change_orders.changes.select do |e|
+            e.is_a?(SpyAlleyApplication::ChangeOrders::AddWildCard)
+          end.length}.by(1)
+        )
+      end
+    end
+    describe 'card is not a wild card' do
+      let(:calling_method) do
+        -> do
+          change_orders.add_draw_top_free_gift_card(
+            player:        {game: 1, seat: 1},
+            top_free_gift_card: 'russian password'
+          )
+        end
+      end
+
+      it 'adds one DrawTopFreeGiftCard element' do
+        expect{calling_method.()}.to(
+          change{change_orders.changes.select do |e|
+            e.is_a?(SpyAlleyApplication::ChangeOrders::DrawTopFreeGiftCard)
+          end.length}.by(1)
+        )
+      end
+
+      it 'adds one PlaceCardAtBottomOfFreeGiftCardDeck element' do
+        expect{calling_method.()}.to(
+          change{change_orders.changes.select do |e|
+            e.is_a?(SpyAlleyApplication::ChangeOrders::PlaceCardAtBottomOfFreeGiftCardDeck)
+          end.length}.by(1)
+        )
+      end
+    end
+  end
 end
