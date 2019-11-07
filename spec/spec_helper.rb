@@ -103,6 +103,8 @@ class ChangeOrdersMock
   def add_draw_top_move_card(player:, top_move_card:)
     @top_move_card = top_move_card
   end
+  def add_draw_top_free_gift_card(player:, top_free_gift_card:)
+  end
   def money_added
     @money_added.dup
   end
@@ -120,6 +122,7 @@ end
 class DecksModelMock
   extend Dry::Initializer
   option :top_move_card, default: ->{1}
+  option :top_free_gift_card, default: ->{'russian password'}
 end
 
 class Count
