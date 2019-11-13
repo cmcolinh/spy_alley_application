@@ -117,6 +117,8 @@ class ChangeOrdersMock
   def top_move_card
     @top_move_card.dup
   end
+  def add_game_victory(player:, reason:)
+  end
 end
 
 class DecksModelMock
