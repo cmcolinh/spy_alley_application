@@ -15,18 +15,18 @@ RSpec.describe SpyAlleyApplication::Results::Embassy do
           equipment_owned = german_set + num_equipment_owned.times.map.with_index do |e, i|
             "french #{e}"
           end
-          let(:player_model) do
-            PlayerMock.new(
-              equipment: equipment_owned,
-              wild_cards: wild_cards,
-              spy_identity: spy_identity
-            )
-          end
           win = (num_equipment_owned + wild_cards >= 4) && same_embassy_as_player
           describe "when the player is #{'not ' unless same_embassy_as_player}the same nationality " +
             "as the embassy with #{num_equipment_owned} equipment owned " +
             "and #{wild_cards} wild card#{'s' unless wild_cards.eql?(1)}" do
 
+            let(:player_model) do
+              PlayerMock.new(
+                equipment: equipment_owned,
+                wild_cards: wild_cards,
+               spy_identity: spy_identity
+              )
+            end
             if win
               it 'calls change_orders#add_game_victory' do
                 expect{
