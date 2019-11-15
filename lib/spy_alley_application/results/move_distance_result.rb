@@ -15,7 +15,7 @@ module SpyAlleyApplication
       def call(player_model:, change_orders:, action_hash:, move_distance:)
         move_options = move_options_from.(location: player_model.location, move_distance: move_distance, decks_model: nil)
         if move_options.length > 1
-          get_move_options_result.(move_options:  move_options)
+          get_move_options_result.(move_options: move_options)
         elsif move_options.length.eql? 1
           get_move_result.(
             player_model:  player_model,
