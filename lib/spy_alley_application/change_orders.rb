@@ -178,6 +178,14 @@ module SpyAlleyApplication
       end
     end
 
+    def add_spy_eliminator_option(options:)
+      @changes.push(SpyEliminatorOption::new(options: options))
+    end
+
+    def add_game_victory(player:, reason:)
+      @changes.push(GameVictory::new(player: player, reason: reason))
+    end 
+
     class DieRoll
       extend Dry::Initializer
       option :player, type: Dry::Types['strict.hash']
@@ -256,6 +264,7 @@ module SpyAlleyApplication
       all_equipment = []
       nationalities = %w(french german spanish italian american russian)
       equipment     = %w(password disguise codebook key)
+
       nationalities.each{|n| equipment.each{|e| all_equipment.push("#{n} #{e}")}}
       
       option :player,    type: Dry::Types['strict.hash']
@@ -285,11 +294,26 @@ module SpyAlleyApplication
     class ActionHashElement
       extend Dry::Initializer
       option :action_hash, type: Dry::Types['strict.hash']
+
     end
 
     class NextActionOptions
       extend Dry::Initializer
       option :option, type: Dry::Types['strict.hash']
     end
+
+    class GameVictory
+      extend Dry::Initializer
+      option :player, type: Dry::Types['strict.hash']
+      option :reason, type: Dry::Types['strict.string']
+    end
+
+    class SpyEliminatorOption
+      extend Dry::Initializer
+      option :options, type: Dry::Types['strict.array'].of(
+        Dry::Types['strict.string'].constrained(included_in: (1..6).map{|seat| "seat_#{seat}"})
+      )
+    end
   end
-end    
+end
+

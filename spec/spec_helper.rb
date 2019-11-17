@@ -119,6 +119,9 @@ class ChangeOrdersMock
   end
   def add_game_victory(player:, reason:)
   end
+  def add_spy_eliminator_option(options:)
+    @target[:add_spy_eliminator_option] = options
+  end
 end
 
 class DecksModelMock

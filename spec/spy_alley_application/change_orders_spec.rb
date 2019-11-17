@@ -497,4 +497,41 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
       end
     end
   end
+
+  describe '#add_game_victory' do
+    let(:calling_method) do
+      -> do
+        change_orders.add_game_victory(
+          player: {game: 1, seat: 1},
+          reason: 'all opponents eliminated'
+        )
+      end
+    end
+
+    it 'adds one GameVictory element' do
+      expect{calling_method.()}.to(
+        change{change_orders.changes.select do |e|
+          e.is_a?(SpyAlleyApplication::ChangeOrders::GameVictory)
+        end.length}.by(1)
+      )
+    end
+  end
+
+  describe '#add_game_victory' do
+    let(:calling_method) do
+      -> do
+        change_orders.add_spy_eliminator_option(
+          options: ['seat_1', 'seat_2']
+        )
+      end
+    end
+
+    it 'adds one SpyEliminatorOption element' do
+      expect{calling_method.()}.to(
+        change{change_orders.changes.select do |e|
+          e.is_a?(SpyAlleyApplication::ChangeOrders::SpyEliminatorOption)
+        end.length}.by(1)
+      )
+    end
+  end
 end
