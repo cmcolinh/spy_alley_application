@@ -122,6 +122,9 @@ class ChangeOrdersMock
   def add_spy_eliminator_option(options:)
     @target[:add_spy_eliminator_option] = options
   end
+  def add_confiscate_materials_option(options:)
+    @target[:add_confiscate_materials_option] = options
+  end
 end
 
 class DecksModelMock

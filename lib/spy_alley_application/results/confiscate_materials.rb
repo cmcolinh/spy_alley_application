@@ -24,10 +24,10 @@ module SpyAlleyApplication
         end
         opts.merge!(add_wild_cards(target_player_model: target_player_model, player_model: player_model))
         if opts.empty?
+          false
+        else
           change_orders.add_confiscate_materials_option(options: opts)
           true
-        else
-          false
         end
       end
 

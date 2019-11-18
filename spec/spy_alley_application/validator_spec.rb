@@ -57,7 +57,7 @@ RSpec.describe SpyAlleyApplication::Validator do
         expect(validator_for.(options)).to be_a(SpyAlleyApplication::Validator::SpyEliminatorValidator)
       end
     end
-    describe 'when options are to confiscaate materials or pass' do
+    describe 'when options are to confiscate materials or pass' do
       let(:options) do 
         { accept_pass: true,
           accept_confiscate_materials: ['russian password', 'american password']

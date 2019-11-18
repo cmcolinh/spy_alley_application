@@ -11,8 +11,6 @@ module SpyAlleyApplication
   module Results
     class Embassy
       def call(player_model:, change_orders:, nationality:)
-        puts "nationality:  #{nationality}"
-        puts "spy_identity: #{player_model.spy_identity}"
         if player_model.spy_identity.eql?(nationality) && all_equipment_collected(player_model, nationality)
           change_orders.add_game_victory(
             player: {game: player_model.game, seat: player_model.seat},

@@ -186,6 +186,10 @@ module SpyAlleyApplication
       @changes.push(GameVictory::new(player: player, reason: reason))
     end 
 
+    def add_confiscate_materials_option(options:)
+      @changes.push(ConfiscateMaterialsOption::new(options: options))
+    end
+
     class DieRoll
       extend Dry::Initializer
       option :player, type: Dry::Types['strict.hash']
@@ -313,6 +317,11 @@ module SpyAlleyApplication
       option :options, type: Dry::Types['strict.array'].of(
         Dry::Types['strict.string'].constrained(included_in: (1..6).map{|seat| "seat_#{seat}"})
       )
+    end
+
+    class ConfiscateMaterialsOption
+      extend Dry::Initializer
+      option :options, type: Dry::Types['strict.hash']
     end
   end
 end

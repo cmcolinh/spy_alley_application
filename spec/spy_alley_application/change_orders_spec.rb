@@ -534,4 +534,25 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
       )
     end
   end
+
+  describe '#add_confiscate_materials_option' do
+    let(:calling_method) do
+      -> do
+        change_orders.add_confiscate_materials_option(
+          options: {
+            'seat_2' => ['russian password', 'french disguise'],
+            'seat_3' => ['russian password', 'german key', 'wild card']
+          }
+        )
+      end
+    end
+
+    it 'adds one ConfiscateMaterialsOption element' do
+      expect{calling_method.()}.to(
+        change{change_orders.changes.select do |e|
+          e.is_a?(SpyAlleyApplication::ChangeOrders::ConfiscateMaterialsOption)
+        end.length}.by(1)
+      )
+    end
+  end
 end
