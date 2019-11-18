@@ -32,13 +32,11 @@ RSpec.describe SpyAlleyApplication::Results::ConfiscateMaterials do
   let(:target_player_model, &->{[opponent1, opponent2, opponent3]})
   describe '#call' do
     describe 'with less than 5 money' do
-      let(:player_model) do
-        PlayerMock::new(
-          location: '2s',
-          money: 4,
-          equipment: ['french password', 'german disguise', 'spanish codebook']
-        )
-      end
+      player_model = PlayerMock::new(
+        location: '2s',
+        money: 4,
+        equipment: ['french password', 'german disguise', 'spanish codebook']
+      )
       it "returns false, indicating the end of the player's turn" do
         expect(
           confiscate_materials.(
@@ -59,6 +57,47 @@ RSpec.describe SpyAlleyApplication::Results::ConfiscateMaterials do
             target_player_model: target_player_model
           )
         }.not_to change{change_orders.times_called[:add_confiscate_materials_option]}
+      end
+    end
+    describe 'with between 5 and 9 money' do
+      player_model = PlayerMock::new(
+        location: '2s',
+        money: 9,
+        equipment: ['french password', 'german disguise', 'spanish codebook']
+      )
+      it "returns true, indicating the player's turn will continue" do
+        expect(
+          confiscate_materials.(
+            player_model: player_model,
+            change_orders: change_orders,
+            action_hash: action_hash,
+            target_player_model: target_player_model
+          )
+        ).to be true
+      end
+      it 'does not call change_orders#add_confiscate_materials_option' do
+        expect{
+          confiscate_materials.(
+            player_model: player_model,
+            change_orders: change_orders,
+            action_hash: action_hash,
+            target_player_model: target_player_model
+          )
+        }.to change{change_orders.times_called[:add_confiscate_materials_option]}.by(1)
+      end
+      it 'adds the correct equipment' do
+        confiscate_materials.(
+          player_model: player_model,
+          change_orders: change_orders,
+          action_hash: action_hash,
+          target_player_model: target_player_model
+        )
+      expect(change_orders.target[:add_confiscate_materials_option]).to(
+        eql({
+          'seat_2' => ['french disguise'],
+          'seat_3' => ['german password'],
+          'seat_4' => ['spanish password', 'spanish disguise']
+        }))
       end
     end
   end

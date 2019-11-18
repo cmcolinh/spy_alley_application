@@ -20,9 +20,14 @@ module SpyAlleyApplication
               cost: cost,
               equipment_type: equipment_type,
             )
-          )
+          ){|k, v1, v2| v1 + v2}
         end
-        opts.merge!(add_wild_cards(target_player_model: target_player_model, player_model: player_model))
+        opts.merge!(
+          add_wild_cards(
+            target_player_model: target_player_model,
+            player_model: player_model
+          )
+        ){|k, v1, v2| v1 + v2}
         if opts.empty?
           false
         else
@@ -34,14 +39,14 @@ module SpyAlleyApplication
       def add_equipment(player_model:, target_player_model:, equipment_type:, cost:)
         return {} if player_model.money < cost
 
-        target_player_model.select do |player|
-          player.equipment.any?{|equipment| equipment.eql?(equipment_type)}
-        end.map do |player|
+        target_player_model.select do |opposing_player|
+          opposing_player.equipment.any?{|equipment| equipment.include?(equipment_type)}
+        end.map do |opposing_player|
           [
-            "seat_#{player.seat}",
-            player.equipment
+            "seat_#{opposing_player.seat}",
+            opposing_player.equipment
               .select{|e| e.include?(equipment_type)}
-              .reject{|e| player.equipment.include?(e)}
+              .reject{|e| player_model.equipment.include?(e)}
           ]
         end.to_h
       end
