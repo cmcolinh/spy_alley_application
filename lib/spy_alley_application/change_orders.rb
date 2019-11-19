@@ -190,6 +190,10 @@ module SpyAlleyApplication
       @changes.push(ConfiscateMaterialsOption::new(options: options))
     end
 
+    def add_move_back_two_spaces_result
+      @changes.push(MoveBackTwoSpaces::new)
+    end
+
     class DieRoll
       extend Dry::Initializer
       option :player, type: Dry::Types['strict.hash']
@@ -323,6 +327,8 @@ module SpyAlleyApplication
       extend Dry::Initializer
       option :options, type: Dry::Types['strict.hash']
     end
+
+    class MoveBackTwoSpaces
+    end
   end
 end
-

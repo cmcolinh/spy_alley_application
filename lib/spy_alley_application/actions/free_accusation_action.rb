@@ -8,7 +8,7 @@ module SpyAlleyApplication
     class FreeAccusationAction
       extend Dry::Initializer
       option :eliminate_player, default: ->{SpyAlleyApplication::Results::EliminatePlayerResult::new}
-      
+
       def call(change_orders:, player_model:, target_player_model:, action_hash:, decks_model: nil)
         guess_correct = action_hash[:nationality].eql?(target_player_model.spy_identity)
         change_orders.add_action(action_hash.dup)
@@ -16,9 +16,9 @@ module SpyAlleyApplication
         if guess_correct
           change_orders.add_action(result: {guess_correct: true})
           eliminate_player.(
-           player_model:        player_model,
-             target_player_model: target_player_model,
-             change_orders:       change_orders
+            player_model:        player_model,
+            target_player_model: target_player_model,
+            change_orders:       change_orders
           )
         else
           change_orders.add_action(result: {guess_correct: false})

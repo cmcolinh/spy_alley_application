@@ -125,6 +125,8 @@ class ChangeOrdersMock
   def add_confiscate_materials_option(options:)
     @target[:add_confiscate_materials_option] = options
   end
+  def add_move_back_two_spaces_result
+  end
 end
 
 class DecksModelMock

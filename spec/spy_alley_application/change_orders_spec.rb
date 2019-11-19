@@ -555,4 +555,16 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
       )
     end
   end
+
+  describe '#add_move_back_two_spaces_result' do
+    let(:calling_method, &->{->{change_orders.add_move_back_two_spaces_result}})
+
+    it 'adds one MoveBackTwoSpaces element' do
+      expect{calling_method.()}.to(
+        change{change_orders.changes.select do |e|
+          e.is_a?(SpyAlleyApplication::ChangeOrders::MoveBackTwoSpaces)
+        end.length}.by(1)
+      )
+    end
+  end
 end
