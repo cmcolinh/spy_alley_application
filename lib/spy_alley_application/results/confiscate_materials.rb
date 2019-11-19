@@ -55,8 +55,8 @@ module SpyAlleyApplication
         cost = 50
         return {} if player_model.money < cost
 
-        target_player_model.select{|player| player.wild_cards > 0}.map do |player|
-          ["seat_#{player.seat}", 'wild card']
+        target_player_model.select{|opposing_player| opposing_player.wild_cards > 0}.map do |opposing_player|
+          ["seat_#{opposing_player.seat}", ['wild card']]
         end.to_h
       end
     end
