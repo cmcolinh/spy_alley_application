@@ -2,7 +2,7 @@
 
 RSpec.describe SpyAlleyApplication::Actions::AtRiskAccusationAction do
   let(:player_model,        &->{PlayerMock::new})
-  let(:target_player_model, &->{TargetPlayerMock::new})
+  let(:target_player_models, &->{[TargetPlayerMock::new]})
   let(:change_orders, &->{ChangeOrdersMock::new})
   let(:eliminate_player) do 
     ->(options={}) do

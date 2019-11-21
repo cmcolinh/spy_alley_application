@@ -9,7 +9,7 @@ module SpyAlleyApplication
       extend Dry::Initializer
       option :eliminate_player, default: ->{SpyAlleyApplication::Results::EliminatePlayerResult::new}
 
-      def call(change_orders:, player_model:, target_player_model:, action_hash:, decks_model: nil)
+      def call(change_orders:, player_model:, target_player_models:, action_hash:, decks_model: nil)
         guess_correct = action_hash[:nationality].eql?(target_player_model.spy_identity)
         change_orders.add_action(action_hash.dup)
 

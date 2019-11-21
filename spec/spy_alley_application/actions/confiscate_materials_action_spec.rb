@@ -2,7 +2,7 @@
 
 RSpec.describe SpyAlleyApplication::Actions::ConfiscateMaterialsAction do
   let(:player_model, &->{PlayerMock::new})
-  let(:target_player_model, &->{TargetPlayerMock::new})
+  let(:target_player_models, &->{[TargetPlayerMock::new]})
   let(:change_orders, &->{ChangeOrdersMock::new})
   let(:action_hash) do
     ->(target_player, equipment) do
@@ -22,7 +22,7 @@ RSpec.describe SpyAlleyApplication::Actions::ConfiscateMaterialsAction do
           confiscate_materials.(
             player_model: player_model,
             change_orders: change_orders,
-            target_player_model: target_player_model,
+            target_player_models: target_player_model,
             action_hash: action_hash.(target_player, equipment)
           )
         end

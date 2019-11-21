@@ -13,7 +13,7 @@ module SpyAlleyApplication
           end.to_h
         end.reduce({}, :merge).tap{|h| h['wild card'] = 50}
       }
-      def call(player_model:, target_player_model:, change_orders:, action_hash:, decks_model: nil)
+      def call(player_model:, target_player_models:, change_orders:, action_hash:, decks_model: nil)
         equipment_to_confiscate = action_hash[:equipment_to_confiscate]
         price = confiscation_price[equipment_to_confiscate]
         if equipment_to_confiscate.eql? 'wild card'
