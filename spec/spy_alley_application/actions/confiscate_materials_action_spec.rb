@@ -22,7 +22,7 @@ RSpec.describe SpyAlleyApplication::Actions::ConfiscateMaterialsAction do
           confiscate_materials.(
             player_model: player_model,
             change_orders: change_orders,
-            target_player_models: target_player_model,
+            target_player_models: target_player_models,
             action_hash: action_hash.(target_player, equipment)
           )
         end
@@ -63,7 +63,6 @@ RSpec.describe SpyAlleyApplication::Actions::ConfiscateMaterialsAction do
         expect(change_orders.times_called[:add_action]).to eql(1)
       end
 
-
       it 'targets the correct player with change_orders#add_equipment_action' do
         calling_method.('seat_2', 'russian password')
         expect(change_orders.target[:add_equipment_action]).to eql(player_model.seat)
@@ -76,12 +75,12 @@ RSpec.describe SpyAlleyApplication::Actions::ConfiscateMaterialsAction do
 
       it 'targets the correct player with change_orders#subtract_equipment_action' do
         calling_method.('seat_2', 'russian password')
-        expect(change_orders.target[:subtract_equipment_action]).to eql(target_player_model.seat)
+        expect(change_orders.target[:subtract_equipment_action]).to eql(target_player_models.first.seat)
       end
 
       it 'targets the correct player with change_orders#add_money_action' do
         calling_method.('seat_2', 'russian password')
-        expect(change_orders.target[:add_money_action]).to eql(target_player_model.seat)
+        expect(change_orders.target[:add_money_action]).to eql(target_player_models.first.seat)
       end
     end
   end

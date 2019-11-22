@@ -10,7 +10,7 @@ module SpyAlleyApplication
         option :sold_top_secret_information, default: -> do
           SpyAlleyApplication::Results::SoldTopSecretInformation::new
         end
-        def call(player_model:, change_orders:, action_hash: nil, target_player_model: nil, decks_model: nil)
+        def call(player_model:, change_orders:, action_hash: nil, opponent_models: nil, decks_model: nil)
           sold_top_secret_information.(
             player_model: player_model,
             change_orders: change_orders,

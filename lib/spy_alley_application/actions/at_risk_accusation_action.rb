@@ -8,8 +8,8 @@ module SpyAlleyApplication
     class AtRiskAccusationAction
       extend Dry::Initializer
       option :eliminate_player, default: ->{SpyAlleyApplication::Results::EliminatePlayerResult::new}
-      def call(player_model:, target_player_models:, change_orders:, action_hash:, decks_model: nil)
-        target_player_model = get_target_player_model_from(target_player_models, action_hash)
+      def call(player_model:, opponent_models:, change_orders:, action_hash:, decks_model: nil)
+        target_player_model = get_target_player_model_from(opponent_models, action_hash)
         guess_correct = action_hash[:nationality].eql?(target_player_model.spy_identity)
         change_orders.add_action(action_hash.dup)
         if guess_correct
@@ -30,11 +30,10 @@ module SpyAlleyApplication
         return guess_correct
       end
 
-      def get_target_player_model_from(target_player_models, action_hash)
-        seat = action_hash[:seat].gsub('seat_', '').to_i
-        target_player_models.select{|m| m.seat = seat}.first
+      def get_target_player_model_from(opponent_models, action_hash)
+        seat = action_hash[:player_to_accuse].gsub('seat_', '').to_i
+        opponent_models.select{|m| m.seat.eql? seat}.first
       end
     end
   end
 end
-

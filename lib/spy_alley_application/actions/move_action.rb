@@ -9,7 +9,7 @@ module SpyAlleyApplication
       extend Dry::Initializer
       option :move_result,  default: ->{SpyAlleyApplication::Results::MoveResult::new}
 
-      def call(player_model:, change_orders:, action_hash:, target_player_model: nil, decks_model: nil)
+      def call(player_model:, change_orders:, action_hash:, opponent_models: nil, decks_model: nil)
         money_per_lap = 15
         space_to_move = action_hash[:space]
         change_orders.add_move_action(
@@ -17,11 +17,11 @@ module SpyAlleyApplication
           space: space_to_move
         )
         move_result.(
-          player_model:        player_model,
-          change_orders:       change_orders,
-          action_hash:         action_hash,
-          target_player_model: target_player_model,
-          space_to_move:       space_to_move
+          player_model:    player_model,
+          change_orders:   change_orders,
+          action_hash:     action_hash,
+          opponent_models: opponent_models,
+          space_to_move:   space_to_move
         )
         space_to_move
       end

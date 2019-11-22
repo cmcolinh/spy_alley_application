@@ -6,7 +6,7 @@ module SpyAlleyApplication
   module Results
     class DrawFreeGift
       extend Dry::Initializer
-      def call(player_model:, change_orders:, action_hash:, target_player_model: nil, decks_model:)
+      def call(player_model:, change_orders:, action_hash:, opponent_models: nil, decks_model:)
         free_gift_card = decks_model.top_free_gift_card
         change_orders.add_draw_top_free_gift_card(
           player: {game: player_model.game, seat: player_model.seat},

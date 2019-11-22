@@ -12,7 +12,7 @@ module SpyAlleyApplication
       extend Dry::Initializer
       option :move_action
       option :move_result_for, default: ->{SpyAlleyApplication::Results::MoveDistanceResult::new}
-      def call(player_model:, change_orders:, action_hash:, target_player_model: nil, decks_model:)
+      def call(player_model:, change_orders:, action_hash:, opponent_models: nil, decks_model:)
         move distance = move_action.(
           player_model:  player_model,
           change_orders: change_orders,

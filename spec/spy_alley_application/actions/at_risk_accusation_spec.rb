@@ -19,9 +19,9 @@ RSpec.describe SpyAlleyApplication::Actions::AtRiskAccusationAction do
     let(:making_guess) do
       ->(correct:) do
         make_accusation.(
-          player_model:        player_model,
-          change_orders:       change_orders,
-          target_player_model: target_player_model,
+          player_model:         player_model,
+          change_orders:        change_orders,
+          target_player_models: target_player_models,
           action_hash: {
             player_action:    'make_accusation',
             player_to_accuse: 'seat_2',
