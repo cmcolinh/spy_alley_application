@@ -15,7 +15,7 @@ module SpyAlleyApplication
         @@equipment.each do |equipment_type, cost|
           opts.merge!(
             add_equipment(
-              target_player_model: target_player_model,
+              opponent_models: opponent_models,
               player_model: player_model,
               cost: cost,
               equipment_type: equipment_type,

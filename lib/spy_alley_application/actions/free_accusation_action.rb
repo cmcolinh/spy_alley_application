@@ -29,7 +29,7 @@ module SpyAlleyApplication
 
       def get_target_player_model_from(opponent_models, action_hash)
         seat = action_hash[:player_to_accuse].gsub('seat_', '').to_i
-        target_player_models.select{|m| m.seat.eql? seat}.first
+        opponent_models.select{|m| m.seat.eql? seat}.first
       end
     end
   end

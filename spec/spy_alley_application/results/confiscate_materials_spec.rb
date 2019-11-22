@@ -30,7 +30,7 @@ RSpec.describe SpyAlleyApplication::Results::ConfiscateMaterials do
       wild_cards: 1
     )
   end
-  let(:target_player_model, &->{[opponent1, opponent2, opponent3]})
+  let(:opponent_models, &->{[opponent1, opponent2, opponent3]})
   describe '#call' do
     describe 'with less than 5 money' do
       player_model = PlayerMock::new(
@@ -44,7 +44,7 @@ RSpec.describe SpyAlleyApplication::Results::ConfiscateMaterials do
             player_model: player_model,
             change_orders: change_orders,
             action_hash: action_hash,
-            target_player_model: target_player_model
+            opponent_models: opponent_models
           )
         ).to be false
       end
@@ -55,7 +55,7 @@ RSpec.describe SpyAlleyApplication::Results::ConfiscateMaterials do
             player_model: player_model,
             change_orders: change_orders,
             action_hash: action_hash,
-            target_player_model: target_player_model
+            opponent_models: opponent_models
           )
         }.not_to change{change_orders.times_called[:add_confiscate_materials_option]}
       end
@@ -72,7 +72,7 @@ RSpec.describe SpyAlleyApplication::Results::ConfiscateMaterials do
             player_model: player_model,
             change_orders: change_orders,
             action_hash: action_hash,
-            target_player_model: target_player_model
+            opponent_models: opponent_models
           )
         ).to be true
       end
@@ -82,7 +82,7 @@ RSpec.describe SpyAlleyApplication::Results::ConfiscateMaterials do
             player_model: player_model,
             change_orders: change_orders,
             action_hash: action_hash,
-            target_player_model: target_player_model
+            opponent_models: opponent_models
           )
         }.to change{change_orders.times_called[:add_confiscate_materials_option]}.by(1)
       end
@@ -91,7 +91,7 @@ RSpec.describe SpyAlleyApplication::Results::ConfiscateMaterials do
           player_model: player_model,
           change_orders: change_orders,
           action_hash: action_hash,
-          target_player_model: target_player_model
+          opponent_models: opponent_models
         )
       expect(change_orders.target[:add_confiscate_materials_option]).to(
         eql({
@@ -113,7 +113,7 @@ RSpec.describe SpyAlleyApplication::Results::ConfiscateMaterials do
             player_model: player_model,
             change_orders: change_orders,
             action_hash: action_hash,
-            target_player_model: target_player_model
+            opponent_models: opponent_models
           )
         ).to be true
       end
@@ -123,7 +123,7 @@ RSpec.describe SpyAlleyApplication::Results::ConfiscateMaterials do
             player_model: player_model,
             change_orders: change_orders,
             action_hash: action_hash,
-            target_player_model: target_player_model
+            opponent_models: opponent_models
           )
         }.to change{change_orders.times_called[:add_confiscate_materials_option]}.by(1)
       end
@@ -132,7 +132,7 @@ RSpec.describe SpyAlleyApplication::Results::ConfiscateMaterials do
           player_model: player_model,
           change_orders: change_orders,
           action_hash: action_hash,
-          target_player_model: target_player_model
+          opponent_models: opponent_models
         )
       expect(change_orders.target[:add_confiscate_materials_option]).to(
         eql({
@@ -154,7 +154,7 @@ RSpec.describe SpyAlleyApplication::Results::ConfiscateMaterials do
             player_model: player_model,
             change_orders: change_orders,
             action_hash: action_hash,
-            target_player_model: target_player_model
+            opponent_models: opponent_models
           )
         ).to be true
       end
@@ -164,7 +164,7 @@ RSpec.describe SpyAlleyApplication::Results::ConfiscateMaterials do
             player_model: player_model,
             change_orders: change_orders,
             action_hash: action_hash,
-            target_player_model: target_player_model
+            opponent_models: opponent_models
           )
         }.to change{change_orders.times_called[:add_confiscate_materials_option]}.by(1)
       end
@@ -173,7 +173,7 @@ RSpec.describe SpyAlleyApplication::Results::ConfiscateMaterials do
           player_model: player_model,
           change_orders: change_orders,
           action_hash: action_hash,
-          target_player_model: target_player_model
+          opponent_models: opponent_models
         )
       expect(change_orders.target[:add_confiscate_materials_option]).to(
         eql({
@@ -196,7 +196,7 @@ RSpec.describe SpyAlleyApplication::Results::ConfiscateMaterials do
             player_model: player_model,
             change_orders: change_orders,
             action_hash: action_hash,
-            target_player_model: target_player_model
+            opponent_models: opponent_models
           )
         ).to be true
       end
@@ -206,7 +206,7 @@ RSpec.describe SpyAlleyApplication::Results::ConfiscateMaterials do
             player_model: player_model,
             change_orders: change_orders,
             action_hash: action_hash,
-            target_player_model: target_player_model
+            opponent_models: opponent_models
           )
         }.to change{change_orders.times_called[:add_confiscate_materials_option]}.by(1)
       end
@@ -215,7 +215,7 @@ RSpec.describe SpyAlleyApplication::Results::ConfiscateMaterials do
           player_model: player_model,
           change_orders: change_orders,
           action_hash: action_hash,
-          target_player_model: target_player_model
+          opponent_models: opponent_models
         )
       expect(change_orders.target[:add_confiscate_materials_option]).to(
         eql({

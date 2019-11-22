@@ -2,7 +2,7 @@
 
 RSpec.describe SpyAlleyApplication::Actions::ConfiscateMaterialsAction do
   let(:player_model, &->{PlayerMock::new})
-  let(:target_player_models, &->{[TargetPlayerMock::new]})
+  let(:opponent_models, &->{[TargetPlayerMock::new]})
   let(:change_orders, &->{ChangeOrdersMock::new})
   let(:action_hash) do
     ->(target_player, equipment) do
@@ -20,10 +20,10 @@ RSpec.describe SpyAlleyApplication::Actions::ConfiscateMaterialsAction do
       let(:calling_method) do
         ->(target_player, equipment) do
           confiscate_materials.(
-            player_model: player_model,
-            change_orders: change_orders,
-            target_player_models: target_player_models,
-            action_hash: action_hash.(target_player, equipment)
+            player_model:    player_model,
+            change_orders:   change_orders,
+            opponent_models: opponent_models,
+            action_hash:     action_hash.(target_player, equipment)
           )
         end
       end
@@ -75,12 +75,12 @@ RSpec.describe SpyAlleyApplication::Actions::ConfiscateMaterialsAction do
 
       it 'targets the correct player with change_orders#subtract_equipment_action' do
         calling_method.('seat_2', 'russian password')
-        expect(change_orders.target[:subtract_equipment_action]).to eql(target_player_models.first.seat)
+        expect(change_orders.target[:subtract_equipment_action]).to eql(opponent_models.first.seat)
       end
 
       it 'targets the correct player with change_orders#add_money_action' do
         calling_method.('seat_2', 'russian password')
-        expect(change_orders.target[:add_money_action]).to eql(target_player_models.first.seat)
+        expect(change_orders.target[:add_money_action]).to eql(opponent_models.first.seat)
       end
     end
   end

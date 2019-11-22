@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe SpyAlleyApplication::Actions::FreeAccusationAction do
-  let(:player_model,        &->{PlayerMock::new})
-  let(:target_player_models, &->{[TargetPlayerMock::new]})
-  let(:change_orders, &->{ChangeOrdersMock::new})
+  let(:player_model,    &->{PlayerMock::new})
+  let(:opponent_models, &->{[TargetPlayerMock::new]})
+  let(:change_orders,   &->{ChangeOrdersMock::new})
   let(:eliminate_player) do 
     ->(options={}) do
       eliminating_player[:seat] = options[:player_model].seat
@@ -19,9 +19,9 @@ RSpec.describe SpyAlleyApplication::Actions::FreeAccusationAction do
     let(:making_guess) do
       ->(correct:) do
         make_accusation.(
-          player_model:         player_model,
-          change_orders:        change_orders,
-          target_player_models: target_player_models,
+          player_model:    player_model,
+          change_orders:   change_orders,
+          opponent_models: opponent_models,
           action_hash: {
             player_action:    'make_accusation',
             player_to_accuse: 'seat_2',
