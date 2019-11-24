@@ -16,10 +16,15 @@ module SpyAlleyApplication
         transfer_money.(from: target_player_model, to: player_model, change_orders: change_orders)
         transfer_equipment.(from: target_player_model, to: player_model, change_orders: change_orders)
         transfer_wild_cards.(from: target_player_model, to: player_model, change_orders: change_orders)
+        change_orders.add_choose_new_spy_identity_option(return_player: return_player, options: [
+          player_model.seat,
+          target_player_model.seat
+        ])
       end
 
       class TransferMoney
         def transfer_money(to:, from:, change_orders:)
+          return if from.money.eql? 0
           change_orders.subtract_money_action(
             player: {game: from.game, seat: from.seat},
             amount: from.money,
@@ -64,3 +69,4 @@ module SpyAlleyApplication
     end
   end
 end
+

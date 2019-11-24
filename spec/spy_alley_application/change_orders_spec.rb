@@ -567,4 +567,23 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
       )
     end
   end
+
+  describe '#add_choose_new_spy_identity_option' do
+    let(:calling_method) do
+      -> do
+        change_orders.add_choose_new_spy_identity_option(
+          options: ['french', 'spanish'],
+          return_player: 'seat_2'
+        )
+      end
+    end
+
+    it 'adds one ChooseNewSpyIdentityOption element' do
+      expect{calling_method.()}.to(
+        change{change_orders.changes.select do |e|
+          e.is_a?(SpyAlleyApplication::ChangeOrders::ChooseNewSpyIdentityOption)
+        end.length}.by(1)
+      )
+    end
+  end
 end

@@ -16,6 +16,7 @@ module SpyAlleyApplication
           change_orders.add_action(result: {guess_correct: true})
           eliminate_player.(
             player_model:        player_model,
+            opponent_models:     opponent_models,
             target_player_model: target_player_model,
             change_orders:       change_orders
           )
@@ -23,6 +24,7 @@ module SpyAlleyApplication
           change_orders.add_action(result: {guess_correct: false})
           eliminate_player.(
             player_model:        target_player_model,
+            opponent_models:     opponent_models,
             target_player_model: player_model,
             change_orders:       change_orders
           )

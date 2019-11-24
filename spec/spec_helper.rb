@@ -127,6 +127,8 @@ class ChangeOrdersMock
   end
   def add_move_back_two_spaces_result
   end
+  def add_choose_new_spy_identity_option(options:, return_player:)
+  end
 end
 
 class DecksModelMock

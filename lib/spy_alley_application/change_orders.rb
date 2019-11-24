@@ -194,6 +194,10 @@ module SpyAlleyApplication
       @changes.push(MoveBackTwoSpaces::new)
     end
 
+    def add_choose_new_spy_identity_option(options:, return_player:)
+      @changes.push(ChooseNewSpyIdentityOption::new(options:options, return_player: return_player))
+    end
+
     class DieRoll
       extend Dry::Initializer
       option :player, type: Dry::Types['strict.hash']
@@ -330,5 +334,16 @@ module SpyAlleyApplication
 
     class MoveBackTwoSpaces
     end
+
+    class ChooseNewSpyIdentityOption
+      extend Dry::Initializer
+      nationalities = %w(french german spanish italian american russian)
+      option :options, type: Dry::Types['strict.array'].of(
+        Dry::Types['strict.string'].constrained(included_in: nationalities)
+      ).constrained(size: 2)
+      option :return_player,
+        type: Dry::Types['strict.string'].constrained(included_in: (1..6).map{|seat| "seat_#{seat}"})
+    end
   end
 end
+
