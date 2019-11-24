@@ -5,3 +5,4 @@ gemspec
 gem 'dry-initializer'
 gem 'dry-types'
 gem 'dry-validation'
+gem 'dry-monads'

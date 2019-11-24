@@ -11,6 +11,7 @@ require 'spy_alley_application/validator/choose_new_identity_validator.rb'
 
 module SpyAlleyApplication
   class Validator
+    Dry::Validation.load_extensions(:monads)
     def self.new(accept_roll: nil, accept_pass: nil, accept_use_move_card: nil,
       accept_make_accusation: nil, accept_move: nil, accept_buy_equipment: nil,
       accept_confiscate_materials: nil, accept_choose_new_identity: nil
