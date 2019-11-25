@@ -29,4 +29,3 @@ module SpyAlleyApplication
     end
   end
 end
-

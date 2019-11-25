@@ -3,8 +3,7 @@ require 'dry/initializer'
 require 'roda/spy_alley_application'
 require 'spy_alley_application/change_orders'
 require 'spy_alley_application/validator'
-require 'spy_alley_application/action_creator'
-require 'spy_alley_application/result_creator'
+require 'spy_alley_application/execute_action'
 
 class PlayerMock
   extend Dry::Initializer

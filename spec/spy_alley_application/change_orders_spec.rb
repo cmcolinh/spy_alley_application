@@ -1,16 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe SpyAlleyApplication::ChangeOrders do
-  let (:change_orders){SpyAlleyApplication::ChangeOrders::new}
+  let(:change_orders){SpyAlleyApplication::ChangeOrders::new}
   describe '#get_action_hash' do
     before(:each) do
       change_orders.add_action(action_hash: {player_action: 'roll'})
     end
-    let(:calling_method) do
-      -> do
-        change_orders.get_action_hash
-      end
-    end
+    let(:calling_method, &->{->{change_orders.get_action_hash}})
     it 'returns a hash representation of the ActionHashElement node' do
       expect(calling_method.()).to eql(action_hash: {player_action: 'roll'})
     end
