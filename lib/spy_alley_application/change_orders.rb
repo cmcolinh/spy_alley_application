@@ -306,7 +306,6 @@ module SpyAlleyApplication
     class ActionHashElement
       extend Dry::Initializer
       option :action_hash, type: Dry::Types['strict.hash']
-
     end
 
     class NextActionOptions
