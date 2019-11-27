@@ -59,10 +59,13 @@ class ChangeOrdersMock
     @target           = {}
   end
   def add_die_roll(player:, rolled:)
+    self
   end
   def add_admin_die_roll(player:, result_chosen:)
+    self
   end
   def add_move_card_action(player:, card_to_add:)
+    self
   end
   def add_use_move_card(player:, card_to_use:)
   end

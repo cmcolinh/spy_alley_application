@@ -12,7 +12,7 @@ module SpyAlleyApplication
       def call(player_model:, change_orders:, action_hash:, opponent_models: nil, decks_model: nil)
         money_per_lap = 15
         space_to_move = action_hash[:space]
-        change_orders.add_move_action(
+        change_orders = change_orders.add_move_action(
           player: {game: player_model.game, seat: player_model.seat},
           space: space_to_move
         )
@@ -23,7 +23,6 @@ module SpyAlleyApplication
           opponent_models: opponent_models,
           space_to_move:   space_to_move
         )
-        space_to_move
       end
     end
   end

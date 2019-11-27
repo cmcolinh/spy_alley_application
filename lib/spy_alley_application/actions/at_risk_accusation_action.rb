@@ -11,9 +11,9 @@ module SpyAlleyApplication
       def call(player_model:, opponent_models:, change_orders:, action_hash:, decks_model: nil)
         target_player_model = get_target_player_model_from(opponent_models, action_hash)
         guess_correct = action_hash[:nationality].eql?(target_player_model.spy_identity)
-        change_orders.add_action(action_hash.dup)
+        change_orders = change_orders.add_action(action_hash.dup)
         if guess_correct
-          change_orders.add_action(result: {guess_correct: true})
+          change_orders = change_orders.add_action(result: {guess_correct: true})
           eliminate_player.(
             player_model:        player_model,
             opponent_models:     opponent_models,
@@ -21,7 +21,7 @@ module SpyAlleyApplication
             change_orders:       change_orders
           )
         else
-          change_orders.add_action(result: {guess_correct: false})
+          change_orders = change_orders.add_action(result: {guess_correct: false})
           eliminate_player.(
             player_model:        target_player_model,
             opponent_models:     opponent_models,

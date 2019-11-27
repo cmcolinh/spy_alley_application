@@ -25,7 +25,6 @@ module SpyAlleyApplication
         change_orders: change_orders,
         action_hash: action_hash
       )
-      change_orders
     end
   end
 end

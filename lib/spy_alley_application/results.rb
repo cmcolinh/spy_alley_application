@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SpyAlleyApplication
   module Results
     def move_options(player_model:, change_orders:, distance:)

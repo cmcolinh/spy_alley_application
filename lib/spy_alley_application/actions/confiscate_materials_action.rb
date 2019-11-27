@@ -18,18 +18,16 @@ module SpyAlleyApplication
         equipment_to_confiscate = action_hash[:equipment_to_confiscate]
         price = confiscation_price[equipment_to_confiscate]
         if equipment_to_confiscate.eql? 'wild card'
-          change_orders.add_wild_card_action(
+          change_orders = change_orders.add_wild_card_action(
             player: {game: player_model.game, seat: player_model.seat}
-          )
-          change_orders.subtract_wild_card_action(
+          ).subtract_wild_card_action(
             player: {game: target_player_model.game, seat: target_player_model.seat}
           )
         else
           change_orders.add_equipment_action(
             player: {game: player_model.game, seat: player_model.seat},
             equipment: equipment_to_confiscate
-          )
-          change_orders.subtract_equipment_action(
+          ).subtract_equipment_action(
             player: {game: target_player_model.game, seat: target_player_model.seat},
             equipment: equipment_to_confiscate
           )
@@ -38,14 +36,11 @@ module SpyAlleyApplication
           player: {game: player_model.game, seat: player_model.seat},
           amount:  price,
           paid_to: :"seat_#{target_player_model.seat}"
-        )
-        change_orders.add_money_action(
+        ).add_money_action(
           player: {game: target_player_model.game, seat: target_player_model.seat},
           amount: price,
           reason: 'equipment confiscated'
-        )
-        change_orders.add_action(action_hash.dup)
-        equipment_to_confiscate
+        ).add_action(action_hash.dup)
       end
 
       def get_target_player_model_from(opponent_models, action_hash)

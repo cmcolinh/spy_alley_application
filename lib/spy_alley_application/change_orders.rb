@@ -1,28 +1,33 @@
+# frozen_string_literal: true
+
 require 'dry/initializer'
 require 'dry/types'
 
 module SpyAlleyApplication
   class ChangeOrders
-    def initialize
-      @changes = []
-    end
+    extend Dry::Initializer
+    option :first, optional: true, reader: :private
+    option :rest, optional: true, reader: :private
 
     def changes
-      @changes.map{|e| e.dup}
+      (Array(first) + Array(rest&.changes)).freeze
     end
 
-    def get_action_hash
-      action_node = nil
-      @changes.delete_if{|v| action_node = v if v.is_a?(ActionHashElement)}
-      return action_node&.action_hash || {}
+    def push(node)
+      SpyAlleyApplication::ChangeOrders::new(first: node, rest: self)
     end
+
+    def inspect
+      "#<SpyAlleyApplicaton::ChangeOrders @changes=\r\n#{changes.map(&:inspect).join("\r\n")}>"
+    end
+    alias_method :to_s, :inspect
 
     def add_die_roll(player:, rolled:)
       action_hash = get_action_hash
       action_hash[:player_action] = 'roll'
       action_hash[:rolled]        = rolled
 
-      @changes.push(
+      push(
         DieRoll.new(
           player: player,
           rolled: rolled
@@ -36,7 +41,7 @@ module SpyAlleyApplication
       action_hash[:rolled]        = result_chosen
       action_hash[:admin_set?]    = true
 
-      @changes.push(
+      push(
         AdminDieRoll.new(
           player:        player,
           result_chosen: result_chosen
@@ -45,11 +50,12 @@ module SpyAlleyApplication
     end
 
     def add_use_move_card(player:, card_to_use:)
-      action_hash = get_action_hash
-      action_hash[:player_action] = 'use_move_card'
-      action_hash[:card_to_use]   = card_to_use
+      action_hash = {
+        player_action: 'use_move_card',
+        card_to_use:   card_to_use
+      }
 
-      @changes.push(
+      push(
         UseMoveCard.new(
           player: player,
           card_to_use: card_to_use
@@ -64,7 +70,7 @@ module SpyAlleyApplication
       action_hash[:player_action] = 'move'
       action_hash[:space]         = space
 
-      @changes.push(
+      push(
         MoveAction.new(
           player: player,
           space_to_move: space
@@ -77,7 +83,7 @@ module SpyAlleyApplication
       action_hash[:result] ||= {}
       action_hash[:result][:collect] = "$#{amount} for #{reason}"
 
-      @changes.push(
+      push(
         AddMoney.new(
           player: player,
           amount: amount
@@ -86,7 +92,7 @@ module SpyAlleyApplication
     end
 
     def subtract_money_action(player:, amount:, paid_to:)
-      @changes.push(
+      push(
         SubtractMoney.new(
           player: player,
           amount: amount
@@ -98,11 +104,11 @@ module SpyAlleyApplication
       action_hash = get_action_hash
       action_hash[:player_action] = 'pass'
 
-      @changes.push(ActionHashElement.new(action_hash: action_hash))
+      push(ActionHashElement.new(action_hash: action_hash))
     end
 
     def add_equipment_action(player:, equipment:)
-      @changes.push(
+      push(
         AddEquipment.new(
           player: player,
           equipment: equipment
@@ -118,11 +124,11 @@ module SpyAlleyApplication
       end
       action_hash.merge!(action_to_add_as_hash.reject{|k, v| k.eql?(:result)})
 
-      @changes.push(ActionHashElement.new(action_hash: action_hash))
+      push(ActionHashElement.new(action_hash: action_hash))
     end
 
     def subtract_equipment_action(player:, equipment:)
-      @changes.push(
+      push(
         SubtractEquipment.new(
           player: player,
           equipment: equipment
@@ -131,19 +137,19 @@ module SpyAlleyApplication
     end
 
     def eliminate_player_action(player:)
-      @changes.push(EliminatePlayer.new(player: player))
+      push(EliminatePlayer.new(player: player))
     end
 
     def add_wild_card_action(player:)
-      @changes.push(AddWildCard::new(player: player))
+      push(AddWildCard::new(player: player))
     end
 
     def subtract_wild_card_action(player:)
-      @changes.push(SubtractWildCard::new(player: player))
+      push(SubtractWildCard::new(player: player))
     end
 
     def add_move_options(options:)
-      @changes.push(
+      push(
         NextActionOptions::new(
           option: {move: {space: options}}
         )
@@ -151,8 +157,7 @@ module SpyAlleyApplication
     end 
 
     def add_buy_equipment_option(equipment:, limit:)
-      @changes.push(NextActionOptions::new(option: {pass: true}))
-      @changes.push(
+      push(NextActionOptions::new(option: {pass: true})).push(
         NextActionOptions::new(
           option: {
             buy_equipment: {
@@ -165,37 +170,36 @@ module SpyAlleyApplication
     end
 
     def add_draw_top_move_card(player:, top_move_card:)
-      @changes.push(DrawTopMoveCard::new)
-      @changes.push(AddMoveCard::new(player: player, card_to_add: top_move_card))
+      push(DrawTopMoveCard::new).push(AddMoveCard::new(player: player, card_to_add: top_move_card))
     end
 
     def add_draw_top_free_gift_card(player:, top_free_gift_card:)
-      @changes.push(DrawTopFreeGiftCard::new)
+      draw_top_gift_card = push(DrawTopFreeGiftCard::new)
       if top_free_gift_card.eql?('wild card')
-        add_wild_card_action(player: player)
+        draw_top_gift_card.add_wild_card_action(player: player)
       else
-        @changes.push(PlaceCardAtBottomOfFreeGiftCardDeck::new(card: top_free_gift_card))
+        draw_top_gift_card.push(PlaceCardAtBottomOfFreeGiftCardDeck::new(card: top_free_gift_card))
       end
     end
 
     def add_spy_eliminator_option(options:)
-      @changes.push(SpyEliminatorOption::new(options: options))
+      push(SpyEliminatorOption::new(options: options))
     end
 
     def add_game_victory(player:, reason:)
-      @changes.push(GameVictory::new(player: player, reason: reason))
+      push(GameVictory::new(player: player, reason: reason))
     end 
 
     def add_confiscate_materials_option(options:)
-      @changes.push(ConfiscateMaterialsOption::new(options: options))
+      push(ConfiscateMaterialsOption::new(options: options))
     end
 
     def add_move_back_two_spaces_result
-      @changes.push(MoveBackTwoSpaces::new)
+      push(MoveBackTwoSpaces::new)
     end
 
     def add_choose_new_spy_identity_option(options:, return_player:)
-      @changes.push(ChooseNewSpyIdentityOption::new(options:options, return_player: return_player))
+      push(ChooseNewSpyIdentityOption::new(options:options, return_player: return_player))
     end
 
     class DieRoll

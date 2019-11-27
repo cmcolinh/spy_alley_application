@@ -17,21 +17,19 @@ module SpyAlleyApplication
         total_cost = 0
         Array(action_hash[:equipment_to_buy]).each do |equipment|
           equipment = equipment[0] if equipment.is_a?(Array)
-          change_orders.add_equipment_action(
+          change_orders = change_orders.add_equipment_action(
             player: {game: player_model.game, seat: player_model.seat},
             equipment: equipment
           )
           total_cost += purchase_price[equipment]
         end
-        change_orders.subtract_money_action(
+        change_orders = change_orders.subtract_money_action(
           player: {game: player_model.game, seat: player_model.seat},
           amount:  total_cost,
           paid_to: :bank
-        )
-        change_orders.add_action(
+        ).add_action(
           action_hash.dup.merge(result: {total_amount_paid: "#{total_cost} to bank"})
         )
-        action_hash[:equipment_to_buy]
       end
     end
   end

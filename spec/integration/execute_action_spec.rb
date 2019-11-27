@@ -24,7 +24,7 @@ RSpec.describe SpyAlleyApplication::ExecuteAction do
         decks_model: decks_model,
         next_player: next_player
       )
-      puts result.changes.map(&:inspect)
+      puts result
     end
   end
 end

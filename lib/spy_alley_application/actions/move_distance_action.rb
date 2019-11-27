@@ -13,7 +13,7 @@ module SpyAlleyApplication
       option :move_action
       option :move_result_for, default: ->{SpyAlleyApplication::Results::MoveDistanceResult::new}
       def call(player_model:, change_orders:, action_hash:, opponent_models: nil, decks_model:)
-        move_distance = move_action.(
+        change_orders, move_distance = move_action.(
           player_model:  player_model,
           change_orders: change_orders,
           action_hash:   action_hash
