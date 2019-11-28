@@ -68,68 +68,93 @@ class ChangeOrdersMock
     self
   end
   def add_use_move_card(player:, card_to_use:)
+    self
   end
   def add_move_action(player:, space:)
+    self
   end
   def add_money_action(player:, amount:, reason:)
     @money_added += amount
     @target[:add_money_action] = player[:seat]
+    self
   end
   def subtract_money_action(player:, amount:, paid_to:)
     @money_subtracted += amount
     @target[:subtract_money_action] = player[:seat]
+    self
   end
   def add_pass_action
+    self
   end
   def add_equipment_action(player:, equipment:)
     @target[:add_equipment_action] = player[:seat]
+    self
   end
   def subtract_equipment_action(player:, equipment:)
     @target[:subtract_equipment_action] = player[:seat]
+    self
   end
   def add_action(**action)
+    self
   end
   def eliminate_player_action(player:)
     @target[:eliminate_player_action] = player[:seat]
+    self
   end
   def choose_new_spy_identity_action(player:, identity_chosen:)
+    self
   end
   def add_wild_card_action(player:)
+    self
   end
   def subtract_wild_card_action(player:)
+    self
   end
   def add_move_options(options:)
+    self
   end
   def add_buy_equipment_option(equipment:, limit:)
+    self
   end
   def add_draw_top_move_card(player:, top_move_card:)
     @top_move_card = top_move_card
+    self
   end
   def add_draw_top_free_gift_card(player:, top_free_gift_card:)
+    self
   end
   def money_added
     @money_added.dup
+    self
   end
   def money_subtracted
     @money_subtracted.dup
+    self
   end
   def target
     @target.dup
+    self
   end
   def top_move_card
     @top_move_card.dup
+    self
   end
   def add_game_victory(player:, reason:)
+    self
   end
   def add_spy_eliminator_option(options:)
     @target[:add_spy_eliminator_option] = options
+    self
   end
   def add_confiscate_materials_option(options:)
     @target[:add_confiscate_materials_option] = options
+    self
   end
   def add_move_back_two_spaces_result
+    self
   end
   def add_choose_new_spy_identity_option(options:, return_player:)
+    self
   end
 end
 

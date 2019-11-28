@@ -23,13 +23,11 @@ module SpyAlleyApplication
           )
           total_cost += purchase_price[equipment]
         end
-        change_orders = change_orders.subtract_money_action(
+        change_orders.subtract_money_action(
           player: {game: player_model.game, seat: player_model.seat},
           amount:  total_cost,
           paid_to: :bank
-        ).add_action(
-          action_hash.dup.merge(result: {total_amount_paid: "#{total_cost} to bank"})
-        )
+        ).add_action(result: {total_amount_paid: "#{total_cost} to bank"})
       end
     end
   end

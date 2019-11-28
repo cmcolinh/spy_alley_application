@@ -9,7 +9,6 @@ module SpyAlleyApplication
           player: {game: player_model.game, seat: player_model.seat},
           identity_chosen: identity_chosen
         )
-        identity_chosen
       end
     end
   end

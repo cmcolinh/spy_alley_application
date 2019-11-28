@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
+require 'dry/initializer'
+
 module SpyAlleyApplication
   module Results
     class ConfiscateMaterials
+      extends Dry::Initializer
+      option :next_player_up_for, default: ->{SpyAlleyApplication::Results::NextPlayerUp::new}
       @@equipment = {
         'password' => 5,
         'disguise' => 5,
@@ -28,12 +32,13 @@ module SpyAlleyApplication
             player_model: player_model
           )
         ){|k, v1, v2| v1 + v2}
-        if opts.empty?
-          false
-        else
-          change_orders.add_confiscate_materials_option(options: opts)
-          true
-        end
+        change_orders = change_orders.add_confiscate_materials_option(options: opts)if !opts.empty?
+        next_player_up_for.(
+          player_model: player_model,
+          opponent_models: opponent_models,
+          change_orders: change_orders,
+          turn_complete?: opts.empty?
+        )
       end
 
       def add_equipment(player_model:, opponent_models:, equipment_type:, cost:)
