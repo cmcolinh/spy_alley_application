@@ -125,19 +125,15 @@ class ChangeOrdersMock
   end
   def money_added
     @money_added.dup
-    self
   end
   def money_subtracted
     @money_subtracted.dup
-    self
   end
   def target
     @target.dup
-    self
   end
   def top_move_card
     @top_move_card.dup
-    self
   end
   def add_game_victory(player:, reason:)
     self

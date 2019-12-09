@@ -15,7 +15,7 @@ require 'spy_alley_application/results/buy_equipment/black_market'
 module SpyAlleyApplication
   module Results
     class BuyEquipment
-      extends Dry::Initializer
+      extend Dry::Initializer
       option :next_player_up_for, default: ->{SpyAlleyApplication::Results::NextPlayerUp::new}
       def call(change_orders:, purchase_options:, purchase_limit:)
         change_orders = change_orders.add_buy_equipment_option(

@@ -5,7 +5,7 @@ require 'dry/initializer'
 module SpyAlleyApplication
   module Results
     class ConfiscateMaterials
-      extends Dry::Initializer
+      extend Dry::Initializer
       option :next_player_up_for, default: ->{SpyAlleyApplication::Results::NextPlayerUp::new}
       @@equipment = {
         'password' => 5,
