@@ -20,7 +20,7 @@ RSpec.describe SpyAlleyApplication::Results::DrawMoveCard do
             player_model: player_model,
             change_orders: change_orders,
             action_hash: action_hash,
-            decks_model: DecksModelMock::new(top_move_card: top_move_card)
+            decks_model: DecksModelMock::new(top_move_card: nil)
           )
           expect(next_player_up.called_with[:turn_complete?]).to be true
       end

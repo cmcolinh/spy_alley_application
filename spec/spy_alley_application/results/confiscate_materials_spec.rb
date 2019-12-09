@@ -2,12 +2,15 @@
 
 RSpec.describe SpyAlleyApplication::Results::ConfiscateMaterials do
   let(:change_orders, &->{ChangeOrdersMock::new})
+  let(:next_player_up, &->{CallableStub::new})
   let(:action_hash) do
     {
       player_action: 'roll'
     }
   end
-  let(:confiscate_materials, &->{SpyAlleyApplication::Results::ConfiscateMaterials::new})
+  let(:confiscate_materials) do
+    SpyAlleyApplication::Results::ConfiscateMaterials::new(next_player_up_for: next_player_up)
+  end
   let(:opponent1) do
     PlayerMock.new(
       location: '0',
