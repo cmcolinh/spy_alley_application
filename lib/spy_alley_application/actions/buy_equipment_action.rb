@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 require 'dry/initializer'
+require 'spy_alley_application/results/next_player_up'
 
 module SpyAlleyApplication
   module Actions
     class BuyEquipmentAction
       extend Dry::Initializer
+      option :next_player_up_for, default: ->{SpyAlleyApplication::Results::NextPlayerUp::new}
       option :purchase_price, default: ->{
         %w(french german spanish italian american russian).map do |nationality|
           [['password', 1],['codebook', 5],['disguise', 15],['key', 30]].map do |equipment, price|
@@ -23,11 +25,17 @@ module SpyAlleyApplication
           )
           total_cost += purchase_price[equipment]
         end
-        change_orders.subtract_money_action(
+        change_orders = change_orders.subtract_money_action(
           player: {game: player_model.game, seat: player_model.seat},
           amount:  total_cost,
           paid_to: :bank
         ).add_action(result: {total_amount_paid: "#{total_cost} to bank"})
+        next_player_up_for.(
+          player_model: player_model,
+          opponent_models: opponent_models,
+          change_orders: change_orders.add_pass_action,
+          turn_complete?: true # the current player's turn will *not* continue
+        )
       end
     end
   end

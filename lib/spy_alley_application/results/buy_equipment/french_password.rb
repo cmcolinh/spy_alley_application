@@ -13,11 +13,13 @@ module SpyAlleyApplication
           if player_model.equipment.include?('french password') || player_model.money < 1
             do_nothing.(
               player_model: player_model,
+              opponent_models: opponent_models,
               change_orders: change_orders,
-              action_hash: action_hash
             )
           else
             buy_equipment.(
+              player_model: player_model,
+              opponent_models: opponent_models,
               change_orders: change_orders,
               purchase_options: ['french password'],
               purchase_limit: 1

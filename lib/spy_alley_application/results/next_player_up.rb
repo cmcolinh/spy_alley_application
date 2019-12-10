@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 require 'dry/initializer'
+require 'spy_alley_application/results/next_player_up/next_player_options'
 
 module SpyAlleyApplication
   module Results
     class NextPlayerUp
-      extends Dry::Initializer
+      extend Dry::Initializer
       option :next_player_options, default: -> do
         SpyAlleyApplication::Results::NextPlayerUp::NextPlayerOptions::new
       end
@@ -14,7 +15,7 @@ module SpyAlleyApplication
         next_seat_up = turn_complete ? get_next_seat_from(player_model, opponent_models) : player_model.seat
         if turn_complete
           change_orders = next_player_options.(
-            next_player_model: opponent_models.select{|p| p.seat.eql? next_seat_up}
+            next_player_model: opponent_models.select{|p| p.seat.eql? next_seat_up},
             opponent_models: opponent_models.reject{|p| p.seat.eql? next_seat_up} + [player_model],
             change_orders: change_orders
           )
@@ -23,14 +24,14 @@ module SpyAlleyApplication
       end
 
       private
-      def get_next_seat_from(player_model, opponent_models, change_orders)
+      def get_next_seat_from(player_model, opponent_models)
         opponent_seats = opponent_models.map(&:seat)
         opponent_seats.select{|seat| seat > player_model.seat}.min || opponent_seats.min
       end
 
       def get_vars_from(options)
         keys = [:player_model, :opponent_models, :change_orders, :turn_complete?]
-        errors = keys.select{|key| !options.has_key(key)}
+        errors = keys.select{|key| !options.has_key?(key)}
         errors = "#{'s' if errors.length > 1}#{': ' unless errors.empty?}#{errors.join(', ')}"
 
         raise ArgumentError "missing keyword#{errors}"  unless errors.empty?

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'dry/initializer'
+require 'spy_alley_application/results/next_player_up'
 
 module SpyAlleyApplication
   module Results

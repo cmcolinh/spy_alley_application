@@ -1,11 +1,21 @@
 # frozen_string_literal: true
 
+require 'dry/initializer'
+require 'spy_alley_application/results/next_player_up'
+
 module SpyAlleyApplication
   module Results
     class MoveBackTwoSpaces
+      extend Dry::Initializer
+      option :next_player_up_for, default: ->{SpyAlleyApplication::Results::NextPlayerUp::new}
       def call(player_model:, change_orders:, action_hash: nil, opponent_models: nil, decks_model: nil)
-        change_orders.add_move_back_two_spaces_result
-        false # the current player's turn will *not* continue
+        change_orders = change_orders.add_move_back_two_spaces_result
+        next_player_up_for.(
+          player_model: player_model,
+          opponent_models: opponent_models,
+          change_orders: change_orders,
+          turn_complete?: true # the current player's turn will *not* continue
+        )
       end
     end
   end

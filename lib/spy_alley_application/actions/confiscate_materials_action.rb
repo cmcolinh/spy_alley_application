@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
-
+require 'dry/initializer'
+require 'spy_alley_application/results/next_player_up'
 
 module SpyAlleyApplication
   module Actions
     class ConfiscateMaterialsAction
       extend Dry::Initializer
+      option :next_player_up_for, default: ->{SpyAlleyApplication::Results::NextPlayerUp::new}
       option :confiscation_price, default: ->{
         %w(french german spanish italian american russian).map do |nationality|
           [['password', 15],['codebook', 5],['disguise', 15],['key', 50]].map do |equipment, price|
@@ -24,7 +26,7 @@ module SpyAlleyApplication
             player: {game: target_player_model.game, seat: target_player_model.seat}
           )
         else
-          change_orders.add_equipment_action(
+          change_orders = change_orders.add_equipment_action(
             player: {game: player_model.game, seat: player_model.seat},
             equipment: equipment_to_confiscate
           ).subtract_equipment_action(
@@ -32,7 +34,7 @@ module SpyAlleyApplication
             equipment: equipment_to_confiscate
           )
         end
-        change_orders.subtract_money_action(
+        change_orders = change_orders.subtract_money_action(
           player: {game: player_model.game, seat: player_model.seat},
           amount:  price,
           paid_to: :"seat_#{target_player_model.seat}"
@@ -41,6 +43,12 @@ module SpyAlleyApplication
           amount: price,
           reason: 'equipment confiscated'
         ).add_action(action_hash.dup)
+        next_player_up_for.(
+          player_model: player_model,
+          opponent_models: opponent_models,
+          change_orders: change_orders,
+          turn_complete?: true # the current player's turn will *not* continue
+        )
       end
 
       def get_target_player_model_from(opponent_models, action_hash)

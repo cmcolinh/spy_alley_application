@@ -14,11 +14,13 @@ module SpyAlleyApplication
           if (@@all_disguises - player_model.equipment).empty? || player_model.money < 5
             do_nothing.(
               player_model: player_model,
+              opponent_models: opponent_models,
               change_orders: change_orders,
-              action_hash: action_hash
             )
           else
             buy_equipment.(
+              player_model: player_model,
+              opponent_models: opponent_models,
               change_orders: change_orders,
               purchase_options: @@all_disguises - player_model.equipment,
               purchase_limit: [player_model.money / 5, (@@all_disguises - player_model.equipment).length].min

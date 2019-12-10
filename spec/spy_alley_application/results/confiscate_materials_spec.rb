@@ -41,15 +41,14 @@ RSpec.describe SpyAlleyApplication::Results::ConfiscateMaterials do
         money: 4,
         equipment: ['french password', 'german disguise', 'spanish codebook']
       )
-      it "returns false, indicating the end of the player's turn" do
-        expect(
-          confiscate_materials.(
-            player_model: player_model,
-            change_orders: change_orders,
-            action_hash: action_hash,
-            opponent_models: opponent_models
-          )
-        ).to be false
+      it "marks turn_complete? as true, indicating the end of the player's turn" do
+        confiscate_materials.(
+          player_model: player_model,
+          change_orders: change_orders,
+          action_hash: action_hash,
+          opponent_models: opponent_models
+        )
+        expect(next_player_up.called_with[:turn_complete?]).to be true
       end
 
       it 'does not call change_orders#add_confiscate_materials_option' do
@@ -69,15 +68,14 @@ RSpec.describe SpyAlleyApplication::Results::ConfiscateMaterials do
         money: 9,
         equipment: ['french password', 'german disguise', 'spanish codebook']
       )
-      it "returns true, indicating the player's turn will continue" do
-        expect(
-          confiscate_materials.(
-            player_model: player_model,
-            change_orders: change_orders,
-            action_hash: action_hash,
-            opponent_models: opponent_models
-          )
-        ).to be true
+      it "marks turn_complete? as false, indicating the player's turn will continue" do
+        confiscate_materials.(
+          player_model: player_model,
+          change_orders: change_orders,
+          action_hash: action_hash,
+          opponent_models: opponent_models
+        )
+        expect(next_player_up.called_with[:turn_complete?]).to be false
       end
       it 'does call change_orders#add_confiscate_materials_option' do
         expect{
@@ -110,15 +108,14 @@ RSpec.describe SpyAlleyApplication::Results::ConfiscateMaterials do
         money: 24,
         equipment: ['french password', 'german disguise', 'spanish codebook']
       )
-      it "returns true, indicating the player's turn will continue" do
-        expect(
-          confiscate_materials.(
-            player_model: player_model,
-            change_orders: change_orders,
-            action_hash: action_hash,
-            opponent_models: opponent_models
-          )
-        ).to be true
+      it "marks turn_complete? as false, indicating the player's turn will continue" do
+        confiscate_materials.(
+          player_model: player_model,
+          change_orders: change_orders,
+          action_hash: action_hash,
+          opponent_models: opponent_models
+        )
+        expect(next_player_up.called_with[:turn_complete?]).to be false
       end
       it 'does call change_orders#add_confiscate_materials_option' do
         expect{
@@ -151,15 +148,14 @@ RSpec.describe SpyAlleyApplication::Results::ConfiscateMaterials do
         money: 49,
         equipment: ['french password', 'german disguise', 'spanish codebook']
       )
-      it "returns true, indicating the player's turn will continue" do
-        expect(
-          confiscate_materials.(
-            player_model: player_model,
-            change_orders: change_orders,
-            action_hash: action_hash,
-            opponent_models: opponent_models
-          )
-        ).to be true
+      it "marks turn_complete? as false, indicating the player's turn will continue" do
+        confiscate_materials.(
+          player_model: player_model,
+          change_orders: change_orders,
+          action_hash: action_hash,
+          opponent_models: opponent_models
+        )
+        expect(next_player_up.called_with[:turn_complete?]).to be false
       end
       it 'does call change_orders#add_confiscate_materials_option' do
         expect{
@@ -193,15 +189,14 @@ RSpec.describe SpyAlleyApplication::Results::ConfiscateMaterials do
         equipment: ['french password', 'german disguise', 'spanish codebook'],
         wild_cards: 1
       )
-      it "returns true, indicating the player's turn will continue" do
-        expect(
-          confiscate_materials.(
-            player_model: player_model,
-            change_orders: change_orders,
-            action_hash: action_hash,
-            opponent_models: opponent_models
-          )
-        ).to be true
+      it "marks turn_complete? as false, indicating the player's turn will continue" do
+        confiscate_materials.(
+          player_model: player_model,
+          change_orders: change_orders,
+          action_hash: action_hash,
+          opponent_models: opponent_models
+        )
+        expect(next_player_up.called_with[:turn_complete?]).to be false
       end
       it 'does call change_orders#add_confiscate_materials_option' do
         expect{

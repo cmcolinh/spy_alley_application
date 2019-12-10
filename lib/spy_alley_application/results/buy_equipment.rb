@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'dry/initializer'
+require 'spy_alley_application/results/next_player_up'
 require 'spy_alley_application/results/buy_equipment/french_password'
 require 'spy_alley_application/results/buy_equipment/german_password'
 require 'spy_alley_application/results/buy_equipment/spanish_password'
@@ -17,7 +18,7 @@ module SpyAlleyApplication
     class BuyEquipment
       extend Dry::Initializer
       option :next_player_up_for, default: ->{SpyAlleyApplication::Results::NextPlayerUp::new}
-      def call(change_orders:, purchase_options:, purchase_limit:)
+      def call(player_model:, opponent_models:, change_orders:, purchase_options:, purchase_limit:)
         change_orders = change_orders.add_buy_equipment_option(
           equipment: purchase_options,
           limit: purchase_limit
