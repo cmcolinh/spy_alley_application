@@ -2,12 +2,16 @@
 
 RSpec.describe SpyAlleyApplication::Results::DrawFreeGift do
   let(:change_orders, &->{ChangeOrdersMock::new})
+  let(:opponent_models, &->{[PlayerMock::new]})
+  let(:next_player_up, &->{CallableStub::new})
   let(:action_hash) do
     {
       player_action: 'roll'
     }
   end
-  let(:draw_free_gift, &->{SpyAlleyApplication::Results::DrawFreeGift::new})
+  let(:draw_free_gift) do
+    SpyAlleyApplication::Results::DrawFreeGift::new(next_player_up_for: next_player_up)
+  end
   describe '#call' do
     describe 'when top card is wild card' do
       let(:player_model, &->{PlayerMock::new})
@@ -15,26 +19,28 @@ RSpec.describe SpyAlleyApplication::Results::DrawFreeGift do
         expect{
           draw_free_gift.(
             player_model: player_model,
+            opponent_models: opponent_models,
             change_orders: change_orders,
             action_hash: action_hash,
             decks_model: DecksModelMock::new(top_free_gift_card: 'wild card')
           )
         }.to change{change_orders.times_called[:add_draw_top_free_gift_card]}.by(1)
       end
-      it "returns false, indicating that it will not remain the same player's turn" do
-        expect(
-          draw_free_gift.(
-            player_model: player_model,
-            change_orders: change_orders,
-            action_hash: action_hash,
-            decks_model: DecksModelMock::new(top_free_gift_card: 'wild card')
-          )
-        ).to be false
+      it "marks turn_complete? as true, indicating that it will not remain the same player's turn" do
+        draw_free_gift.(
+          player_model: player_model,
+          opponent_models: opponent_models,
+          change_orders: change_orders,
+          action_hash: action_hash,
+          decks_model: DecksModelMock::new(top_free_gift_card: 'wild card')
+        )
+        expect(next_player_up.called_with[:turn_complete?]).to be true
       end
       it 'does not call change_orders#add_equipment_action' do
         expect{
           draw_free_gift.(
             player_model: player_model,
+            opponent_models: opponent_models,
             change_orders: change_orders,
             action_hash: action_hash,
             decks_model: DecksModelMock::new(top_free_gift_card: 'wild card')
@@ -48,26 +54,28 @@ RSpec.describe SpyAlleyApplication::Results::DrawFreeGift do
         expect{
           draw_free_gift.(
             player_model: player_model,
+            opponent_models: opponent_models,
             change_orders: change_orders,
             action_hash: action_hash,
             decks_model: DecksModelMock::new(top_free_gift_card: 'russian password')
           )
         }.to change{change_orders.times_called[:add_draw_top_free_gift_card]}.by(1)
       end
-      it "returns false, indicating that it will not remain the same player's turn" do
-        expect(
-          draw_free_gift.(
-            player_model: player_model,
-            change_orders: change_orders,
-            action_hash: action_hash,
-            decks_model: DecksModelMock::new(top_free_gift_card: 'russian password')
-          )
-        ).to be false
+      it "marks turn_complete? as true, indicating that it will not remain the same player's turn" do
+        draw_free_gift.(
+          player_model: player_model,
+          opponent_models: opponent_models,
+          change_orders: change_orders,
+          action_hash: action_hash,
+          decks_model: DecksModelMock::new(top_free_gift_card: 'russian password')
+        )
+        expect(next_player_up.called_with[:turn_complete?]).to be true
       end
       it 'does not call change_orders#add_equipment_action' do
         expect{
           draw_free_gift.(
             player_model: player_model,
+            opponent_models: opponent_models,
             change_orders: change_orders,
             action_hash: action_hash,
             decks_model: DecksModelMock::new(top_free_gift_card: 'russian password')
@@ -81,26 +89,28 @@ RSpec.describe SpyAlleyApplication::Results::DrawFreeGift do
         expect{
           draw_free_gift.(
             player_model: player_model,
+            opponent_models: opponent_models,
             change_orders: change_orders,
             action_hash: action_hash,
             decks_model: DecksModelMock::new(top_free_gift_card: 'russian password')
           )
         }.to change{change_orders.times_called[:add_draw_top_free_gift_card]}.by(1)
       end
-      it "returns false, indicating that it will not remain the same player's turn" do
-        expect(
-          draw_free_gift.(
-            player_model: player_model,
-            change_orders: change_orders,
-            action_hash: action_hash,
-            decks_model: DecksModelMock::new(top_free_gift_card: 'russian password')
-          )
-        ).to be false
+      it "marks turn_complete? as true, indicating that it will not remain the same player's turn" do
+        draw_free_gift.(
+          player_model: player_model,
+          opponent_models: opponent_models,
+          change_orders: change_orders,
+          action_hash: action_hash,
+          decks_model: DecksModelMock::new(top_free_gift_card: 'russian password')
+        )
+        expect(next_player_up.called_with[:turn_complete?]).to be true
       end
       it 'does calls change_orders#add_equipment_action' do
         expect{
           draw_free_gift.(
             player_model: player_model,
+            opponent_models: opponent_models,
             change_orders: change_orders,
             action_hash: action_hash,
             decks_model: DecksModelMock::new(top_free_gift_card: 'russian password')

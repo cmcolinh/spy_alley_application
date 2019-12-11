@@ -2,6 +2,7 @@
 
 RSpec.describe SpyAlleyApplication::Results::DrawMoveCard do
   let(:player_model, &->{PlayerMock::new})
+  let(:opponent_models, &->{[PlayerMock::new]})
   let(:change_orders, &->{ChangeOrdersMock::new})
   let(:next_player_up, &->{CallableStub::new})
   let(:action_hash) do
@@ -16,18 +17,20 @@ RSpec.describe SpyAlleyApplication::Results::DrawMoveCard do
   describe '#call' do
     describe 'when move card deck is empty' do
       it "marks turn_complete? as true, indicating that it will not remain the same player's turn" do
-          draw_move_card.(
-            player_model: player_model,
-            change_orders: change_orders,
-            action_hash: action_hash,
-            decks_model: DecksModelMock::new(top_move_card: nil)
-          )
-          expect(next_player_up.called_with[:turn_complete?]).to be true
+        draw_move_card.(
+          player_model: player_model,
+          opponent_models: opponent_models,
+          change_orders: change_orders,
+          action_hash: action_hash,
+          decks_model: DecksModelMock::new(top_move_card: nil)
+        )
+        expect(next_player_up.called_with[:turn_complete?]).to be true
       end
       it 'does not call change_orders#add_draw_top_move_card' do
         expect{
           draw_move_card.(
             player_model: player_model,
+            opponent_models: opponent_models,
             change_orders: change_orders,
             action_hash: action_hash,
             decks_model: DecksModelMock::new(top_move_card: nil)
@@ -40,6 +43,7 @@ RSpec.describe SpyAlleyApplication::Results::DrawMoveCard do
         it "marks turn_complete? as true, indicating that it will not remain the same player's turn when top card is #{top_move_card}" do
           draw_move_card.(
             player_model: player_model,
+            opponent_models: opponent_models,
             change_orders: change_orders,
             action_hash: action_hash,
             decks_model: DecksModelMock::new(top_move_card: top_move_card)
@@ -50,6 +54,7 @@ RSpec.describe SpyAlleyApplication::Results::DrawMoveCard do
           expect{
             draw_move_card.(
               player_model: player_model,
+              opponent_models: opponent_models,
               change_orders: change_orders,
               action_hash: action_hash,
               decks_model: DecksModelMock::new(top_move_card: top_move_card)
@@ -59,6 +64,7 @@ RSpec.describe SpyAlleyApplication::Results::DrawMoveCard do
         it "calls change_orders#add_draw_top_move_card sending the top move card value when it is a #{top_move_card}" do
           draw_move_card.(
             player_model: player_model,
+            opponent_models: opponent_models,
             change_orders: change_orders,
             action_hash: action_hash,
             decks_model: DecksModelMock::new(top_move_card: top_move_card)

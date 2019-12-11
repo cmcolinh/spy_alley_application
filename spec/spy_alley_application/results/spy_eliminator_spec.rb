@@ -8,22 +8,24 @@ RSpec.describe SpyAlleyApplication::Results::SpyEliminator do
       player_action: 'roll'
     }
   end
-  let(:spy_eliminator, &->{SpyAlleyApplication::Results::SpyEliminator::new})
+  let(:next_player_up, &->{CallableStub::new})
+  let(:spy_eliminator) do
+    SpyAlleyApplication::Results::SpyEliminator::new(next_player_up_for: next_player_up)
+  end
   let(:opponent1, &->{PlayerMock.new(location: '0', seat: 2)})
   let(:opponent2, &->{PlayerMock.new(location: '1s', seat: 3)})
   let(:opponent3, &->{PlayerMock.new(location: '9s', seat: 4)})
   describe '#call' do
     describe 'no opponents in spy alley' do
       let(:opponent_models, &->{[opponent1]})
-      it "returns false, indicating that it will not remain the same player's turn" do
-        expect(
-          spy_eliminator.(
-            player_model: player_model,
-            opponent_models: opponent_models,
-            change_orders: change_orders,
-            action_hash: action_hash
-          )
-        ).to be false
+      it "marks turn_complete? as true, indicating that it will not remain the same player's turn" do
+        spy_eliminator.(
+          player_model: player_model,
+          opponent_models: opponent_models,
+          change_orders: change_orders,
+          action_hash: action_hash
+        )
+        expect(next_player_up.called_with[:turn_complete?]).to be true
       end
       it 'does not call change_orders#add_spy_eliminator_option' do
         expect{
@@ -38,15 +40,14 @@ RSpec.describe SpyAlleyApplication::Results::SpyEliminator do
     end
     describe 'one opponent in spy alley' do
       let(:opponent_models, &->{[opponent1, opponent2]})
-      it "returns true, indicating that it will remain the same player's turn" do
-        expect(
-          spy_eliminator.(
-            player_model: player_model,
-            opponent_models: opponent_models,
-            change_orders: change_orders,
-            action_hash: action_hash
-          )
-        ).to be true
+      it "marks turn_complete? as false, indicating that it will remain the same player's turn" do
+        spy_eliminator.(
+          player_model: player_model,
+          opponent_models: opponent_models,
+          change_orders: change_orders,
+          action_hash: action_hash
+        )
+        expect(next_player_up.called_with[:turn_complete?]).to be false
       end
       it 'calls change_orders#add_spy_eliminator_option' do
         expect{
@@ -71,15 +72,14 @@ RSpec.describe SpyAlleyApplication::Results::SpyEliminator do
     end
     describe 'two opponents in spy alley' do
       let(:opponent_models, &->{[opponent1, opponent2, opponent3]})
-      it "returns true, indicating that it will remain the same player's turn" do
-        expect(
-          spy_eliminator.(
-            player_model: player_model,
-            opponent_models: opponent_models,
-            change_orders: change_orders,
-            action_hash: action_hash
-          )
-        ).to be true
+      it "marks turn_complete? as false, indicating that it will remain the same player's turn" do
+        spy_eliminator.(
+          player_model: player_model,
+          opponent_models: opponent_models,
+          change_orders: change_orders,
+          action_hash: action_hash
+        )
+        expect(next_player_up.called_with[:turn_complete?]).to be false
       end
       it 'calls change_orders#add_spy_eliminator_option' do
         expect{

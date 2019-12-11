@@ -16,7 +16,6 @@ module SpyAlleyApplication
           amount: money_earned,
           reason: 'for selling top secret information'
         )
-        end
         next_player_up_for.(
           player_model: player_model,
           opponent_models: opponent_models,

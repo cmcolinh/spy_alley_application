@@ -12,7 +12,7 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
     end
 
     it 'removes the action_hash node from @changes' do
-      expect{calling_method.()}.to change{change_orders.changes.length}.by(-1)
+      expect(calling_method.().changes.length).to eql(-1)
     end
   end
 
@@ -26,14 +26,13 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
       end
     end
     it 'adds two total nodes' do
-      expect{calling_method.()}.to change{change_orders.changes.length}.by(2)
+      expect(calling_method.().changes.length).to eql(2)
     end
 
     it 'adds one DieRoll element' do
-      expect{calling_method.()}.to(
-        change{change_orders.changes.select{|e| e.is_a?(SpyAlleyApplication::ChangeOrders::DieRoll)}.length}
-        .by(1)
-      )
+      expect(calling_method.().changes.select do |e|
+        e.is_a?(SpyAlleyApplication::ChangeOrders::DieRoll)
+      end.length).to eql(1)
     end
 
     it 'will not allow a number other than one through six to be rolled' do

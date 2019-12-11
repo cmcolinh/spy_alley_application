@@ -23,7 +23,7 @@ module SpyAlleyApplication
     alias_method :to_s, :inspect
 
     def add_die_roll(player:, rolled:)
-      action_hash = get_action_hash
+      action_hash = {}
       action_hash[:player_action] = 'roll'
       action_hash[:rolled]        = rolled
 
@@ -36,7 +36,7 @@ module SpyAlleyApplication
     end
 
     def add_admin_die_roll(player:, result_chosen:)
-      action_hash = get_action_hash
+      action_hash = {}
       action_hash[:player_action] = 'roll'
       action_hash[:rolled]        = result_chosen
       action_hash[:admin_set?]    = true
@@ -66,7 +66,7 @@ module SpyAlleyApplication
     end
 
     def add_move_action(player:, space:)
-      action_hash = get_action_hash
+      action_hash = {}
       action_hash[:player_action] = 'move'
       action_hash[:space]         = space
 
@@ -79,7 +79,7 @@ module SpyAlleyApplication
     end
 
     def add_money_action(player:, amount:, reason:)
-      action_hash = get_action_hash
+      action_hash = {}
       action_hash[:result] ||= {}
       action_hash[:result][:collect] = "$#{amount} for #{reason}"
 
@@ -101,7 +101,7 @@ module SpyAlleyApplication
     end
 
     def add_pass_action
-      action_hash = get_action_hash
+      action_hash = {}
       action_hash[:player_action] = 'pass'
 
       push(ActionHashElement.new(action_hash: action_hash))
@@ -117,7 +117,7 @@ module SpyAlleyApplication
     end
 
     def add_action(action_to_add_as_hash)
-      action_hash = get_action_hash
+      action_hash = {}
       if action_to_add_as_hash.has_key?(:result) && action_to_add_as_hash.is_a?(Hash)
         action_hash[:result] ||= {}
         action_hash[:result].merge!(action_to_add_as_hash[:result])
@@ -154,7 +154,7 @@ module SpyAlleyApplication
           option: {move: {space: options}}
         )
       )
-    end 
+    end
 
     def add_buy_equipment_option(equipment:, limit:)
       push(NextActionOptions::new(option: {pass: true})).push(
@@ -188,7 +188,7 @@ module SpyAlleyApplication
 
     def add_game_victory(player:, reason:)
       push(GameVictory::new(player: player, reason: reason))
-    end 
+    end
 
     def add_confiscate_materials_option(options:)
       push(ConfiscateMaterialsOption::new(options: options))
@@ -200,6 +200,10 @@ module SpyAlleyApplication
 
     def add_choose_new_spy_identity_option(options:, return_player:)
       push(ChooseNewSpyIdentityOption::new(options:options, return_player: return_player))
+    end
+
+    def add_next_player_up(seat:)
+      push(NextPlayerUp::new(seat: seat))
     end
 
     class DieRoll
@@ -270,7 +274,7 @@ module SpyAlleyApplication
       nationalities = %w(french german spanish italian american russian)
       equipment     = %w(password disguise codebook key)
       nationalities.each{|n| equipment.each{|e| all_equipment.push("#{n} #{e}")}}
-      
+
       option :player,    type: Dry::Types['strict.hash']
       option :equipment, type: Dry::Types['strict.string'].constrained(included_in: all_equipment)
     end
@@ -282,7 +286,7 @@ module SpyAlleyApplication
       equipment     = %w(password disguise codebook key)
 
       nationalities.each{|n| equipment.each{|e| all_equipment.push("#{n} #{e}")}}
-      
+
       option :player,    type: Dry::Types['strict.hash']
       option :equipment, type: Dry::Types['strict.string'].constrained(included_in: all_equipment)
     end
@@ -346,6 +350,11 @@ module SpyAlleyApplication
       ).constrained(size: 2)
       option :return_player,
         type: Dry::Types['strict.string'].constrained(included_in: (1..6).map{|seat| "seat_#{seat}"})
+    end
+
+    class NextPlayerUp
+      extend Dry::Initializer
+      option :card, type: Dry::Types['strict.integer'].constrained(included_in: (1..6))
     end
   end
 end

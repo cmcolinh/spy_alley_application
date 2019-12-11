@@ -2,6 +2,7 @@
 
 RSpec.describe SpyAlleyApplication::Results::Embassy::Russian do
   let(:player_model, &->{PlayerMock::new})
+  let(:opponent_models, &->{[PlayerMock::new(seat: 2)]})
   let(:change_orders, &->{ChangeOrdersMock::new})
   let(:action_hash, &->{{player_action: 'roll'}})
   let(:embassy, &->{CallableStub::new})
@@ -12,6 +13,7 @@ RSpec.describe SpyAlleyApplication::Results::Embassy::Russian do
     it "embassy with nationality: 'russian'" do
       french_embassy.(
         player_model: player_model,
+        opponent_models: opponent_models,
         change_orders: change_orders,
         action_hash:  action_hash
       )

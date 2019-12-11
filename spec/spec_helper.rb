@@ -152,6 +152,10 @@ class ChangeOrdersMock
   def add_choose_new_spy_identity_option(options:, return_player:)
     self
   end
+  def add_next_player_up(seat:)
+    @target[:seat] = seat
+    self
+  end
 end
 
 class DecksModelMock

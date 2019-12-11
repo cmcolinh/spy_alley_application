@@ -6,7 +6,11 @@ RSpec.describe SpyAlleyApplication::Results::Embassy do
   german_set = equipment.map{|e| "german #{e}"}
   all_equipment = nationalities.map{|n| equipment.map{|e| "#{n} #{e}"}}.flatten
   let(:change_orders, &->{ChangeOrdersMock::new})
-  let(:embassy, &->{SpyAlleyApplication::Results::Embassy::new})
+  let(:opponent_models, &->{[PlayerMock::new(seat: 3)]})
+  let(:next_player_up, &->{CallableStub::new})
+  let(:embassy) do
+    SpyAlleyApplication::Results::Embassy::new(next_player_up_for: next_player_up)
+  end
   describe '#call' do
     [true, false].each do |same_embassy_as_player|
       (0..4).each do |num_equipment_owned|
@@ -24,7 +28,7 @@ RSpec.describe SpyAlleyApplication::Results::Embassy do
               PlayerMock.new(
                 equipment: equipment_owned,
                 wild_cards: wild_cards,
-               spy_identity: spy_identity
+                spy_identity: spy_identity
               )
             end
             if win
@@ -32,38 +36,40 @@ RSpec.describe SpyAlleyApplication::Results::Embassy do
                 expect{
                   embassy.(
                     player_model: player_model,
+                    opponent_models: opponent_models,
                     change_orders: change_orders,
                     nationality: 'french'
                   )
                 }.to change{change_orders.times_called[:add_game_victory]}.by(1)
               end
-              it 'returns true' do
-                expect(
-                  embassy.(
-                    player_model: player_model,
-                    change_orders: change_orders,
-                    nationality: 'french'
-                  )
-                ).to be true
+              it 'marks turn_complete? as false' do
+                embassy.(
+                  player_model: player_model,
+                  opponent_models: opponent_models,
+                  change_orders: change_orders,
+                  nationality: 'french'
+                )
+                expect(next_player_up.called_with[:turn_complete?]).to be false
               end
             else
               it 'does not call change_orders#add_game_victory' do
                 expect{
                   embassy.(
                     player_model: player_model,
+                    opponent_models: opponent_models,
                     change_orders: change_orders,
                     nationality: 'french'
                   )
                 }.not_to change{change_orders.times_called[:add_game_victory]}
               end
-              it 'returns false' do
-                expect(
-                  embassy.(
-                    player_model: player_model,
-                    change_orders: change_orders,
-                    nationality: 'french'
-                  )
-                ).to be false
+              it 'marks turn_complete? as true' do
+                embassy.(
+                  player_model: player_model,
+                  opponent_models: opponent_models,
+                  change_orders: change_orders,
+                  nationality: 'french'
+                )
+                expect(next_player_up.called_with[:turn_complete?]).to be true
               end
             end
           end

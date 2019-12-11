@@ -8,7 +8,7 @@ module SpyAlleyApplication
     class DrawMoveCard
       extend Dry::Initializer
       option :next_player_up_for, default: ->{SpyAlleyApplication::Results::NextPlayerUp::new}
-      def call(player_model:, change_orders:, action_hash:, opponent_models: nil, decks_model:)
+      def call(player_model:, opponent_models:, change_orders:, action_hash:, decks_model:)
         if !decks_model.top_move_card.nil?
           change_orders = change_orders.add_draw_top_move_card(
             player: {game: player_model.game, seat: player_model.seat},
