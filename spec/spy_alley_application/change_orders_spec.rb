@@ -52,17 +52,13 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
       end
     end
     it 'adds two total nodes' do
-      expect{calling_method.()}.to change{change_orders.changes.length}.by(2)
+      expect(calling_method.().changes.length).to eql(2)
     end
 
     it 'adds one AdminDieRoll element' do
-      expect{calling_method.()}.to(
-        change do
-          change_orders.changes.select do |e|
-            e.is_a? SpyAlleyApplication::ChangeOrders::AdminDieRoll
-          end.length
-        end.by(1)
-      )
+      expect(calling_method.().changes.select do |e|
+        e.is_a? SpyAlleyApplication::ChangeOrders::AdminDieRoll
+      end.length).to eql(1)
     end
 
     it 'will not allow a number other than one through six to be chosen' do
@@ -82,24 +78,19 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
       end
     end
     it 'adds three total nodes' do
-      expect{calling_method.()}.to change{change_orders.changes.length}.by(3)
+      expect(calling_method.().changes.length).to eql(3)
     end
 
     it 'adds one UseMoveCard element' do
-      expect{calling_method.()}.to(
-        change{change_orders.changes.select do |e|
-          e.is_a?(SpyAlleyApplication::ChangeOrders::UseMoveCard)
-        end.length}.by(1)
-      )
+      expect(calling_method.().changes.select do |e|
+        e.is_a?(SpyAlleyApplication::ChangeOrders::UseMoveCard)
+      end.length).to eql(1)
     end
 
     it 'adds one PlaceCardAtBottomOfDeck element' do
-      expect{calling_method.()}.to(
-        change{change_orders.changes.select do |e|
-          e.is_a?(SpyAlleyApplication::ChangeOrders::PlaceCardAtBottomOfMoveCardDeck)
-        end.length}
-        .by(1)
-      )
+      expect(calling_method.().changes.select do |e|
+        e.is_a?(SpyAlleyApplication::ChangeOrders::PlaceCardAtBottomOfMoveCardDeck)
+      end.length).to eql(1)
     end
 
     it 'will not allow a move card other than one through six to be used' do
@@ -119,15 +110,13 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
       end
     end
     it 'adds two total nodes' do
-      expect{calling_method.()}.to change{change_orders.changes.length}.by(2)
+      expect(calling_method.().changes.length).to eql(2)
     end
 
     it 'adds one MoveAction element' do
-      expect{calling_method.()}.to(
-        change{change_orders.changes.select do |e|
-          e.is_a?(SpyAlleyApplication::ChangeOrders::MoveAction)
-        end.length}.by(1)
-      )
+      expect(calling_method.().changes.select do |e|
+        e.is_a?(SpyAlleyApplication::ChangeOrders::MoveAction)
+      end.length).to eql(1)
     end
 
     it 'will not allow a move to a location other than one through 32 to be registered' do
@@ -154,15 +143,13 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
       end
     end
     it 'adds two total nodes' do
-      expect{calling_method.()}.to change{change_orders.changes.length}.by(2)
+      expect(calling_method.().changes.length).to eql(2)
     end
 
     it 'adds one AddMoney element' do
-      expect{calling_method.()}.to(
-        change{change_orders.changes.select do |e|
-          e.is_a?(SpyAlleyApplication::ChangeOrders::AddMoney)
-        end.length}.by(1)
-      )
+      expect(calling_method.().changes.select do |e|
+        e.is_a?(SpyAlleyApplication::ChangeOrders::AddMoney)
+      end.length).to eql(1)
     end
 
     it 'will not allow adding a negative amount of money' do
@@ -195,15 +182,13 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
       end
     end
     it 'adds one total node' do
-      expect{calling_method.()}.to change{change_orders.changes.length}.by(1)
+      expect(calling_method.().changes.length).to eql(1)
     end
 
     it 'adds one SubtractMoney element' do
-      expect{calling_method.()}.to(
-        change{change_orders.changes.select do |e|
-          e.is_a?(SpyAlleyApplication::ChangeOrders::SubtractMoney)
-        end.length}.by(1)
-      )
+      expect(calling_method.().changes.select do |e|
+        e.is_a?(SpyAlleyApplication::ChangeOrders::SubtractMoney)
+      end.length).to eql(1)
     end
 
     it 'will not allow subtracting a negative amount of money' do
@@ -228,7 +213,7 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
   describe '#add_pass_action' do
     let(:calling_method){->{change_orders.add_pass_action}}
     it 'adds one total node' do
-      expect{calling_method.()}.to change{change_orders.changes.length}.by(1)
+      expect(calling_method.().changes.length).to eql(1)
     end
   end
 
@@ -243,15 +228,13 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
     end
 
     it 'adds one total node' do
-      expect{calling_method.()}.to change{change_orders.changes.length}.by(1)
+      expect(calling_method.().changes.length).to eql(1)
     end
 
     it 'adds one AddEquipment element' do
-      expect{calling_method.()}.to(
-        change{change_orders.changes.select do |e|
-          e.is_a?(SpyAlleyApplication::ChangeOrders::AddEquipment)
-        end.length}.by(1)
-      )
+      expect(calling_method.().changes.select do |e|
+        e.is_a?(SpyAlleyApplication::ChangeOrders::AddEquipment)
+      end.length).to eql(1)
     end
 
     it 'will not allow adding invalid equipment' do
@@ -272,15 +255,13 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
     end
 
     it 'adds one total node' do
-      expect{calling_method.()}.to change{change_orders.changes.length}.by(1)
+      expect(calling_method.().changes.length).to eql(1)
     end
 
     it 'adds one SubtractEquipment element' do
-      expect{calling_method.()}.to(
-        change{change_orders.changes.select do |e|
-          e.is_a?(SpyAlleyApplication::ChangeOrders::SubtractEquipment)
-        end.length}.by(1)
-      )
+      expect(calling_method.().changes.select do |e|
+        e.is_a?(SpyAlleyApplication::ChangeOrders::SubtractEquipment)
+      end.length).to eql(1)
     end
 
     it 'will not allow subtracting invalid equipment' do
@@ -305,7 +286,7 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
     end
 
     it 'adds one total node' do
-      expect{calling_method.()}.to change{change_orders.changes.length}.by(1)
+      expect(calling_method.().changes.length).to eql(1)
     end
   end
 
@@ -319,15 +300,13 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
     end
 
     it 'adds one total node' do
-      expect{calling_method.()}.to change{change_orders.changes.length}.by(1)
+      expect(calling_method.().changes.length).to eql(1)
     end
 
     it 'adds one EliminatePlayer element' do
-      expect{calling_method.()}.to(
-        change{change_orders.changes.select do |e|
-          e.is_a?(SpyAlleyApplication::ChangeOrders::EliminatePlayer)
-        end.length}.by(1)
-      )
+      expect(calling_method.().changes.select do |e|
+        e.is_a?(SpyAlleyApplication::ChangeOrders::EliminatePlayer)
+      end.length).to eql(1)
     end
   end
 
@@ -341,15 +320,13 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
     end
 
     it 'adds one total node' do
-      expect{calling_method.()}.to change{change_orders.changes.length}.by(1)
+      expect(calling_method.().changes.length).to eql(1)
     end
 
     it 'adds one AddWildCard element' do
-      expect{calling_method.()}.to(
-        change{change_orders.changes.select do |e|
-          e.is_a?(SpyAlleyApplication::ChangeOrders::AddWildCard)
-        end.length}.by(1)
-      )
+      expect(calling_method.().changes.select do |e|
+        e.is_a?(SpyAlleyApplication::ChangeOrders::AddWildCard)
+      end.length).to eql(1)
     end
   end
 
@@ -363,15 +340,13 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
     end
 
     it 'adds one total node' do
-      expect{calling_method.()}.to change{change_orders.changes.length}.by(1)
+      expect(calling_method.().changes.length).to eql(1)
     end
 
     it 'adds one SubtractWildCard element' do
-      expect{calling_method.()}.to(
-        change{change_orders.changes.select do |e|
-          e.is_a?(SpyAlleyApplication::ChangeOrders::SubtractWildCard)
-        end.length}.by(1)
-      )
+      expect(calling_method.().changes.select do |e|
+        e.is_a?(SpyAlleyApplication::ChangeOrders::SubtractWildCard)
+      end.length).to eql(1)
     end
   end
 
@@ -379,15 +354,13 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
     let(:calling_method){->{change_orders.add_move_options(options: [19, 25])}}
 
     it 'adds one total node' do
-      expect{calling_method.()}.to change{change_orders.changes.length}.by(1)
+      expect(calling_method.().changes.length).to eql(1)
     end
 
     it 'adds one NextActionOptions element' do
-      expect{calling_method.()}.to(
-        change{change_orders.changes.select do |e|
-          e.is_a?(SpyAlleyApplication::ChangeOrders::NextActionOptions)
-        end.length}.by(1)
-      )
+      expect(calling_method.().changes.select do |e|
+        e.is_a?(SpyAlleyApplication::ChangeOrders::NextActionOptions)
+      end.length).to eql(1)
     end     
   end
 
@@ -395,15 +368,13 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
     let(:calling_method){->{change_orders.add_buy_equipment_option(equipment: ['russian password'], limit: 1)}}
 
     it 'adds two total nodes' do
-      expect{calling_method.()}.to change{change_orders.changes.length}.by(2)
+      expect(calling_method.().changes.length).to eql(2)
     end
 
     it 'adds two NextActionOptions elements' do
-      expect{calling_method.()}.to(
-        change{change_orders.changes.select do |e|
-          e.is_a?(SpyAlleyApplication::ChangeOrders::NextActionOptions)
-        end.length}.by(2)
-      )
+      expect(calling_method.().changes.select do |e|
+        e.is_a?(SpyAlleyApplication::ChangeOrders::NextActionOptions)
+      end.length).to eql(2)
     end
   end
 
@@ -418,23 +389,19 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
     end
 
     it 'adds two total nodes' do
-      expect{calling_method.()}.to change{change_orders.changes.length}.by(2)
+      expect(calling_method.().changes.length).to eql(2)
     end
 
     it 'adds one DrawTopMoveCard element' do
-      expect{calling_method.()}.to(
-        change{change_orders.changes.select do |e|
-          e.is_a?(SpyAlleyApplication::ChangeOrders::DrawTopMoveCard)
-        end.length}.by(1)
-      )
+      expect(calling_method.().changes.select do |e|
+        e.is_a?(SpyAlleyApplication::ChangeOrders::DrawTopMoveCard)
+      end.length).to eql(1)
     end
 
     it 'adds one AddMoveCard element' do
-      expect{calling_method.()}.to(
-        change{change_orders.changes.select do |e|
-          e.is_a?(SpyAlleyApplication::ChangeOrders::AddMoveCard)
-        end.length}.by(1)
-      )
+      expect(calling_method.().changes.select do |e|
+        e.is_a?(SpyAlleyApplication::ChangeOrders::AddMoveCard)
+      end.length).to eql(1)
     end
   end
 
@@ -450,19 +417,15 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
       end
 
       it 'adds one DrawTopFreeGiftCard element' do
-        expect{calling_method.()}.to(
-          change{change_orders.changes.select do |e|
-            e.is_a?(SpyAlleyApplication::ChangeOrders::DrawTopFreeGiftCard)
-          end.length}.by(1)
-        )
+        expect(calling_method.().changes.select do |e|
+          e.is_a?(SpyAlleyApplication::ChangeOrders::DrawTopFreeGiftCard)
+        end.length).to eql(1)
       end
 
       it 'adds one AddWildCard element' do
-        expect{calling_method.()}.to(
-          change{change_orders.changes.select do |e|
-            e.is_a?(SpyAlleyApplication::ChangeOrders::AddWildCard)
-          end.length}.by(1)
-        )
+        expect(calling_method.().changes.select do |e|
+          e.is_a?(SpyAlleyApplication::ChangeOrders::AddWildCard)
+        end.length).to eql(1)
       end
     end
     describe 'card is not a wild card' do
@@ -476,19 +439,15 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
       end
 
       it 'adds one DrawTopFreeGiftCard element' do
-        expect{calling_method.()}.to(
-          change{change_orders.changes.select do |e|
-            e.is_a?(SpyAlleyApplication::ChangeOrders::DrawTopFreeGiftCard)
-          end.length}.by(1)
-        )
+        expect(calling_method.().changes.select do |e|
+          e.is_a?(SpyAlleyApplication::ChangeOrders::DrawTopFreeGiftCard)
+        end.length).to eql(1)
       end
 
       it 'adds one PlaceCardAtBottomOfFreeGiftCardDeck element' do
-        expect{calling_method.()}.to(
-          change{change_orders.changes.select do |e|
-            e.is_a?(SpyAlleyApplication::ChangeOrders::PlaceCardAtBottomOfFreeGiftCardDeck)
-          end.length}.by(1)
-        )
+        expect(calling_method.().changes.select do |e|
+          e.is_a?(SpyAlleyApplication::ChangeOrders::PlaceCardAtBottomOfFreeGiftCardDeck)
+        end.length).to eql(1)
       end
     end
   end
@@ -504,11 +463,9 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
     end
 
     it 'adds one GameVictory element' do
-      expect{calling_method.()}.to(
-        change{change_orders.changes.select do |e|
-          e.is_a?(SpyAlleyApplication::ChangeOrders::GameVictory)
-        end.length}.by(1)
-      )
+      expect(calling_method.().changes.select do |e|
+        e.is_a?(SpyAlleyApplication::ChangeOrders::GameVictory)
+      end.length).to eql(1)
     end
   end
 
@@ -522,11 +479,9 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
     end
 
     it 'adds one SpyEliminatorOption element' do
-      expect{calling_method.()}.to(
-        change{change_orders.changes.select do |e|
-          e.is_a?(SpyAlleyApplication::ChangeOrders::SpyEliminatorOption)
-        end.length}.by(1)
-      )
+      expect(calling_method.().changes.select do |e|
+        e.is_a?(SpyAlleyApplication::ChangeOrders::SpyEliminatorOption)
+      end.length).to eql(1)
     end
   end
 
@@ -543,11 +498,9 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
     end
 
     it 'adds one ConfiscateMaterialsOption element' do
-      expect{calling_method.()}.to(
-        change{change_orders.changes.select do |e|
-          e.is_a?(SpyAlleyApplication::ChangeOrders::ConfiscateMaterialsOption)
-        end.length}.by(1)
-      )
+      expect(calling_method.().changes.select do |e|
+        e.is_a?(SpyAlleyApplication::ChangeOrders::ConfiscateMaterialsOption)
+      end.length).to eql(1)
     end
   end
 
@@ -555,11 +508,9 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
     let(:calling_method, &->{->{change_orders.add_move_back_two_spaces_result}})
 
     it 'adds one MoveBackTwoSpaces element' do
-      expect{calling_method.()}.to(
-        change{change_orders.changes.select do |e|
-          e.is_a?(SpyAlleyApplication::ChangeOrders::MoveBackTwoSpaces)
-        end.length}.by(1)
-      )
+      expect(calling_method.().changes.select do |e|
+        e.is_a?(SpyAlleyApplication::ChangeOrders::MoveBackTwoSpaces)
+      end.length).to eql(1)
     end
   end
 
@@ -574,11 +525,9 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
     end
 
     it 'adds one ChooseNewSpyIdentityOption element' do
-      expect{calling_method.()}.to(
-        change{change_orders.changes.select do |e|
-          e.is_a?(SpyAlleyApplication::ChangeOrders::ChooseNewSpyIdentityOption)
-        end.length}.by(1)
-      )
+      expect(calling_method.().changes.select do |e|
+        e.is_a?(SpyAlleyApplication::ChangeOrders::ChooseNewSpyIdentityOption)
+      end.length).to eql(1)
     end
   end
 end
