@@ -20,8 +20,13 @@ RSpec.describe SpyAlleyApplication::Actions::MoveDistanceAction::RollAction do
         )
       end
     end
-    it 'returns the card used' do
-      expect(calling_method.(card_to_use)).to eql(1)
+
+    it 'returns an array with two elements' do
+      expect(calling_method.(card_to_use).size).to eql(2)
+    end
+
+    it 'returns an array with the card used to be returned as the last element' do
+      expect(calling_method.(card_to_use).last).to eql(1)
     end
 
     it 'calls change_orders' do

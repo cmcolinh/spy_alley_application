@@ -6,9 +6,15 @@ RSpec.describe SpyAlleyApplication::Actions::MoveDistanceAction::AdminRollAction
   let(:action_hash, &->{{player_action: 'roll', choose_result: 1}})
   let(:roll, &->{SpyAlleyApplication::Actions::MoveDistanceAction::AdminRollAction::new})
   describe '#call' do
-    it 'returns the chosen number' do
+    it 'returns an array with the rolled number to be returned as the last element' do
       expect(
-        roll.(player_model: player_model, change_orders: change_orders, action_hash: action_hash)
+        roll.(player_model: player_model, change_orders: change_orders, action_hash: action_hash).last
+      ).to eql(1)
+    end
+
+    it 'returns an array with the rolled number to be returned as the last element' do
+      expect(
+        roll.(player_model: player_model, change_orders: change_orders, action_hash: action_hash).last
       ).to eql(1)
     end
 

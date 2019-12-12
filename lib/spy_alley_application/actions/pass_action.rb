@@ -8,7 +8,7 @@ module SpyAlleyApplication
     class PassAction
       extend Dry::Initializer
       option :next_player_up_for, default: ->{SpyAlleyApplication::Results::NextPlayerUp::new}
-      def call(change_orders:, player_model:, opponent_models: nil, action_hash:, decks_model: nil)
+      def call(change_orders:, player_model:, opponent_models:, action_hash:, decks_model: nil)
         next_player_up_for.(
           player_model: player_model,
           opponent_models: opponent_models,

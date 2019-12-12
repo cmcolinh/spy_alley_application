@@ -3,6 +3,7 @@
 RSpec.describe SpyAlleyApplication::Actions::ConfiscateMaterialsAction do
   let(:player_model, &->{PlayerMock::new})
   let(:opponent_models, &->{[TargetPlayerMock::new]})
+  let(:next_player_up, &->{CallableStub::new})
   let(:change_orders, &->{ChangeOrdersMock::new})
   let(:action_hash) do
     ->(target_player, equipment) do
@@ -13,7 +14,9 @@ RSpec.describe SpyAlleyApplication::Actions::ConfiscateMaterialsAction do
       }
     end
   end
-  let(:confiscate_materials, &->{SpyAlleyApplication::Actions::ConfiscateMaterialsAction::new})
+  let(:confiscate_materials) do
+    SpyAlleyApplication::Actions::ConfiscateMaterialsAction::new(next_player_up_for: next_player_up)
+  end
   describe '#call' do
     describe '#confiscate_materials' do
       define_method(:confiscation_price, &->{{'russian codebook' => 5, 'wild card' => 50}})
@@ -31,8 +34,9 @@ RSpec.describe SpyAlleyApplication::Actions::ConfiscateMaterialsAction do
         %w(password codebook disguise key).each do |type|
           equipment = "#{nationality} #{type}"
           describe "when equipment is '#{equipment}' it" do
-            it 'returns the equipment confiscated' do
-              expect(calling_method.('seat_2', equipment)).to eq(equipment)
+            it "marks turn_complete? as true, indicating that it will not remain the same player's turn" do
+              calling_method.('seat_2', equipment)
+              expect(next_player_up.called_with[:turn_complete?]).to be true
             end
           end
         end
@@ -85,4 +89,3 @@ RSpec.describe SpyAlleyApplication::Actions::ConfiscateMaterialsAction do
     end
   end
 end
-
