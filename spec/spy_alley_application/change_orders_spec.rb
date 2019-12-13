@@ -530,4 +530,21 @@ RSpec.describe SpyAlleyApplication::ChangeOrders do
       end.length).to eql(1)
     end
   end
+
+  describe '#add_top_level_options' do
+    let(:calling_method) do
+      -> do
+        change_orders.add_top_level_options(
+          accept_roll: true,
+          accept_make_accusation: {nationality: ['french'], player: ['seat_2']}
+        )
+      end
+    end
+
+    it 'adds one TopLevelOptions element' do
+      expect(calling_method.().changes.select do |e|
+        e.is_a?(SpyAlleyApplication::ChangeOrders::TopLevelOptions)
+      end.length).to eql(1)
+    end
+  end
 end

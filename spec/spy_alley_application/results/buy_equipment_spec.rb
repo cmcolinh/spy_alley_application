@@ -2,8 +2,9 @@
 
 RSpec.describe SpyAlleyApplication::Results::BuyEquipment do
   let(:player_model, &->{PlayerMock::new})
-  let(:opponent_models, &->{[PlayerMock::new]})
+  let(:opponent_models, &->{[PlayerMock::new(seat: 4)]})
   let(:change_orders, &->{ChangeOrdersMock::new})
+  let(:action_hash, &->{{player_action: 'roll'}})
   let(:next_player_up, &->{CallableStub::new})
   let(:buy_equipment) do
     SpyAlleyApplication::Results::BuyEquipment::new(next_player_up_for: next_player_up)
@@ -14,6 +15,7 @@ RSpec.describe SpyAlleyApplication::Results::BuyEquipment do
         player_model: player_model,
         opponent_models: opponent_models,
         change_orders: change_orders,
+        action_hash: action_hash,
         purchase_options: ['french password'],
         purchase_limit: 1
       )
@@ -25,6 +27,7 @@ RSpec.describe SpyAlleyApplication::Results::BuyEquipment do
         player_model: player_model,
         opponent_models: opponent_models,
         change_orders: change_orders,
+        action_hash: action_hash,
         purchase_options: ['french password'],
         purchase_limit: 1
       )

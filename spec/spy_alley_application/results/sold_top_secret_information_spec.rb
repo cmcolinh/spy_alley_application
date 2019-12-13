@@ -5,6 +5,7 @@ RSpec.describe SpyAlleyApplication::Results::SoldTopSecretInformation do
   let(:opponent_models, &->{[PlayerMock::new(seat: 5)]})
   let(:next_player_up, &->{CallableStub::new})
   let(:change_orders, &->{ChangeOrdersMock::new})
+  let(:action_hash, &->{{player_action: 'roll'}})
   let(:sold_top_secret_information) do
     SpyAlleyApplication::Results::SoldTopSecretInformation::new(next_player_up_for: next_player_up)
   end
@@ -14,6 +15,7 @@ RSpec.describe SpyAlleyApplication::Results::SoldTopSecretInformation do
         player_model: player_model,
         opponent_models: opponent_models,
         change_orders: change_orders,
+        action_hash: action_hash,
         money_earned: 10
       )
       expect(next_player_up.called_with[:turn_complete?]).to be true
@@ -24,6 +26,7 @@ RSpec.describe SpyAlleyApplication::Results::SoldTopSecretInformation do
         player_model: player_model,
         opponent_models: opponent_models,
         change_orders: change_orders,
+        action_hash: action_hash,
         money_earned: 10
       )
       expect(change_orders.times_called[:add_money_action]).to eql 1

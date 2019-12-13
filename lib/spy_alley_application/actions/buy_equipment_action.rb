@@ -15,7 +15,7 @@ module SpyAlleyApplication
           end.to_h
         end.reduce({}, :merge)
       }
-      def call(player_model:, change_orders:, action_hash:, opponent_models: nil, decks_model: nil)
+      def call(player_model:, opponent_models:, change_orders:, action_hash:, decks_model: nil)
         total_cost = 0
         Array(action_hash[:equipment_to_buy]).each do |equipment|
           equipment = equipment[0] if equipment.is_a?(Array)
@@ -34,6 +34,7 @@ module SpyAlleyApplication
           player_model: player_model,
           opponent_models: opponent_models,
           change_orders: change_orders.add_pass_action,
+          action_hash: action_hash,
           turn_complete?: true # the current player's turn will *not* continue
         )
       end

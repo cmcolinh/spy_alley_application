@@ -8,11 +8,12 @@ module SpyAlleyApplication
     class TakeAnotherTurn
       extend Dry::Initializer
       option :next_player_up_for, default: ->{SpyAlleyApplication::Results::NextPlayerUp::new}
-      def call(player_model:, opponent_models:, change_orders:, action_hash: nil, decks_model: nil)
+      def call(player_model:, opponent_models:, change_orders:, action_hash:, decks_model: nil)
         next_player_up_for.(
           player_model: player_model,
           opponent_models: opponent_models,
           change_orders: change_orders,
+          action_hash: action_hash,
           turn_complete?: false # will be same player's turn again
         )
       end

@@ -2,6 +2,7 @@
 
 require 'dry/initializer'
 require 'spy_alley_application/results/next_player_up/next_player_options'
+require 'spy_alley_application/results/next_player_up/forgo_adding_options'
 
 module SpyAlleyApplication
   module Results
@@ -11,11 +12,11 @@ module SpyAlleyApplication
         SpyAlleyApplication::Results::NextPlayerUp::NextPlayerOptions::new
       end
       def call(options = {})
-        player_model, opponent_models, change_orders, turn_complete = get_vars_from(options)
+        player_model, opponent_models, change_orders, action_hash, turn_complete = get_vars_from(options)
         next_seat_up = turn_complete ? get_next_seat_from(player_model, opponent_models) : player_model.seat
         if turn_complete
           change_orders = next_player_options.(
-            next_player_model: opponent_models.select{|p| p.seat.eql? next_seat_up},
+            next_player_model: opponent_models.select{|p| p.seat.eql? next_seat_up}.first,
             opponent_models: opponent_models.reject{|p| p.seat.eql? next_seat_up} + [player_model],
             change_orders: change_orders
           )
@@ -30,7 +31,7 @@ module SpyAlleyApplication
       end
 
       def get_vars_from(options)
-        keys = [:player_model, :opponent_models, :change_orders, :turn_complete?]
+        keys = [:player_model, :opponent_models, :change_orders, :action_hash, :turn_complete?]
         errors = keys.select{|key| !options.has_key?(key)}
         errors = "#{'s' if errors.length > 1}#{': ' unless errors.empty?}#{errors.join(', ')}"
 
@@ -40,6 +41,7 @@ module SpyAlleyApplication
           options[:player_model],
           options[:opponent_models],
           options[:change_orders],
+          options[:action_hash],
           options[:turn_complete?]
         ]
       end

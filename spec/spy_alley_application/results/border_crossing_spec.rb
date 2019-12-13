@@ -4,6 +4,7 @@ RSpec.describe SpyAlleyApplication::Results::BorderCrossing do
   let(:player_model, &->{PlayerMock::new})
   let(:opponent_models, &->{[PlayerMock::new]})
   let(:change_orders, &->{ChangeOrdersMock::new})
+  let(:action_hash, &->{{player_action: 'roll'}})
   let(:next_player_up, &->{CallableStub::new})
   let(:border_crossing) do
     SpyAlleyApplication::Results::BorderCrossing::new(next_player_up_for: next_player_up)
@@ -13,6 +14,7 @@ RSpec.describe SpyAlleyApplication::Results::BorderCrossing do
       border_crossing.(
         player_model: player_model,
         opponent_models: opponent_models,
+        action_hash: action_hash,
         change_orders: change_orders,
       )
       expect(next_player_up.called_with[:turn_complete?]).to be true
@@ -23,6 +25,7 @@ RSpec.describe SpyAlleyApplication::Results::BorderCrossing do
         border_crossing.(
           player_model: player_model,
           opponent_models: opponent_models,
+          action_hash: action_hash,
           change_orders: change_orders,
         )
       end.to change{change_orders.times_called[:subtract_money_action]}.by(1)

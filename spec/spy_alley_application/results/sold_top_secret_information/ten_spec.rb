@@ -16,6 +16,7 @@ RSpec.describe SpyAlleyApplication::Results::SoldTopSecretInformation::Ten do
       sold_for_ten.(
         player_model: player_model,
         opponent_models: opponent_models,
+        action_hash: action_hash,
         change_orders: change_orders
       )
       expect(sold_top_secret_information.called_with[:money_earned]).to eql(10)

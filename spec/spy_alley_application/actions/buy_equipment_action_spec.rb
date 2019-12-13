@@ -3,8 +3,12 @@
 RSpec.describe SpyAlleyApplication::Actions::BuyEquipmentAction do
   define_method(:purchase_price, &->{{'american codebook' => 5, 'russian codebook' => 5}})
   let(:player_model, &->{PlayerMock::new})
+  let(:opponent_models, &->{[PlayerMock::new(seat: 3)]})
   let(:change_orders, &->{ChangeOrdersMock::new})
-  let(:buy_equipment, &->{SpyAlleyApplication::Actions::BuyEquipmentAction::new})
+  let(:next_player_up, &->{CallableStub::new})
+  let(:buy_equipment) do
+    SpyAlleyApplication::Actions::BuyEquipmentAction::new(next_player_up_for: next_player_up)
+  end
 
   describe '#call' do
     describe 'when buying one item' do
@@ -12,6 +16,7 @@ RSpec.describe SpyAlleyApplication::Actions::BuyEquipmentAction do
         -> do
           buy_equipment.(
             player_model:  player_model,
+            opponent_models: opponent_models,
             change_orders: change_orders,
             action_hash:   {
               player_action:    'buy_equipment',
@@ -21,8 +26,9 @@ RSpec.describe SpyAlleyApplication::Actions::BuyEquipmentAction do
         end
       end
 
-      it 'returns the equipment input' do
-        expect(calling_method.()).to eql(['russian codebook'])
+      it "marks turn_complete? as true, indicating that it will not remain the same player's turn" do
+        calling_method.()
+        expect(next_player_up.called_with[:turn_complete?]).to be true
       end
 
       it 'calls change_orders#add_equipment_action once' do
@@ -50,6 +56,7 @@ RSpec.describe SpyAlleyApplication::Actions::BuyEquipmentAction do
         -> do
           buy_equipment.(
             player_model:  player_model,
+            opponent_models: opponent_models,
             change_orders: change_orders,
             action_hash:   {
               player_action:    'buy_equipment',
@@ -59,8 +66,9 @@ RSpec.describe SpyAlleyApplication::Actions::BuyEquipmentAction do
         end
       end
 
-      it 'returns the equipment input' do
-        expect(calling_method.()).to eql(['russian codebook', 'american codebook'])
+      it "marks turn_complete? as true, indicating that it will not remain the same player's turn" do
+        calling_method.()
+        expect(next_player_up.called_with[:turn_complete?]).to be true
       end
 
       it 'calls change_orders#add_equipment_action twice' do

@@ -5,6 +5,7 @@ RSpec.describe SpyAlleyApplication::Results::NoActionResult do
   let(:opponent_models, &->{[PlayerMock::new]})
   let(:change_orders, &->{ChangeOrdersMock::new})
   let(:next_player_up, &->{CallableStub::new})
+  let(:action_hash, &->{{player_action: 'roll'}})
   let(:no_result) do
     SpyAlleyApplication::Results::NoActionResult::new(next_player_up_for: next_player_up)
   end
@@ -14,6 +15,7 @@ RSpec.describe SpyAlleyApplication::Results::NoActionResult do
         player_model: player_model,
         opponent_models: opponent_models,
         change_orders: change_orders,
+        action_hash: action_hash
       )
       expect(next_player_up.called_with[:turn_complete?]).to be true
     end

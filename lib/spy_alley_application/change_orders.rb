@@ -206,6 +206,10 @@ module SpyAlleyApplication
       push(NextPlayerUp::new(seat: seat))
     end
 
+    def add_top_level_options(options={})
+      push(TopLevelOptions::new(options))
+    end
+
     class DieRoll
       extend Dry::Initializer
       option :player, type: Dry::Types['strict.hash']
@@ -354,7 +358,16 @@ module SpyAlleyApplication
 
     class NextPlayerUp
       extend Dry::Initializer
-      option :card, type: Dry::Types['strict.integer'].constrained(included_in: (1..6))
+      option :seat, type: Dry::Types['strict.integer'].constrained(included_in: (1..6))
+    end
+
+    class TopLevelOptions
+      extend Dry::Initializer
+      option :accept_roll
+      option :accept_make_accusation, type: Dry::Types['strict.hash']
+      option :accept_use_move_card, optional: true, type: Dry::Types['strict.array'].of(
+        Dry::Types['strict.integer'].constrained(included_in: (1..6))
+      )
     end
   end
 end

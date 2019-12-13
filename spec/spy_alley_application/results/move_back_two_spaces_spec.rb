@@ -5,6 +5,7 @@ RSpec.describe SpyAlleyApplication::Results::MoveBackTwoSpaces do
   let(:opponent_models, &->{[PlayerMock::new(seat: 4)]})
   let(:next_player_up, &->{CallableStub::new})
   let(:change_orders, &->{ChangeOrdersMock::new})
+  let(:action_hash, &->{{player_action: 'roll'}})
   let(:move_back_two_spaces) do
     SpyAlleyApplication::Results::MoveBackTwoSpaces::new(next_player_up_for: next_player_up)
   end
@@ -13,6 +14,7 @@ RSpec.describe SpyAlleyApplication::Results::MoveBackTwoSpaces do
       move_back_two_spaces.(
         player_model: player_model,
         opponent_models: opponent_models,
+        action_hash: action_hash,
         change_orders: change_orders
       )
       expect(next_player_up.called_with[:turn_complete?]).to be true
@@ -23,6 +25,7 @@ RSpec.describe SpyAlleyApplication::Results::MoveBackTwoSpaces do
         move_back_two_spaces.(
           player_model: player_model,
           opponent_models: opponent_models,
+          action_hash: action_hash,
           change_orders: change_orders
         )
       }.to(change{change_orders.times_called[:add_move_back_two_spaces_result]}.by(1))

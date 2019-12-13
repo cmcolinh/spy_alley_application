@@ -7,6 +7,7 @@ RSpec.describe SpyAlleyApplication::Results::Embassy do
   all_equipment = nationalities.map{|n| equipment.map{|e| "#{n} #{e}"}}.flatten
   let(:change_orders, &->{ChangeOrdersMock::new})
   let(:opponent_models, &->{[PlayerMock::new(seat: 3)]})
+  let(:action_hash, &->{{player_action: 'roll'}})
   let(:next_player_up, &->{CallableStub::new})
   let(:embassy) do
     SpyAlleyApplication::Results::Embassy::new(next_player_up_for: next_player_up)
@@ -38,6 +39,7 @@ RSpec.describe SpyAlleyApplication::Results::Embassy do
                     player_model: player_model,
                     opponent_models: opponent_models,
                     change_orders: change_orders,
+                    action_hash: action_hash,
                     nationality: 'french'
                   )
                 }.to change{change_orders.times_called[:add_game_victory]}.by(1)
@@ -47,6 +49,7 @@ RSpec.describe SpyAlleyApplication::Results::Embassy do
                   player_model: player_model,
                   opponent_models: opponent_models,
                   change_orders: change_orders,
+                  action_hash: action_hash,
                   nationality: 'french'
                 )
                 expect(next_player_up.called_with[:turn_complete?]).to be false
@@ -58,6 +61,7 @@ RSpec.describe SpyAlleyApplication::Results::Embassy do
                     player_model: player_model,
                     opponent_models: opponent_models,
                     change_orders: change_orders,
+                    action_hash: action_hash,
                     nationality: 'french'
                   )
                 }.not_to change{change_orders.times_called[:add_game_victory]}
@@ -67,6 +71,7 @@ RSpec.describe SpyAlleyApplication::Results::Embassy do
                   player_model: player_model,
                   opponent_models: opponent_models,
                   change_orders: change_orders,
+                  action_hash: action_hash,
                   nationality: 'french'
                 )
                 expect(next_player_up.called_with[:turn_complete?]).to be true

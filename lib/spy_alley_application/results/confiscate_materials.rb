@@ -7,7 +7,11 @@ module SpyAlleyApplication
   module Results
     class ConfiscateMaterials
       extend Dry::Initializer
-      option :next_player_up_for, default: ->{SpyAlleyApplication::Results::NextPlayerUp::new}
+      option :next_player_up_for, default: -> do
+        SpyAlleyApplication::Results::NextPlayerUp::new(
+          next_player_options: SpyAlleyApplication::Results::NextPlayerUp::ForgoAddingOptions::new
+        )
+      end
       @@equipment = {
         'password' => 5,
         'disguise' => 5,
@@ -38,6 +42,7 @@ module SpyAlleyApplication
           player_model: player_model,
           opponent_models: opponent_models,
           change_orders: change_orders,
+          action_hash: action_hash,
           turn_complete?: opts.empty?
         )
       end

@@ -13,6 +13,7 @@ module SpyAlleyApplication
           player_model: player_model,
           opponent_models: opponent_models,
           change_orders: change_orders.add_pass_action,
+          action_hash: action_hash,
           turn_complete?: true # the current player's turn will *not* continue
         )
       end
