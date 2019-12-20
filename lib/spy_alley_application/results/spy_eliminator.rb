@@ -25,7 +25,7 @@ module SpyAlleyApplication
         if !opponents_in_spy_alley.empty?
           action_hash[:accusation_targets] = opponents_in_spy_alley.map{|s| "seat_#{s}"}
           
-          #change_orders = change_orders.add_spy_eliminator_option(
+          change_orders = change_orders.add_spy_eliminator_option(
             options: opponents_in_spy_alley.map{|s| "seat_#{s}"}
           )
         else
