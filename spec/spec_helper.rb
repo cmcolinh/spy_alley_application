@@ -156,6 +156,10 @@ class ChangeOrdersMock
     @target[:seat] = seat
     self
   end
+  def add_top_level_options(options = {})
+    @target = options
+    self
+  end
 end
 
 class DecksModelMock

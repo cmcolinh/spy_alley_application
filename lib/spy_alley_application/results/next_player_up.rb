@@ -18,6 +18,7 @@ module SpyAlleyApplication
           change_orders = next_player_options.(
             next_player_model: opponent_models.select{|p| p.seat.eql? next_seat_up}.first,
             opponent_models: opponent_models.reject{|p| p.seat.eql? next_seat_up} + [player_model],
+            action_hash: action_hash,
             change_orders: change_orders
           )
         end
