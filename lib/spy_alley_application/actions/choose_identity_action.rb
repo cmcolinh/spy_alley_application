@@ -4,7 +4,7 @@ module SpyAlleyApplication
   module Actions
     class ChooseIdentityAction
       extend Dry::Initializer
-      option :next_player_options do
+      option :next_player_options, default: -> do
         SpyAlleyApplication::Results::NextPlayerUp::NextPlayerOptions::new
       end
       def call(player_model:, change_orders:, action_hash:, opponent_models:, decks_model: nil)
