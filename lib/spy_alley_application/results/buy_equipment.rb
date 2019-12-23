@@ -17,11 +17,7 @@ module SpyAlleyApplication
   module Results
     class BuyEquipment
       extend Dry::Initializer
-      option :next_player_up_for, default: -> do
-        SpyAlleyApplication::Results::NextPlayerUp::new(
-          next_player_options: SpyAlleyApplication::Results::NextPlayerUp::ForgoAddingOptions::new
-        )
-      end
+      option :next_player_up_for, default: ->{SpyAlleyApplication::Results::NextPlayerUp::new}
 
       def call(player_model:, opponent_models:, change_orders:, action_hash:, purchase_options:, purchase_limit:)
         change_orders = change_orders.add_buy_equipment_option(

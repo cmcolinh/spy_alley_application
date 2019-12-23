@@ -8,11 +8,6 @@ module SpyAlleyApplication
     class SpyEliminator
       extend Dry::Initializer
       option :next_player_up_for, default: ->{SpyAlleyApplication::Results::NextPlayerUp::new}
-      option :next_turn_make_accusation, default: -> do
-        SpyAlleyApplication::Results::NextPlayerUp::new(
-          next_player_options: SpyAlleyApplication::Results::NextPlayerUp::SpyEliminatorOptions::new
-        )
-      end
 
       def call(player_model:, change_orders:, action_hash:, opponent_models:, decks_model: nil)
         options = {

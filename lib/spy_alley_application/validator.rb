@@ -62,7 +62,10 @@ module SpyAlleyApplication
       end
       # the next path to explore is the "choose new identity" path
       if options_set.eql?([:accept_choose_new_identity])
-        return ChooseNewIdentityValidator::new(nationality_options: accept_choose_new_identity)
+        return ChooseNewIdentityValidator::new(
+          nationality_options: accept_choose_new_identity[:identity],
+          return_options: accept_choose_new_identity[:return_options]
+        )
       end
       raise "set option list #{options_set} invalid!!!!"
     end

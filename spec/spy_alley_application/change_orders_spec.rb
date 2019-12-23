@@ -2,20 +2,6 @@
 
 RSpec.describe SpyAlleyApplication::ChangeOrders do
   let(:change_orders){SpyAlleyApplication::ChangeOrders::new}
-  describe '#get_action_hash' do
-    before(:each) do
-      change_orders.add_action(action_hash: {player_action: 'roll'})
-    end
-    let(:calling_method, &->{->{change_orders.get_action_hash}})
-    it 'returns a hash representation of the ActionHashElement node' do
-      expect(calling_method.()).to eql(action_hash: {player_action: 'roll'})
-    end
-
-    it 'removes the action_hash node from @changes' do
-      expect(calling_method.().changes.length).to eql(-1)
-    end
-  end
-
   describe '#add_die_roll' do
     let(:calling_method) do
       -> do

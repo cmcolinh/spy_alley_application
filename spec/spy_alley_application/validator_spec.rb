@@ -69,7 +69,12 @@ RSpec.describe SpyAlleyApplication::Validator do
     end
     describe 'when options are to choose a new spy identity' do
       let(:options) do 
-        { accept_choose_new_identity: ['french', 'german'] }
+        { 
+          accept_choose_new_identity: {
+            identity: ['french', 'german'],
+            return_options: {return_player: 3}
+          }
+        }
       end
       it 'creates the correct type of validator for this case' do
         expect(validator_for.(options)).to be_a(SpyAlleyApplication::Validator::ChooseNewIdentityValidator)

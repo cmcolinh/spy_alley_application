@@ -4,7 +4,8 @@ RSpec.describe SpyAlleyApplication::Validator::ChooseNewIdentityValidator do
   describe '#call' do
     let(:validate){
       SpyAlleyApplication::Validator::ChooseNewIdentityValidator::new(
-        nationality_options: ['french', 'german']
+        nationality_options: ['french', 'german'],
+        return_options: {player: 3}
       )
     }
     it 'will validate correctly when choosing a valid new identity' do
