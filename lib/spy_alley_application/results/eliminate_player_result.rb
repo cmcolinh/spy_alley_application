@@ -10,16 +10,21 @@ module SpyAlleyApplication
       option :transfer_equipment, default: ->{TransferEquipment::new}
       option :transfer_wild_cards, default: ->{TransferWildCards::new}
 
-      def call(player_model:, target_player_model:, change_orders:, return_player:)
+      def call(player_model:, target_player_model:, change_orders:, return_player:, remaining_choices: nil)
         change_orders.eliminate_player_action(
           player: {game: target_player_model.game, seat: target_player_model.seat})
         transfer_money.(from: target_player_model, to: player_model, change_orders: change_orders)
         transfer_equipment.(from: target_player_model, to: player_model, change_orders: change_orders)
         transfer_wild_cards.(from: target_player_model, to: player_model, change_orders: change_orders)
-        change_orders.add_choose_new_spy_identity_option(return_player: return_player, options: [
-          player_model.seat,
-          target_player_model.seat
-        ])
+        options = {
+          return_player: return_player,
+          options: [
+            player_model.seat,
+            target_player_model.seat
+          ]
+        }
+        options[:remaining_choices] = remaining_choices if remaining_choices&.size&.> 0
+        change_orders.add_choose_new_spy_identity_option(options)
       end
 
       class TransferMoney

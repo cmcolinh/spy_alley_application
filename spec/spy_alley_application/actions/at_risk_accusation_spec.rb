@@ -31,10 +31,6 @@ RSpec.describe SpyAlleyApplication::Actions::AtRiskAccusationAction do
       end
     end
     describe 'when guess is correct' do
-      it 'returns true to indicate a correct guess' do
-        expect(making_guess.(correct: true)).to eql(true)
-      end
-
       it 'targets the target player for elimination' do
         making_guess.(correct: true)
         expect(eliminated_player[:seat]).to eql 2
@@ -51,10 +47,6 @@ RSpec.describe SpyAlleyApplication::Actions::AtRiskAccusationAction do
       end
     end
     describe 'when guess is incorrect' do
-      it 'returns false to indicate an incorrect guess' do
-        expect(making_guess.(correct: false)).to eql(false)
-      end
-
       it 'targets the guessing player for elimination' do
         making_guess.(correct: false)
         expect(eliminated_player[:seat]).to eql 1

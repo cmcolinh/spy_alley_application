@@ -2,6 +2,7 @@
 
 require 'dry/initializer'
 require 'dry/types'
+Dry::Types.load_extensions(:maybe)
 
 module SpyAlleyApplication
   class ChangeOrders
@@ -198,8 +199,14 @@ module SpyAlleyApplication
       push(MoveBackTwoSpaces::new)
     end
 
-    def add_choose_new_spy_identity_option(options:, return_player:)
-      push(ChooseNewSpyIdentityOption::new(options:options, return_player: return_player))
+    def add_choose_new_spy_identity_option(options:, return_player:, remaining_choices: [])
+      push(
+        ChooseNewSpyIdentityOption::new(
+          options: options,
+          return_player: return_player,
+          remaining_choices: remaining_choices
+        )
+      )
     end
 
     def add_next_player_up(seat:)
@@ -354,6 +361,9 @@ module SpyAlleyApplication
       ).constrained(size: 2)
       option :return_player,
         type: Dry::Types['strict.string'].constrained(included_in: (1..6).map{|seat| "seat_#{seat}"})
+      option :remaining_choices, type: Dry::Types['strict.array'].of(
+        Dry::Types['strict.integer'].constrained(included_in: (1..6))
+      )
     end
 
     class NextPlayerUp

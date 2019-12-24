@@ -18,7 +18,8 @@ module SpyAlleyApplication
             player_model:        player_model,
             opponent_models:     opponent_models,
             target_player_model: target_player_model,
-            change_orders:       change_orders
+            change_orders:       change_orders,
+            return_player:       get_next_seat_from(player_model, (opponent_models - [target_player_model]))
           )
         else
           change_orders = change_orders.add_action(result: {guess_correct: false})
@@ -26,15 +27,22 @@ module SpyAlleyApplication
             player_model:        target_player_model,
             opponent_models:     opponent_models,
             target_player_model: player_model,
-            change_orders:       change_orders
+            change_orders:       change_orders,
+            return_player:       get_next_seat_from(player_model, opponent_models)
           )
         end
         change_orders
       end
 
+      private
       def get_target_player_model_from(opponent_models, action_hash)
         seat = action_hash[:player_to_accuse].gsub('seat_', '').to_i
         opponent_models.select{|m| m.seat.eql? seat}.first
+      end
+
+      def get_next_seat_from(player_model, opponent_models)
+        opponent_seats = opponent_models.map(&:seat)
+        opponent_seats.select{|seat| seat > player_model.seat}.min || opponent_seats.min
       end
     end
   end
