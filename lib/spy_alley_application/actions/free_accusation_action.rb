@@ -20,6 +20,13 @@ module SpyAlleyApplication
         remaining_choices = accusation_targets - [action_hash[:player_to_accuse]]
         if guess_correct
           change_orders = change_orders.add_action(result: {guess_correct: true})
+          change_orders = eliminate_player.(
+            player_model:        target_player_model,
+            opponent_models:     opponent_models,
+            target_player_model: player_model,
+            change_orders:       change_orders,
+            return_player:       get_next_seat_from(player_model, opponent_models)
+          )
           if remaining_choices.size > 0
             return_player = player_model.seat
           else

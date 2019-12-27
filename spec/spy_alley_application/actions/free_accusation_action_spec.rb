@@ -1,8 +1,16 @@
 # frozen_string_literal: true
 
 RSpec.describe SpyAlleyApplication::Actions::FreeAccusationAction do
+  let(:eliminating_player, &->{{}})
+  let(:eliminated_player,  &->{{}})
   let(:player_model,    &->{PlayerMock::new})
-  let(:opponent_models, &->{[PlayerMock::new(seat: 2), PlayerMock::new(seat: 3)]})
+  let(:opponent_models) do
+    [
+      PlayerMock::new(seat: 2, spy_identity: 'german'),
+      PlayerMock::new(seat: 3)
+    ]
+  end
+  let(:next_player_up, &->{CallableStub::new})
   let(:change_orders,   &->{ChangeOrdersMock::new})
   let(:eliminate_player) do 
     ->(options={}) do
@@ -10,12 +18,13 @@ RSpec.describe SpyAlleyApplication::Actions::FreeAccusationAction do
       eliminated_player[:seat]  = options[:target_player_model].seat
     end
   end
+  let(:make_accusation) do
+    SpyAlleyApplication::Actions::FreeAccusationAction::new(
+      eliminate_player: eliminate_player,
+      next_player_up_for: next_player_up
+    )
+  end
   describe '#call' do
-    let(:eliminating_player, &->{{}})
-    let(:eliminated_player,  &->{{}})
-    let(:make_accusation) do
-      SpyAlleyApplication::Actions::FreeAccusationAction::new(eliminate_player: eliminate_player)
-    end
     let(:making_guess) do
       ->(correct:, more_options: false) do
         make_accusation.(
