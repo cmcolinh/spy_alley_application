@@ -17,11 +17,11 @@ RSpec.describe SpyAlleyApplication::Results::SpyEliminator do
   let(:opponent3, &->{PlayerMock.new(location: '9s', seat: 4)})
   describe '#call' do
     describe 'no opponents in spy alley' do
-      let(:opponent_models, &->{[opponent1]})
+      let(:opponent_models1, &->{[opponent1]})
       it "marks turn_complete? as true, indicating that it will not remain the same player's turn" do
         spy_eliminator.(
           player_model: player_model,
-          opponent_models: opponent_models,
+          opponent_models: opponent_models1,
           change_orders: change_orders,
           action_hash: action_hash
         )
@@ -31,7 +31,7 @@ RSpec.describe SpyAlleyApplication::Results::SpyEliminator do
         expect{
           spy_eliminator.(
             player_model: player_model,
-            opponent_models: opponent_models,
+            opponent_models: opponent_models1,
             change_orders: change_orders,
             action_hash: action_hash
           )
@@ -39,11 +39,11 @@ RSpec.describe SpyAlleyApplication::Results::SpyEliminator do
       end
     end
     describe 'one opponent in spy alley' do
-      let(:opponent_models, &->{[opponent1, opponent2]})
+      let(:opponent_models2, &->{[opponent1, opponent2]})
       it "marks turn_complete? as false, indicating that it will remain the same player's turn" do
         spy_eliminator.(
           player_model: player_model,
-          opponent_models: opponent_models,
+          opponent_models: opponent_models2,
           change_orders: change_orders,
           action_hash: action_hash
         )
@@ -53,7 +53,7 @@ RSpec.describe SpyAlleyApplication::Results::SpyEliminator do
         expect{
           spy_eliminator.(
             player_model: player_model,
-            opponent_models: opponent_models,
+            opponent_models: opponent_models2,
             change_orders: change_orders,
             action_hash: action_hash
           )
@@ -63,7 +63,7 @@ RSpec.describe SpyAlleyApplication::Results::SpyEliminator do
         expect{
           spy_eliminator.(
             player_model: player_model,
-            opponent_models: opponent_models,
+            opponent_models: opponent_models2,
             change_orders: change_orders,
             action_hash: action_hash
           )
@@ -71,11 +71,11 @@ RSpec.describe SpyAlleyApplication::Results::SpyEliminator do
       end
     end
     describe 'two opponents in spy alley' do
-      let(:opponent_models, &->{[opponent1, opponent2, opponent3]})
+      let(:opponent_models3, &->{[opponent1, opponent2, opponent3]})
       it "marks turn_complete? as false, indicating that it will remain the same player's turn" do
         spy_eliminator.(
           player_model: player_model,
-          opponent_models: opponent_models,
+          opponent_models: opponent_models3,
           change_orders: change_orders,
           action_hash: action_hash
         )
@@ -85,7 +85,7 @@ RSpec.describe SpyAlleyApplication::Results::SpyEliminator do
         expect{
           spy_eliminator.(
             player_model: player_model,
-            opponent_models: opponent_models,
+            opponent_models: opponent_models3,
             change_orders: change_orders,
             action_hash: action_hash
           )
@@ -95,7 +95,7 @@ RSpec.describe SpyAlleyApplication::Results::SpyEliminator do
         expect{
           spy_eliminator.(
             player_model: player_model,
-            opponent_models: opponent_models,
+            opponent_models: opponent_models3,
             change_orders: change_orders,
             action_hash: action_hash
           )

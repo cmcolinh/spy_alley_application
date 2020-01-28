@@ -23,6 +23,8 @@ module SpyAlleyApplication
           change_orders = change_orders.add_spy_eliminator_option(
             options: opponents_in_spy_alley.map{|s| "seat_#{s}"}
           )
+
+          next_player_up_for.(options.merge(turn_complete?: false))
         else
           next_player_up_for.(options.merge(turn_complete?: true))
         end
