@@ -1,6 +1,5 @@
 require 'bundler/setup'
 require 'dry/initializer'
-require 'roda/spy_alley_application'
 require 'spy_alley_application/change_orders'
 require 'spy_alley_application/validator'
 require 'spy_alley_application/execute_action'

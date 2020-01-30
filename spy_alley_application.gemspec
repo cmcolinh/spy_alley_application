@@ -1,15 +1,15 @@
 lib = File.expand_path("lib", __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "roda/spy_alley_application/version"
+require "spy_alley_application/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "roda-spy_alley_application"
-  spec.version       = Roda::SpyAlleyApplication::VERSION
+  spec.name          = "spy_alley_application"
+  spec.version       = SpyAlleyApplication::VERSION
   spec.authors       = ["Colin Horner"]
   spec.email         = ["colin.a.horner@gmail.com"]
 
-  spec.summary       = "Application login for roda-spy_alley"
-  spec.description   = "Carries non-persistence abstract game login for roda-spy_alley"
+  spec.summary       = "Spy Alley Application"
+  spec.description   = "Runs the Spy Alley Application"
   #spec.homepage      = "TODO: Put your gem's website or public repo URL here."
   spec.license       = "MIT"
 

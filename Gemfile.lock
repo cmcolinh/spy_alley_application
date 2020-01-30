@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    roda-spy_alley_application (0.1.0)
+    spy_alley_application (0.2.0)
 
 GEM
   remote: https://rubygems.org/
@@ -75,8 +75,8 @@ DEPENDENCIES
   dry-types
   dry-validation
   rake (~> 10.0)
-  roda-spy_alley_application!
   rspec (~> 3.0)
+  spy_alley_application!
 
 BUNDLED WITH
-   2.0.2
+   2.1.4
