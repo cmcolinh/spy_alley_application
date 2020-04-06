@@ -80,5 +80,13 @@ RSpec.describe SpyAlleyApplication::Validator do
         expect(validator_for.(options)).to be_a(SpyAlleyApplication::Validator::ChooseNewIdentityValidator)
       end
     end
+    describe 'when options are nil' do
+      let(:options) do 
+        nil
+      end
+      it 'creates the correct type of validator for this case' do
+        expect(validator_for.(options)).to be_a(SpyAlleyApplication::Validator::InvalidOptionsValidator)
+      end
+    end
   end
 end

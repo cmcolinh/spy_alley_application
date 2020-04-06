@@ -9,7 +9,9 @@ module SpyAlleyApplication
       extend Dry::Initializer
       option :nationality_options
       option :return_options
+      option :action_id
       params do
+        required(:last_action_id).filled(:string)
         required(:player_action).filled(:string, eql?: 'choose_spy_identity')
         required(:nationality).filled(:string)
         required(:return_player).filled(:integer, included_in?: (1..6))
@@ -17,6 +19,9 @@ module SpyAlleyApplication
       end
       rule(:nationality) do
         key.failure({text: 'not a valid nationality', status: 422}) if !nationality_options.include?(values[:nationality])
+      end
+      rule(:last_action_id) do
+        key.failure({text: 'not posting to the current state of the game', status: 409}) if !values[:last_action_id].eql?(action_id)
       end
 
       def call(input)

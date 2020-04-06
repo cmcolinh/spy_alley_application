@@ -13,9 +13,9 @@ require 'spy_alley_application/validator/invalid_options_validator'
 module SpyAlleyApplication
   class Validator
     Dry::Validation.load_extensions(:monads)
-    def self.new(accept_roll: nil, accept_pass: nil, accept_use_move_card: nil,
+    def self.new(arg=nil, accept_roll: nil, accept_pass: nil, accept_use_move_card: nil,
       accept_make_accusation: nil, accept_move: nil, accept_buy_equipment: nil,
-      accept_confiscate_materials: nil, accept_choose_new_identity: nil
+      accept_confiscate_materials: nil, accept_choose_new_identity: nil, action_id:
     )
       #assemble a list of all the options that are not null
       options_set = local_variables.select{|v| !binding.local_variable_get(v).nil?}.sort

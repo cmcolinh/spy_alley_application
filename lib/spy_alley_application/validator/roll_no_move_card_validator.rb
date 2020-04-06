@@ -10,9 +10,11 @@ module SpyAlleyApplication
       option :roll_options
       option :accusation_targets
       option :accusable_nationalities
+      option :action_id
       params do
         legal_options = %w(roll make_accusation)
         seats         = %w(seat_1, seat_2, seat_3, seat_4, seat_5, seat_6)
+        required(:last_action_id).filled(:string)
         required(:player_action).filled(:string,  included_in?: legal_options)
         optional(:choose_result).filled(:integer, included_in?: [1,2,3,4,5,6])
         optional(:player_to_accuse).filled(:string)
@@ -30,6 +32,9 @@ module SpyAlleyApplication
       rule(:choose_result) do
         key.failure({text: "cannot choose value #{values[:choose_result]} for the die roll", status: 422}) if values[:player_action].eql?('roll') && !values[:choose_result].nil? && !roll_options.eql?(:permit_choose_result)
         key.failure({text: 'attempting to set the result of the die roll not permitted', status: 400}) if !values[:player_action].eql?('roll') && !values[:choose_result].nil?
+      end
+      rule(:last_action_id) do
+        key.failure({text: 'not posting to the current state of the game', status: 409}) if !values[:last_action_id].eql?(action_id)
       end
     end
   end

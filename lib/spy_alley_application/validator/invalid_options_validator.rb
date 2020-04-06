@@ -7,6 +7,7 @@ module SpyAlleyApplication
     class InvalidOptionsValidator < Dry::Validation::Contract
       params do
         required(:last_action_id).filled(:string)
+        required(:last_action_id).filled(:string)
       end
 
       rule(:last_action_id) do

@@ -11,9 +11,11 @@ module SpyAlleyApplication
       option :accusation_targets
       option :accusable_nationalities
       option :move_card_options
+      option :action_id
       params do
         legal_options = %w(roll make_accusation use_move_card)
         seats         = %w(seat_1, seat_2, seat_3, seat_4, seat_5, seat_6)
+        required(:last_action_id).filled(:string)
         required(:player_action).filled(:string,  included_in?: legal_options)
         optional(:choose_result).filled(:integer, included_in?: [1,2,3,4,5,6])
         optional(:player_to_accuse).filled(:string)
@@ -36,6 +38,9 @@ module SpyAlleyApplication
       rule(:card_to_use) do
         key.failure({text: 'choosing a card to use not allowed unless you are using move card', status: 400}) if !values[:player_action].eql?('use_move_card') && !values[:card_to_use].nil?
         key.failure({text: 'not allowed to use that particular move card', status: 422}) if values[:player_action].eql?('use_move_card') && !move_card_options.include?(values[:card_to_use])
+      end
+      rule(:last_action_id) do
+        key.failure({text: 'not posting to the current state of the game', status: 409}) if !values[:last_action_id].eql?(action_id)
       end
     end
   end

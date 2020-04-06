@@ -9,9 +9,11 @@ module SpyAlleyApplication
       extend Dry::Initializer
       option :buyable_equipment
       option :buy_limit
+      option :action_id
 
       params do
         legal_options = %w(buy_equipment pass)
+        required(:last_action_id).filled(:string)
         required(:player_action).filled(:string, included_in?: legal_options)
         optional(:equipment_to_buy).filled(:array)
       end
@@ -21,6 +23,10 @@ module SpyAlleyApplication
         key.failure({text: 'must choose equipment to buy when choosing to buy equipment', status: 400}) if values[:player_action].eql?('buy_equipment') && values[:equipment_to_buy].nil?
         key.failure({text: 'not all equipment valid', status: 422}) if values[:player_action].eql?('buy_equipment') && !Array(values[:equipment_to_buy]).all?{|value| buyable_equipment.include?(value)}
         key.failure({text: "limited to buying #{buy_limit} different equipment", status: 400}) if Array(values[:equipment_to_buy]).length > buy_limit
+      end
+
+      rule(:last_action_id) do
+        key.failure({text: 'not posting to the current state of the game', status: 409}) if !values[:last_action_id].eql?(action_id)
       end
     end
   end

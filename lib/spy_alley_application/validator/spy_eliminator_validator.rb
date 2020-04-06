@@ -8,8 +8,10 @@ module SpyAlleyApplication
     class SpyEliminatorValidator < Dry::Validation::Contract
       option :accusation_targets
       option :accusable_nationalities
+      option :action_id
       params do
         legal_options = %w(pass make_accusation)
+        required(:last_action_id).filled(:string)
         required(:player_action).filled(:string,  included_in?: legal_options)
         optional(:player_to_accuse).filled(:string)
         optional(:nationality).filled(:string)
@@ -22,6 +24,9 @@ module SpyAlleyApplication
       rule(:nationality) do
         key.failure({text: 'choosing a nationality is not allowed unless either making an accusation or choosing a new spy identity', status: 400}) if !values[:player_action].eql?('make_accusation') && !values[:nationality].nil?
         key.failure({text: 'not a valid nationality', status: 422}) if values[:player_action].eql?('make_accusation') && !accusable_nationalities.include?(values[:nationality])
+      end
+      rule(:last_action_id) do
+        key.failure({text: 'not posting to the current state of the game', status: 409}) if !values[:last_action_id].eql?(action_id)
       end
 
       def call(input)
