@@ -3,11 +3,12 @@
 require 'dry/validation'
 require 'spy_alley_application/validator/roll_no_move_card_validator'
 require 'spy_alley_application/validator/roll_or_move_card_validator'
-require 'spy_alley_application/validator/buy_equipment_validator.rb'
-require 'spy_alley_application/validator/move_validator.rb'
-require 'spy_alley_application/validator/spy_eliminator_validator.rb'
-require 'spy_alley_application/validator/confiscate_materials_validator.rb'
-require 'spy_alley_application/validator/choose_new_identity_validator.rb'
+require 'spy_alley_application/validator/buy_equipment_validator'
+require 'spy_alley_application/validator/move_validator'
+require 'spy_alley_application/validator/spy_eliminator_validator'
+require 'spy_alley_application/validator/confiscate_materials_validator'
+require 'spy_alley_application/validator/choose_new_identity_validator'
+require 'spy_alley_application/validator/invalid_options_validator'
 
 module SpyAlleyApplication
   class Validator
@@ -67,7 +68,7 @@ module SpyAlleyApplication
           return_options: accept_choose_new_identity[:return_options]
         )
       end
-      raise "set option list #{options_set} invalid!!!!"
+      InvalidOptionsValidator::new
     end
   end
 end
