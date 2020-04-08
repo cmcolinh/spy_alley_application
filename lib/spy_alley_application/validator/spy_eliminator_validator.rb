@@ -12,6 +12,7 @@ module SpyAlleyApplication
       params do
         legal_options = %w(pass make_accusation)
         required(:last_action_id).filled(:string)
+        required(:user).filled
         required(:player_action).filled(:string,  included_in?: legal_options)
         optional(:player_to_accuse).filled(:string)
         optional(:nationality).filled(:string)
@@ -27,6 +28,9 @@ module SpyAlleyApplication
       end
       rule(:last_action_id) do
         key.failure({text: 'not posting to the current state of the game', status: 409}) if !values[:last_action_id].eql?(action_id)
+      end
+      rule(:user) do
+        key.failure({text: 'not your turn', status: 403}) if values[:last_action_id].eql?(action_id) && !user&.id.eql?(next_player_id) && !user&.admin?
       end
 
       def call(input)
