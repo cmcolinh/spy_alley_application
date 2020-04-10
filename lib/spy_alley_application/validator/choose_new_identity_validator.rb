@@ -9,7 +9,8 @@ module SpyAlleyApplication
       extend Dry::Initializer
       option :nationality_options
       option :return_options
-      option :action_id
+      option :action_id, optional
+      option :user, user -> user || NonLoggedInUser::new
       params do
         required(:last_action_id).filled(:string)
         required(:user).filled
@@ -29,7 +30,8 @@ module SpyAlleyApplication
       end
 
       def call(input)
-        input.reject!{|k, v| [:return_player, :remaining_choices].include?(k)}
+        input.reject!{|k, v| [:return_player, :remaining_choices, :user].include?(k)}
+        input[:user] = user
         input[:return_player] = return_options[:player]
         input[:remaining_choices] = return_options[:choices] if return_options.has_key?(:choices)
         super

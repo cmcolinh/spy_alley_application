@@ -8,6 +8,7 @@ module SpyAlleyApplication
     class ConfiscateMaterialsValidator < Dry::Validation::Contract
       option :selectable_options
       option :last_action_id
+      option :user, user -> user || NonLoggedInUser::new
       params do
         legal_options = %w(pass confiscate_materials)
         required(:last_action_id).filled(:string)
@@ -31,6 +32,12 @@ module SpyAlleyApplication
       end
       rule(:user) do
         key.failure({text: 'not your turn', status: 403}) if values[:last_action_id].eql?(action_id) && !user&.id.eql?(next_player_id) && !user&.admin?
+      end
+
+      def call(input)
+        input.reject!{|k, v| k.eql?(:user)}
+        input[:user] = user
+        super
       end
     end
   end

@@ -10,6 +10,7 @@ module SpyAlleyApplication
       option :buyable_equipment
       option :buy_limit
       option :action_id
+      option :user, user -> user || NonLoggedInUser::new
 
       params do
         legal_options = %w(buy_equipment pass)
@@ -32,6 +33,12 @@ module SpyAlleyApplication
 
       rule(:user) do
         key.failure({text: 'not your turn', status: 403}) if values[:last_action_id].eql?(action_id) && !user&.id.eql?(next_player_id) && !user&.admin?
+      end
+
+      def call(input)
+        input.reject!{|k, v| k.eql?(:user)}
+        input[:user] = user
+        super
       end
     end
   end

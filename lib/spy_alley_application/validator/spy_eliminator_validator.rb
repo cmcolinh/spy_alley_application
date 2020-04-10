@@ -9,6 +9,8 @@ module SpyAlleyApplication
       option :accusation_targets
       option :accusable_nationalities
       option :action_id
+      option :user, user -> user || NonLoggedInUser::new
+
       params do
         legal_options = %w(pass make_accusation)
         required(:last_action_id).filled(:string)
@@ -34,6 +36,8 @@ module SpyAlleyApplication
       end
 
       def call(input)
+        input.reject!{|k, v| [:accusation_targets, :user].include?(k)}
+        input[:user] = user
         input[:accusation_targets] = accusable_nationalities
         super
       end

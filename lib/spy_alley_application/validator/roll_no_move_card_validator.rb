@@ -12,6 +12,7 @@ module SpyAlleyApplication
       option :accusation_targets
       option :accusable_nationalities
       option :action_id
+      option :user, user -> user || NonLoggedInUser::new
       params do
         legal_options = %w(roll make_accusation)
         required(:last_action_id).filled(:string)
@@ -40,6 +41,12 @@ module SpyAlleyApplication
       end
       rule(:user) do
         key.failure({text: 'not your turn', status: 403}) if values[:last_action_id].eql?(action_id) && !user&.id.eql?(next_player_id) && !user&.admin?
+      end
+
+      def call(input)
+        input.reject!{|k, v| k.eql?(:user)}
+        input[:user] = user
+        super
       end
     end
   end
