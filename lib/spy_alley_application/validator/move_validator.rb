@@ -9,7 +9,7 @@ module SpyAlleyApplication
       extend Dry::Initializer
       option :space_options
       option :last_action_id
-      option :user, user -> user || NonLoggedInUser::new
+      option :user, -> user {user|| NonLoggedInUser::new}
 
       params do
         required(:last_action_id).filled(:string)

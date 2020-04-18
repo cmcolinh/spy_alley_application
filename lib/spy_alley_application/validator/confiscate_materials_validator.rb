@@ -8,7 +8,7 @@ module SpyAlleyApplication
     class ConfiscateMaterialsValidator < Dry::Validation::Contract
       option :selectable_options
       option :last_action_id
-      option :user, user -> user || NonLoggedInUser::new
+      option :user, -> user {user || NonLoggedInUser::new}
       params do
         legal_options = %w(pass confiscate_materials)
         required(:last_action_id).filled(:string)

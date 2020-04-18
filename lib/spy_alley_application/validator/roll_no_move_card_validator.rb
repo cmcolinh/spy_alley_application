@@ -12,7 +12,7 @@ module SpyAlleyApplication
       option :accusation_targets
       option :accusable_nationalities
       option :action_id
-      option :user, user -> user || NonLoggedInUser::new
+      option :user, -> user {user || NonLoggedInUser::new}
       params do
         legal_options = %w(roll make_accusation)
         required(:last_action_id).filled(:string)

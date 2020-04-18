@@ -5,7 +5,7 @@ require 'dry/validation'
 module SpyAlleyApplication
   class Validator
     class InvalidOptionsValidator < Dry::Validation::Contract
-      option :user, user -> user || NonLoggedInUser::new
+        option :user, -> user {user || NonLoggedInUser::new}
       params do
         required(:last_action_id).filled(:string)
         required(:user).filled

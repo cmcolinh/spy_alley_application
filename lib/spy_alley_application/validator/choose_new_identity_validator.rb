@@ -9,8 +9,8 @@ module SpyAlleyApplication
       extend Dry::Initializer
       option :nationality_options
       option :return_options
-      option :action_id, optional
-      option :user, user -> user || NonLoggedInUser::new
+      option :action_id, optional: true
+      option :user, -> user {user || NonLoggedInUser::new}
       params do
         required(:last_action_id).filled(:string)
         required(:user).filled

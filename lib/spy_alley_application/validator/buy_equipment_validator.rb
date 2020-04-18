@@ -10,7 +10,7 @@ module SpyAlleyApplication
       option :buyable_equipment
       option :buy_limit
       option :action_id
-      option :user, user -> user || NonLoggedInUser::new
+      option :user, -> user {user || NonLoggedInUser::new}
 
       params do
         legal_options = %w(buy_equipment pass)
