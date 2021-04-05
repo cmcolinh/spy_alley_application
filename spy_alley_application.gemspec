@@ -26,7 +26,15 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "bundler", "~> 2.0"
-  spec.add_development_dependency "rake", "~> 13.0"
-  spec.add_development_dependency "rspec", "~> 3.0"
+  spec.add_development_dependency 'bundler', '~> 2.0'
+  spec.add_development_dependency 'change_orders', '~> 0.1.0'
+  spec.add_development_dependency 'dry-auto_inject'
+  spec.add_development_dependency 'dry-initializer'
+  spec.add_development_dependency 'dry-monads'
+  spec.add_development_dependency 'dry-struct'
+  spec.add_development_dependency 'dry-types'
+  spec.add_development_dependency 'dry-validation'
+  spec.add_development_dependency 'game_validator', '~> 0.6.0'
+  spec.add_development_dependency 'rake', '~> 13.0'
+  spec.add_development_dependency 'rspec', '~> 3.0'
 end
