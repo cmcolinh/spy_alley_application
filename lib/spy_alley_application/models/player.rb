@@ -13,9 +13,10 @@ module SpyAlleyApplication
       attribute :seat, ::Types::Coercible::Integer
       attribute :location, SpyAlleyApplication::Types::BoardSpace
       attribute :spy_identity, SpyAlleyApplication::Types::Nationality
+      attribute :money, ::Types::CoercibleNonnegativeInteger
       attribute :move_cards, SpyAlleyApplication::Types::ArrayOfMoveCards
       attribute :equipment, SpyAlleyApplication::Types::ArrayOfEquipment
-      attribute :wild_cards, ::Types::Coercible::Integer.constrained(gteq: 0)
+      attribute :wild_cards, ::Types::CoercibleNonnegativeInteger
       attribute :active, ::Types::Strict::Bool
       alias_method :active?, :active
 

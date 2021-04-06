@@ -4,7 +4,7 @@ require 'dry-struct'
 require 'spy_alley_application/types/array_of_players'
 require 'spy_alley_application/types/array_of_free_gifts'
 require 'spy_alley_application/types/array_of_move_cards'
-#require 'spy_alley_application/types/game_state'
+require 'spy_alley_application/types/game_state'
 
 module SpyAlleyApplication
   module Models

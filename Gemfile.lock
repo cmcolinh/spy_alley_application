@@ -53,7 +53,7 @@ GEM
       dry-equalizer (~> 0.2)
       dry-initializer (~> 3.0)
       dry-schema (~> 1.5, >= 1.5.2)
-    game_validator (0.6.0)
+    game_validator (0.6.1)
     ice_nine (0.11.2)
     rake (13.0.3)
     rspec (3.10.0)
