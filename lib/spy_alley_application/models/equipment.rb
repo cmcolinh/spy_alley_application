@@ -17,6 +17,10 @@ module SpyAlleyApplication
         visitor.handle_equipment(self, args)
       end
 
+      def wild_card?
+        false
+      end
+
       def to_h
         self
       end

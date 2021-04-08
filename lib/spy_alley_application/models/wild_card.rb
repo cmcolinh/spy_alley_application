@@ -10,6 +10,10 @@ module SpyAlleyApplication
         visitor.handle_wild_card(self, args)
       end
 
+      def wild_card?
+        true
+      end
+
       def inspect
         'wild card'
       end

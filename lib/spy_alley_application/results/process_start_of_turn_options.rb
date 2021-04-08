@@ -6,10 +6,10 @@ module SpyAlleyApplication
   module Results
     class ProcessStartOfTurnOptions
       include Dry::Initializer.define -> do
+        option :get_make_accusation_option_node, type: ::Types::Callable, reader: :private
         option :get_next_player_node, type: ::Types::Callable, reader: :private
         option :get_roll_die_option_node, type: ::Types::Callable, reader: :private
         option :get_use_move_card_option_node, type: ::Types::Callable, reader: :private
-        option :get_make_accusation_option_node, type: ::Types::Callable, reader: :private
       end
 
       def call(game_board:, change_orders:)
