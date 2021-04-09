@@ -7,7 +7,7 @@ module SpyAlleyApplication
     module Nodes
       class MoveOptionNode < Dry::Struct
         @@can_handle_move_option = ::Types.Interface(:handle_move_option)
-        attribute :space_id_list, ::Types::ArrayOfStrictInteger
+        attribute :options, ::Types::ArrayOfStrictInteger
 
         def accept(visitor, **args)
           @can_handle_move_option.(visitor)

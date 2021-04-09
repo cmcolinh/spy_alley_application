@@ -13,6 +13,10 @@ module SpyAlleyApplication
       attribute :move_card_pile, Types::ArrayOfMoveCards
       attribute :free_gift_pile, Types::ArrayOfFreeGifts
       attribute :game_state, Types::GameState
+
+      def current_player
+        players.find{|p| p.seat.eql?(game_state.seat)}
+      end
     end
   end
 end

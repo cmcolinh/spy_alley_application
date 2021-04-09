@@ -1,0 +1,66 @@
+require 'dry-initializer'
+
+module SpyAlleyApplication
+  module Results
+    class ProcessMoveOptions
+      include Dry::Initializer.define -> do
+        option :move_options, type: ::Types::Callable, reader: :private
+        option :process_landing_on_space, type: ::Types::Callable, reader: :private
+        option :process_next_turn_options, type: ::Types::Callable, reader: :private
+      end
+
+      def call(game_board:, change_orders:, game_space:, spaces_remaining:)
+        options = [game_space.branch_space, game_space.next_space]
+          .map{|space| get_move_option(space, game_board, spaces_remaiing - 1)}
+          .reject(&:nil?)
+
+        if options.length.eql?(1)
+          process_landing_on_space.(
+            game_board: game_board,
+            change_orders: change_orders,
+            game_space: move_options.first)
+        else
+          space_id_list = move_options.map(&:id).sort.freeze
+          game_board = move_options.(game_board: game_board, options: space_id_list)
+          process_next_turn_options.(game_board: game_board, change_orders: change_orders)
+        end
+      end
+
+      private
+      def get_move_option(space, game_board, spaces_remaining)
+        if spaces_remaining.eql?(0)
+          space.accept(self, game_board: game_board)
+        else
+          get_move_option(space.next_space, game_board, spaces_remaining - 1)
+        end
+      end
+
+      # player cannot land on border crossing if cannot pay the toll to cross the border
+      def handle_border_crossing(space, game_board:)
+        if game_board.current_player.money < 5
+          nil
+        else
+          space
+        end
+      end
+
+      # no other such restriction from landing on any other space on the board
+      def handle_embassy(space, game_board:)
+        space
+      end
+      alias_method :handle_move_back, :handle_embassy
+      alias_method :handle_buy_password, :handle_embassy
+      alias_method :handle_buy_equipment, :handle_embassy
+      alias_method :handle_draw_move_card, :handle_embassy
+      alias_method :handle_sold_top_secret_information, :handle_embassy
+      alias_method :handle_spy_eliminator, :handle_embassy
+      alias_method :handle_confiscate_materials, :handle_embassy
+      alias_method :handle_take_another_turn, :handle_embassy
+      alias_method :handle_draw_free_gift, :handle_embassy
+      alias_method :handle_start, :handle_embassy
+      alias_method :handle_black_market, :handle_embassy
+      alias_method :handle_spy_alley_entrance, :handle_embassy
+    end
+  end
+end
+
