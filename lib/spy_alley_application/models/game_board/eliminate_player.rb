@@ -34,7 +34,7 @@ module SpyAlleyApplication
         def get_game_state(unaffected_players)
           # If none of the other players are in the game, then the game must be over
           if unaffected.players.none?(&:active?)
-            {name: 'game_over', type: 'by_elimination' seat: eliminating_player.seat}
+            {name: 'game_over', reason: {name: 'by_elimination'}, seat: eliminating_player.seat}
           else
             {
               name: 'choose_new_spy_identity',

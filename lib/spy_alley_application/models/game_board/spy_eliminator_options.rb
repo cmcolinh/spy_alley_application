@@ -31,7 +31,7 @@ module SpyAlleyApplication
             targetable_seats: targetable_seats,
             parent: game_board.game_state
           }
-          SpyAlleyApplication::Types::GameBoard.call
+          SpyAlleyApplication::Types::GameBoard.call(
             game_board.to_h.tap{|g| g[:game_state] = game_state})
         end
       end

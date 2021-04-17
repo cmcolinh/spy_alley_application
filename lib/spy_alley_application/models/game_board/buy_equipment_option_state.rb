@@ -23,12 +23,12 @@ module SpyAlleyApplication
         end
 
         def call(game_board:, equipment_type:)
-          player = game_board.players.find{|p| p.seat.eql?(game_board.game_state.seat)}
+          player = game_board.current_player
           unit_cost = equipment_cost[equipment_type.to_sym]
           equipment = SpyAlleyApplication::Types::Nationality.values.map do |nationality|
             SpyAlleyApplication::Types::Equipment.call("#{nationality} #{equipment_type}")
           end
-          options = (player.equipment - equipment).sort.freeze
+          options = (equipment - player.equipment).sort.freeze
           limit = [player.money / unit_cost, options.length].min
 
           # only give buy option if player both has enough money and does not already all equipment

@@ -18,7 +18,7 @@ module SpyAlleyApplication
             seat: game_board.game_state.seat,
             options: options
           }
-          SpyAlleyApplication::Types::GameBoard.call
+          SpyAlleyApplication::Types::GameBoard.call(
             game_board.to_h.tap{|g| g[:game_state] = game_state})
         end
       end

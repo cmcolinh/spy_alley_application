@@ -10,7 +10,9 @@ module SpyAlleyApplication
         def call(game_board:, money_adjustment:)
           player = game_board.players.find{|p| p.seat.eql?(game_board.game_state.seat)}
           unaffected_players = game_board.players.reject{|p| p.equal?(player)}
-          player = player.to_h.tap{|p| p[:money] = p[:money] + money_adjustment}
+          puts player.money
+          puts player.money.class
+          player = player.to_h.tap{|p| puts money_adjustment.class;p[:money] = p[:money] + money_adjustment}
           players = unaffected_players.push(player).sort{|p, q| p[:seat] <=> q[:seat]}
           game_board = SpyAlleyApplication::Types::GameBoard.call(
             game_board.to_h.tap{|g| g[:players] = players})

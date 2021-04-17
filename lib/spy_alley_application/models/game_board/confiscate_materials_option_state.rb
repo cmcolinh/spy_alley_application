@@ -29,20 +29,19 @@ module SpyAlleyApplication
           player = game_board.players.find{|p| p.seat.eql?(game_board.game_state.seat)}
           other_players = game_board.players.reject{|p| p.seat.eql?(game_board.game_state.seat)}
 
-          affordable_equipment_types = SpyAlleyApplication::Types::EquipmentType.values.map do |t|
+          affordable_types = SpyAlleyApplication::Types::EquipmentType.values.select do |t|
             player.money >= equipment_cost[t.to_sym]
           end
           can_afford_wild_card = (player.money > equipment_cost[:wild_card])
 
-          all_affordable_equipment = affordble_equipment.map do |equipment_type|
+          all_affordable_equipment = affordable_types.map do |equipment_type|
             SpyAlleyApplication::Types::Nationality.values.map do |nationality|
               SpyAlleyApplication::Types::Equipment.call("#{nationality} #{equipment_type}")
             end
           end.flatten.sort
 
           targets = other_players.map do |p|
-            get
-            equipment = all_affordble_equipment.select{|e| p.equipment.include?(e)}
+            equipment = all_affordable_equipment.select{|e| p.equipment.include?(e)}
             equipment.push('wild card') if p.wild_cards > 0 && can_afford_wild_card
             [p.seat, equipment.freeze]
           end.reject{|seat, equipment| equipment.empty?}.map do |seat, equipment|

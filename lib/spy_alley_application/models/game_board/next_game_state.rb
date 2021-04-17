@@ -9,13 +9,13 @@ module SpyAlleyApplication
     class GameBoard < Dry::Struct
       class NextGameState
         def call(game_board:, target_player_id: nil)
+          args = {game_board: game_board}
+          args[:target_player_id] = target_player_id if target_player_id
           SpyAlleyApplication::Models::GameBoard::new(
             players: game_board.players,
             move_card_pile: game_board.move_card_pile,
             free_gift_pile: game_board.free_gift_pile,
-            game_state: game_board.game_state.accept(self,
-              game_board: game_board,
-              target_player_id: target_player_id))
+            game_state: game_board.game_state.accept(self, args))
         end
 
         def handle_start_of_turn(node, game_board:)
@@ -48,7 +48,7 @@ module SpyAlleyApplication
           remaining_seats = game_board
             .players
             .select(&:active?)
-            .reject{|p| p.id.eql?(targeted_player_id)}
+            .reject{|p| p.id.eql?(target_player_id)}
             .map(&:seat)
             .select{|seat| node.targetable_seats.include?(seat)}
             .sort

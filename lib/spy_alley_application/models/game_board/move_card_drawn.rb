@@ -13,8 +13,8 @@ module SpyAlleyApplication
         end
 
         def call(game_board:)
-          player = game_board.players.find{|p| p.seat.eql?(game_board.game_state.seat)}
-          unaffected_players = game_board.pleyers.reject{|p| p.equal?(player)}
+          player = game_board.current_player
+          unaffected_players = game_board.players.reject{|p| p.equal?(player)}
           move_card_pile = game_board.move_card_pile
           # put the first card in the player's move card hand
           player = player.to_h.tap{|p| p[:move_cards].push(move_card_pile.first).sort}

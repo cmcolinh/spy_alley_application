@@ -7,7 +7,7 @@ require 'spy_alley_application/types/player'
 i = Class.new do
   def call(game_board)
     game_board[:players] = game_board[:players]&.map do |player|
-      SpyAlleyApplication::Types::Player.call(player)
+      SpyAlleyApplication::Types::Player.call(player.to_h)
     end
     game_board = SpyAlleyApplication::Models::GameBoard.call(game_board)
     players = game_board.players

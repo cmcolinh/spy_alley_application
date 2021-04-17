@@ -15,6 +15,10 @@ module SpyAlleyApplication
       def to_s
         value
       end
+
+      def to_i
+        value
+      end
       alias_method :transform_values, :to_s
     end
   end

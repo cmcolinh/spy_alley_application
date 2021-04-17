@@ -42,7 +42,7 @@ module SpyAlleyApplication
           players = unaffected_players
             .push(player)
             .push(target)
-            .sort{|p, q| p[:seat] <=> q[:seat]]}
+            .sort{|p, q| p[:seat] <=> q[:seat]}
             .freeze
 
           game_board = SpyAlleyApplication::Models::GameBoard.call(

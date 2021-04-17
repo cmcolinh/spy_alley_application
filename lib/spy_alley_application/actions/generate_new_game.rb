@@ -8,7 +8,7 @@ module SpyAlleyApplication
     class GenerateNewGame
       include Dry::Initializer.define -> do
         option :get_result_game_board_node, type: ::Types::Callable, reader: :private
-        option :process_start_of_turn_options, type: ::Types::Callable, reader: :private
+        option :process_next_turn_options, type: ::Types::Callable, reader: :private
         option :start_location, default: ->{{id: 0}}, reader: :private
       end
       def call(seat_assignments:, change_orders:)
@@ -23,7 +23,7 @@ module SpyAlleyApplication
         starting_player_id = players.find{|p| p[:seat].eql?(game_board.game_state.seat)}[:id]
         other_ids = players.reject{|p| p[:seat].eql?(game_board.game_state.seat)}.map{|p| p[:id]}
 
-        process_start_of_turn_options.(game_board: game_board,
+        process_next_turn_options.(game_board: game_board,
           change_orders: change_orders.push(get_result_game_board_node.(game_board: game_board)))
       end
 

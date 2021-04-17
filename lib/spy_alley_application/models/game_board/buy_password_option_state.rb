@@ -11,7 +11,7 @@ module SpyAlleyApplication
       class BuyPasswordOptionState
         include Dry::Initializer.define -> do
           option :next_game_state, type: ::Types::Callable, reader: :private
-          option :password_cost, type: ::Types::CoercibleNonnegativeInteger, reader: private,
+          option :password_cost, type: ::Types::CoercibleNonnegativeInteger, reader: :private,
             default: ->{1}
         end
 

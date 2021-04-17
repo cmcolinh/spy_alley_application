@@ -11,7 +11,8 @@ module SpyAlleyApplication
 
         attribute :name, ::Types::Value('move_option')
         attribute :seat, SpyAlleyApplication::Types::CoercibleIntegerOneToSix
-        attribute :options, ::Types::Array::of(Types::CoercibleIntegerOneToSix)
+        attribute :options, ::Types::Array::of(::Types::Coercible::Integer)
+          .constrained(min_size: 2, max_size: 2)
 
         def accept(visitor, **args)
           @@can_handle_move_option.(visitor)

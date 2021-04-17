@@ -26,7 +26,7 @@ module SpyAlleyApplication
 
         def call(game_board:)
           player = game_board.players.find{|p| p.seat.eql?(game_board.game_state.seat)}
-          affordable_equipment = SpyAlleyApplication::Types::EquipmentType.values.map do |t|
+          affordable_equipment = SpyAlleyApplication::Types::EquipmentType.values.select do |t|
             player.money >= equipment_cost[t.to_sym]
           end
 
@@ -36,7 +36,7 @@ module SpyAlleyApplication
             end
           end.flatten.sort.freeze
 
-          options = player.equipment - equipment
+          options = equipment - player.equipment
 
           # only give buy option if player both has enough money and does not already all equipment
           if options.empty?

@@ -9,29 +9,20 @@ module SpyAlleyApplication
         option :process_next_turn_options, type: ::Types::Callable, reader: :private
       end
 
-      def call(game_board:, change_orders:, game_space:, spaces_remaining:)
-        options = [game_space.branch_space, game_space.next_space]
-          .map{|space| get_move_option(space, game_board, spaces_remaiing - 1)}
+      def call(game_board:, change_orders:, board_space:, spaces_remaining:)
+        options = [board_space.branch_space, board_space.next_space]
+          .map{|space| get_move_option(space, game_board, spaces_remaining - 1)}
           .reject(&:nil?)
 
         if options.length.eql?(1)
           process_landing_on_space.(
             game_board: game_board,
             change_orders: change_orders,
-            game_space: move_options.first)
+            board_space: move_options.first)
         else
-          space_id_list = move_options.map(&:id).sort.freeze
+          space_id_list = options.map(&:id).sort.freeze
           game_board = move_options.(game_board: game_board, options: space_id_list)
           process_next_turn_options.(game_board: game_board, change_orders: change_orders)
-        end
-      end
-
-      private
-      def get_move_option(space, game_board, spaces_remaining)
-        if spaces_remaining.eql?(0)
-          space.accept(self, game_board: game_board)
-        else
-          get_move_option(space.next_space, game_board, spaces_remaining - 1)
         end
       end
 
@@ -60,6 +51,12 @@ module SpyAlleyApplication
       alias_method :handle_start, :handle_embassy
       alias_method :handle_black_market, :handle_embassy
       alias_method :handle_spy_alley_entrance, :handle_embassy
+
+      private
+      def get_move_option(space, game_board, spaces_remaining)
+        spaces_remaining.times{space = space.next_space}
+        space.accept(self, game_board: game_board)
+      end
     end
   end
 end

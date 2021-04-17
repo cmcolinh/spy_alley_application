@@ -7,6 +7,11 @@ module SpyAlleyApplication
   module Models
     module GameState
       class ConfiscateMaterials < Dry::Struct
+        class ConfiscationTarget < Dry::Struct
+          attribute :seat, SpyAlleyApplication::Types::CoercibleIntegerOneToSix
+          attribute :equipment, SpyAlleyApplication::Types::ArrayOfEquipment
+        end
+
         @@can_handle_confiscate_materials = ::Types.Interface(:handle_confiscate_materials)
 
         attribute :name, ::Types::Value('confiscate_materials')
@@ -16,11 +21,6 @@ module SpyAlleyApplication
         def accept(visitor, **args)
           @@can_handle_confiscate_materials.(visitor)
           visitor.handle_confiscate_materials(self, args)
-        end
-
-        class ConfiscationTarget < Dry::Struct
-          attribute :seat, SpyAlleyApplication::Types::CoercibleIntegerOneToSix
-          attribute :equipment, SpyAlleyApplication::Types::ArrayOfEquipment
         end
       end
     end

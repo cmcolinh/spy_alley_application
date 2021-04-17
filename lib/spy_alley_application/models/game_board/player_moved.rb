@@ -9,7 +9,7 @@ module SpyAlleyApplication
       class PlayerMoved
         def call(game_board:, new_location:)
           player = game_board.players.find{|p| p.seat.eql?(game_board.game_state.seat)}
-          unaffected_players = game_board.pleyers.reject{|p| p.equal?(player)}
+          unaffected_players = game_board.players.reject{|p| p.equal?(player)}
           player = player.to_h.tap{|p| p[:location] = new_location}
           players = unaffected_players.push(player).sort{|p, q| p[:seat] <=> q[:seat]}
           game_board = SpyAlleyApplication::Types::GameBoard.call(

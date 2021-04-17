@@ -11,7 +11,7 @@ module SpyAlleyApplication
         @@can_handle_buy_equipment = ::Types.Interface(:handle_buy_equipment)
         attribute :id, ::Types::Coercible::Integer
         attribute :next_space, SpyAlleyApplication::Types::BoardSpace
-        attribute :type, SpyAlleyApplication::Types::EquipmentType
+        attribute :equipment_type, SpyAlleyApplication::Types::EquipmentType
 
         def accept(visitor, **args)
           @@can_handle_buy_equipment.(visitor)

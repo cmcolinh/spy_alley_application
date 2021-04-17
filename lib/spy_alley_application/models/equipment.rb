@@ -29,6 +29,13 @@ module SpyAlleyApplication
         "#{nationality} #{type}"
       end
       alias_method :transform_values, :to_s
+
+      def <=>(other)
+        return nil if !other.is_a?(self.class)
+        result = self.nationality <=> other.nationality
+        result = self.type <=> other.type if result.eql?(0)
+        result
+      end
     end
   end
 end
