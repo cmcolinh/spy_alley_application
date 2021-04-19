@@ -17,7 +17,7 @@ module SpyAlleyApplication
           process_landing_on_space.(
             game_board: game_board,
             change_orders: change_orders,
-            board_space: board_space)
+            space_id: board_space.id)
         else
           board_space.accept(self,
             game_board: game_board,

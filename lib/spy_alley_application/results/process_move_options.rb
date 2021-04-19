@@ -10,34 +10,34 @@ module SpyAlleyApplication
       end
 
       def call(game_board:, change_orders:, board_space:, spaces_remaining:)
-        options = [board_space.branch_space, board_space.next_space]
-          .map{|space| get_move_option(space, game_board, spaces_remaining - 1)}
+        space_id_list = [board_space.branch_space, board_space.next_space]
+          .map{|space| space_id(space, game_board, spaces_remaining - 1)}
           .reject(&:nil?)
+          .freeze
 
-        if options.length.eql?(1)
+        if space_id_list.length.eql?(1)
           process_landing_on_space.(
             game_board: game_board,
             change_orders: change_orders,
-            board_space: move_options.first)
+            space_id: space_id_list.first)
         else
-          space_id_list = options.map(&:id).sort.freeze
           game_board = move_options.(game_board: game_board, options: space_id_list)
           process_next_turn_options.(game_board: game_board, change_orders: change_orders)
         end
       end
 
-      # player cannot land on border crossing if cannot pay the toll to cross the border
+      # player cannot land on border crossing if cannot pay the toll ($5) to cross the border
       def handle_border_crossing(space, game_board:)
         if game_board.current_player.money < 5
           nil
         else
-          space
+          space.id
         end
       end
 
       # no other such restriction from landing on any other space on the board
       def handle_embassy(space, game_board:)
-        space
+        space.id
       end
       alias_method :handle_move_back, :handle_embassy
       alias_method :handle_buy_password, :handle_embassy
@@ -53,7 +53,7 @@ module SpyAlleyApplication
       alias_method :handle_spy_alley_entrance, :handle_embassy
 
       private
-      def get_move_option(space, game_board, spaces_remaining)
+      def space_id(space, game_board, spaces_remaining)
         spaces_remaining.times{space = space.next_space}
         space.accept(self, game_board: game_board)
       end

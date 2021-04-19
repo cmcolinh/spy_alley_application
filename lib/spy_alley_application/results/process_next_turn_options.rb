@@ -71,7 +71,7 @@ module SpyAlleyApplication
           .push(get_make_accusation_option_node.(player_id_list: target_ids))
 
         if !move_cards.empty?
-          change_orders = change_orders.push(get_use_move_option_node.(card_list: move_cards))
+          change_orders = change_orders.push(get_use_move_card_option_node.(card_list:move_cards))
         end
 
         change_orders

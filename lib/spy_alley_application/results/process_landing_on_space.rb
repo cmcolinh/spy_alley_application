@@ -26,12 +26,13 @@ module SpyAlleyApplication
         option :spy_eliminator_options, type: ::Types::Callable, reader: :private
       end
 
-      def call(game_board:, change_orders:, board_space:)
+      def call(game_board:, change_orders:, space_id:)
         player = game_board.current_player
         change_orders = change_orders.push(get_player_movement_node.(
           player_id: player.id,
-          space_id: board_space.id))
-        game_board = player_moved.(game_board: game_board, new_location: board_space)
+          space_id: space_id))
+        game_board = player_moved.(game_board: game_board, new_location: {id: space_id})
+        board_space = game_board.current_player.location
         board_space.accept(self, game_board: game_board, change_orders: change_orders)
       end
 
@@ -229,7 +230,7 @@ module SpyAlleyApplication
       def handle_take_another_turn(board_space, game_board:, change_orders:)
         process_next_turn_options.(
           game_board: game_board,
-          change_orders: change_orders)
+          change_orders: change_orders.push(get_result_game_board_node.(game_board: game_board)))
       end
     end
   end

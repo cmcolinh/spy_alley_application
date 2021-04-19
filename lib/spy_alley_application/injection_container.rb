@@ -4,7 +4,10 @@ require 'change_orders'
 require 'dry-auto_inject'
 require 'dry-container'
 require 'game_validator'
+require 'spy_alley_application/actions/choose_space_to_move'
 require 'spy_alley_application/actions/generate_new_game'
+require 'spy_alley_application/actions/roll_die'
+require 'spy_alley_application/actions/use_move_card'
 require 'spy_alley_application/models/game_board/black_market_option_state'
 require 'spy_alley_application/models/game_board/buy_equipment_option_state'
 require 'spy_alley_application/models/game_board/buy_password_option_state'
@@ -16,6 +19,7 @@ require 'spy_alley_application/models/game_board/equipment_confiscated'
 require 'spy_alley_application/models/game_board/free_gift_drawn'
 require 'spy_alley_application/models/game_board/money_gained_or_lost'
 require 'spy_alley_application/models/game_board/move_card_drawn'
+require 'spy_alley_application/models/game_board/move_card_used'
 require 'spy_alley_application/models/game_board/move_options'
 require 'spy_alley_application/models/game_board/new_spy_identity_chosen'
 require 'spy_alley_application/models/game_board/next_game_state'
@@ -23,6 +27,7 @@ require 'spy_alley_application/models/game_board/player_moved'
 require 'spy_alley_application/models/game_board/spy_eliminator_options'
 require 'spy_alley_application/results/nodes/buy_equipment_option_node'
 require 'spy_alley_application/results/nodes/confiscate_materials_option_node'
+require 'spy_alley_application/results/nodes/die_rolled_node'
 require 'spy_alley_application/results/nodes/equipment_gained_node'
 require 'spy_alley_application/results/nodes/game_over_node'
 require 'spy_alley_application/results/nodes/make_accusation_option_node'
@@ -30,6 +35,7 @@ require 'spy_alley_application/results/nodes/money_gained_node'
 require 'spy_alley_application/results/nodes/money_lost_node'
 require 'spy_alley_application/results/nodes/move_back_node'
 require 'spy_alley_application/results/nodes/move_card_drawn_node'
+require 'spy_alley_application/results/nodes/move_card_used_node'
 require 'spy_alley_application/results/nodes/move_option_node'
 require 'spy_alley_application/results/nodes/next_player_node'
 require 'spy_alley_application/results/nodes/pass_option_node'
@@ -53,6 +59,13 @@ module SpyAlleyApplication
     end
 
     namespace :actions do
+      register :choose_space_to_move do
+        process_landing_on_space =
+          SpyAlleyApplication::DependencyContainer.resolve('results.process_landing_on_space')
+        SpyAlleyApplication::Actions::ChooseSpaceToMove::new(
+          process_landing_on_space: process_landing_on_space).method(:call)
+      end
+
       register :generate_new_game do
         get_result_game_board_node =
           SpyAlleyApplication::DependencyContainer.resolve('results.get.result_game_board_node')
@@ -60,7 +73,33 @@ module SpyAlleyApplication
           SpyAlleyApplication::DependencyContainer.resolve('results.process_next_turn_options')
         SpyAlleyApplication::Actions::GenerateNewGame::new(
           get_result_game_board_node: get_result_game_board_node,
-          process_next_turn_options: process_next_turn_options)
+          process_next_turn_options: process_next_turn_options).method(:call)
+      end
+
+      register :roll_die do
+        execute_die_roll =
+          SpyAlleyApplication::DependencyContainer.resolve('results.execute_die_roll')
+        get_die_rolled_node =
+          SpyAlleyApplication::DependencyContainer.resolve('results.get.die_rolled_node')
+        process_passing_spaces =
+          SpyAlleyApplication::DependencyContainer.resolve('results.process_passing_spaces')
+        SpyAlleyApplication::Actions::RollDie::new(
+          execute_die_roll: execute_die_roll,
+          get_die_rolled_node: get_die_rolled_node,
+          process_passing_spaces: process_passing_spaces).method(:call)
+      end
+
+      register :use_move_card do
+        get_move_card_used_node =
+          SpyAlleyApplication::DependencyContainer.resolve('results.get.move_card_used_node')
+        move_card_used =
+          SpyAlleyApplication::DependencyContainer.resolve('game_board_effects.move_card_used')
+        process_passing_spaces =
+          SpyAlleyApplication::DependencyContainer.resolve('results.process_passing_spaces')
+        SpyAlleyApplication::Actions::UseMoveCard::new(
+          get_move_card_used_node: get_move_card_used_node,
+          move_card_used: move_card_used,
+          process_passing_spaces: process_passing_spaces).method(:call)
       end
     end
 
@@ -117,6 +156,10 @@ module SpyAlleyApplication
           next_game_state: resolve(:next_game_state)).method(:call)
       end
 
+      register :move_card_used do
+        SpyAlleyApplication::Models::GameBoard::MoveCardUsed::new
+      end
+
       register :move_options do
         SpyAlleyApplication::Models::GameBoard::MoveOptions::new(
           next_game_state: resolve(:next_game_state)).method(:call)
@@ -142,6 +185,10 @@ module SpyAlleyApplication
     end
 
     namespace :results do
+      register :execute_die_roll do
+        ->{rand(6) + 1}
+      end
+
       namespace :get do
         register :buy_equipment_option_node do
           ->(options:, limit:) do
@@ -156,6 +203,13 @@ module SpyAlleyApplication
             SpyAlleyApplication::Results::Nodes::ConfiscateMaterialsOptionNode::new(
               target_player_id: target_player_id,
               targetable_equipment: targetable_equipment)
+          end
+        end
+
+        register :die_rolled_node do
+          ->(number_rolled:) do
+            SpyAlleyApplication::Results::Nodes::DieRolledNode::new(
+              number_rolled: number_rolled)
           end
         end
 
@@ -211,6 +265,14 @@ module SpyAlleyApplication
         register :move_card_drawn_node do
           ->(player_id:, card:) do
             SpyAlleyApplication::Results::Nodes::MoveCardDrawnNode::new(
+              player_id: player_id,
+              card: card)
+          end
+        end
+
+        register :move_card_used_node do
+          ->(player_id:, card:) do
+            SpyAlleyApplication::Results::Nodes::MoveCardUsedNode::new(
               player_id: player_id,
               card: card)
           end
