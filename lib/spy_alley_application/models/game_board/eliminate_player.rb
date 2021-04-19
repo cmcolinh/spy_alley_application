@@ -15,7 +15,7 @@ module SpyAlleyApplication
             .players
             .reject{|player| [eliminating_player, eliminated_player].include?(player)}
 
-          game_state = get_game_state(unaffected_players)
+          game_state = get_game_state(unaffected_players, eliminating_player)
 
           eliminating_player = get_eliminating_player(eliminating_player, eliminated_player)
 
@@ -31,9 +31,9 @@ module SpyAlleyApplication
         end
 
         private
-        def get_game_state(unaffected_players)
+        def get_game_state(unaffected_players, eliminating_player)
           # If none of the other players are in the game, then the game must be over
-          if unaffected.players.none?(&:active?)
+          if unaffected_players.none?(&:active?)
             {name: 'game_over', reason: {name: 'by_elimination'}, seat: eliminating_player.seat}
           else
             {
@@ -46,10 +46,14 @@ module SpyAlleyApplication
         end
 
         def get_eliminating_player(eliminating_player, eliminated_player)
-          new_equipment = (eliminating_player.equipment + eliminated_player.equipment).uniq.sort
-          new_move_cards = (eliminating_player.move_cards + eliminated_player.move_cards).sort
+          new_equipment = eliminating_player.equipment.map(&:to_s)
+          new_equipment = new_equipment + (eliminated_player.equipment.map(&:to_s))
+          new_equipment = new_equipment.uniq.sort
+          new_move_cards = eliminating_player.move_cards.map(&:value)
+          new_move_cards = new_move_cards + (eliminated_player.move_cards.map(&:value))
+          new_move_cards = new_move_cards.sort
           new_money = eliminating_player.money + eliminated_player.money
-          new wild_cards = eliminating_wild_cards + eliminated_player.wild_cards
+          new_wild_cards = eliminating_player.wild_cards + eliminated_player.wild_cards
 
           new_values = eliminating_player.to_h
           new_values[:equipment] = new_equipment

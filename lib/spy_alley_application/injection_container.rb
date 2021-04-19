@@ -6,6 +6,7 @@ require 'dry-container'
 require 'game_validator'
 require 'spy_alley_application/actions/choose_space_to_move'
 require 'spy_alley_application/actions/generate_new_game'
+require 'spy_alley_application/actions/make_accusation'
 require 'spy_alley_application/actions/roll_die'
 require 'spy_alley_application/actions/use_move_card'
 require 'spy_alley_application/models/game_board/black_market_option_state'
@@ -28,6 +29,7 @@ require 'spy_alley_application/models/game_board/spy_eliminator_options'
 require 'spy_alley_application/results/nodes/buy_equipment_option_node'
 require 'spy_alley_application/results/nodes/confiscate_materials_option_node'
 require 'spy_alley_application/results/nodes/die_rolled_node'
+require 'spy_alley_application/results/nodes/eliminated_player_node'
 require 'spy_alley_application/results/nodes/equipment_gained_node'
 require 'spy_alley_application/results/nodes/game_over_node'
 require 'spy_alley_application/results/nodes/make_accusation_option_node'
@@ -45,6 +47,7 @@ require 'spy_alley_application/results/nodes/roll_die_option_node'
 require 'spy_alley_application/results/nodes/use_move_card_option_node'
 require 'spy_alley_application/results/nodes/wild_card_gained_node'
 require 'spy_alley_application/results/process_buy_equipment_options'
+require 'spy_alley_application/results/process_eliminating_player'
 require 'spy_alley_application/results/process_move_options'
 require 'spy_alley_application/results/process_landing_on_space'
 require 'spy_alley_application/results/process_next_turn_options'
@@ -74,6 +77,17 @@ module SpyAlleyApplication
         SpyAlleyApplication::Actions::GenerateNewGame::new(
           get_result_game_board_node: get_result_game_board_node,
           process_next_turn_options: process_next_turn_options).method(:call)
+      end
+
+      register :make_accusation do
+        process_eliminating_player =
+          SpyAlleyApplication::DependencyContainer.resolve('results.process_eliminating_player')
+        process_next_turn_options =
+          SpyAlleyApplication::DependencyContainer.resolve('results.process_next_turn_options')
+
+        SpyAlleyApplication::Actions::MakeAccusation::new(
+          process_eliminating_player: process_eliminating_player,
+          process_next_turn_options: process_next_turn_options)
       end
 
       register :roll_die do
@@ -213,6 +227,14 @@ module SpyAlleyApplication
           end
         end
 
+        register :eliminated_player_node do
+          ->(eliminating_player:, eliminated_player:) do
+            SpyAlleyApplication::Results::Nodes::EliminatedPlayerNode::new(
+              eliminating_player: eliminating_player,
+              eliminated_player: eliminated_player)
+          end
+        end
+
         register :equipment_gained_node do
           ->(player_id:, equipment:, reason:) do
             SpyAlleyApplication::Results::Nodes::EquipmentGainedNode::new(
@@ -223,9 +245,9 @@ module SpyAlleyApplication
         end
 
         register :game_over_node do
-          ->(player_id:, reason:) do
+          ->(winning_player_id:, reason:) do
             SpyAlleyApplication::Results::Nodes::GameOverNode::new(
-              player_id_list: player_id_list, reason: reason)
+              winning_player_id: winning_player_id, reason: reason)
           end
         end
 
@@ -336,6 +358,17 @@ module SpyAlleyApplication
           get_buy_equipment_option_node: resolve('get.buy_equipment_option_node'),
           get_next_player_node: resolve('get.next_player_node'),
           get_pass_option_node: resolve('get.pass_option_node')).method(:call)
+      end
+
+      register :process_eliminating_player do
+        eliminate_player = SpyAlleyApplication::DependencyContainer
+          .resolve('game_board_effects.eliminate_player')
+        SpyAlleyApplication::Results::ProcessEliminatingPlayer::new(
+          get_eliminated_player_node: resolve('get.eliminated_player_node'),
+          get_game_over_node: resolve('get.game_over_node'),
+          get_result_game_board_node: resolve('get.result_game_board_node'),
+          eliminate_player: eliminate_player,
+          process_next_turn_options: resolve(:process_next_turn_options))
       end
 
       register :process_landing_on_space do

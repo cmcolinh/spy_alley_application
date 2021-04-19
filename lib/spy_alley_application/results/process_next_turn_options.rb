@@ -15,7 +15,7 @@ module SpyAlleyApplication
         option :get_roll_die_option_node, type: ::Types::Callable, reader: :private
         option :get_use_move_card_option_node, type: ::Types::Callable, reader: :private
       end
-      def call(game_board:, change_orders:)
+      def call(game_board:, change_orders:, **args)
         game_board.game_state.accept(self, game_board: game_board, change_orders: change_orders)
       end
 
@@ -42,6 +42,7 @@ module SpyAlleyApplication
       end
 
       def handle_game_over(game_state, game_board:, change_orders:)
+        change_orders
       end
 
       def handle_move_option(game_state, game_board:, change_orders:)
