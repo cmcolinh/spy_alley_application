@@ -23,6 +23,7 @@ module SpyAlleyApplication
         option :next_game_state, type: ::Types::Callable, reader: :private
         option :player_moved, type: ::Types::Callable, reader: :private
         option :process_next_turn_options, type: ::Types::Callable, reader: :private
+        option :process_proceeding_to_next_state, type: ::Types::Callable, reader: :private
         option :spy_eliminator_options, type: ::Types::Callable, reader: :private
       end
 
@@ -142,11 +143,9 @@ module SpyAlleyApplication
             .push(get_result_game_board_node.(
               game_board: embassy_victory.(game_board: game_board)))
         else
-          game_board = next_game_state.(game_board: game_board)
-          process_next_turn_options.(
+          process_proceeding_to_next_state.(
             game_board: game_board,
-            change_orders: change_orders.push(get_result_game_board_node.(
-              game_board: game_board)))
+            change_orders: change_orders)
         end
       end
 
@@ -188,11 +187,9 @@ module SpyAlleyApplication
       # ///////////////
 
       def handle_spy_alley_entrance(board_space, game_board:, change_orders:)
-        game_board = next_game_state.(game_board: game_board)
-
-        process_next_turn_options.(
+        process_proceeding_to_next_state.(
           game_board: game_board,
-          change_orders: change_orders.push(get_result_game_board_node.(game_board: game_board)))
+          change_orders: change_orders)
       end
 
       # ///////////////
