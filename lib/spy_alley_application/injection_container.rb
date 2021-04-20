@@ -4,6 +4,7 @@ require 'change_orders'
 require 'dry-auto_inject'
 require 'dry-container'
 require 'game_validator'
+require 'spy_alley_application/actions/buy_equipment'
 require 'spy_alley_application/actions/choose_new_spy_identity'
 require 'spy_alley_application/actions/choose_space_to_move'
 require 'spy_alley_application/actions/generate_new_game'
@@ -67,6 +68,19 @@ module SpyAlleyApplication
     end
 
     namespace :actions do
+      register :buy_equipment do
+        equipment_bought = SpyAlleyApplication::DependencyContainer
+          .resolve('game_board_effects.equipment_bought')
+        get_equipment_gained_node = SpyAlleyApplication::DependencyContainer
+          .resolve('results.get.equipment_gained_node')
+        process_proceeding_to_next_state = SpyAlleyApplication::DependencyContainer
+          .resolve('results.process_proceeding_to_next_state')
+        SpyAlleyApplication::Actions::BuyEquipment::new(
+          equipment_bought: equipment_bought,
+          get_equipment_gained_node: get_equipment_gained_node,
+          process_proceeding_to_next_state: process_proceeding_to_next_state).method(:call)
+      end
+
       register :choose_new_spy_identity do
         get_new_spy_identity_chosen_node = SpyAlleyApplication::DependencyContainer
           .resolve('results.get.new_spy_identity_chosen_node')
