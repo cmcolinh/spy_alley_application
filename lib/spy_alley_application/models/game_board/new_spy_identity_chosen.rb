@@ -13,20 +13,22 @@ module SpyAlleyApplication
         end
 
         def call(game_board:, new_spy_identity:)
-          player = game_board.players.find{|p| p.seat.eql?(game_board.game_state.seat)}
+          player = game_board.current_player
           if !player.spy_identity.eql?(new_spy_identity)
+            eliminated_player = game_board.players.find{|p| p.spy_identity.eql?(new_spy_identity)}
+            puts eliminated_player
             unaffected_players = game_board
               .players
-              .reject{|player| [eliminating_player, eliminated_player].include?(player)}
+              .reject{|p| [player, eliminated_player].include?(p)}
 
-            eliminated_player = game_board.players.find{|p| p.spy_identity.eql?(new_spy_identity)}
-            eliminated_player = SpyAlleyApplication::Types::Player.call(
-              eliminated_player.to_h.tap{|p| p[:spy_identity] = player.spy_identity})
-            player = SpyAlleyApplication::Types::Player.call(
-              player.to_h.tap{|p| p[:spy_identity] = new_spy_identity})
+            eliminated_player =
+              eliminated_player.to_h.tap{|p| p[:spy_identity] = player.spy_identity}
+            player = player.to_h.tap{|p| p[:spy_identity] = new_spy_identity}
 
-            players = unaffected_players + [player, eliminated_player]
-              .sort{|p, q| p.seat <=> q.seat}
+            players = unaffected_players
+            players.push(player)
+            players.push(eliminated_player)
+            players = players.sort_by{|p| p[:seat]}
 
             game_board = SpyAlleyApplication::Types::GameBoard.call(
               game_board.to_h.tap{|b| b[:players] = players})

@@ -4,6 +4,7 @@ require 'change_orders'
 require 'dry-auto_inject'
 require 'dry-container'
 require 'game_validator'
+require 'spy_alley_application/actions/choose_new_spy_identity'
 require 'spy_alley_application/actions/choose_space_to_move'
 require 'spy_alley_application/actions/generate_new_game'
 require 'spy_alley_application/actions/make_accusation'
@@ -39,6 +40,7 @@ require 'spy_alley_application/results/nodes/move_back_node'
 require 'spy_alley_application/results/nodes/move_card_drawn_node'
 require 'spy_alley_application/results/nodes/move_card_used_node'
 require 'spy_alley_application/results/nodes/move_option_node'
+require 'spy_alley_application/results/nodes/new_spy_identity_chosen_node'
 require 'spy_alley_application/results/nodes/next_player_node'
 require 'spy_alley_application/results/nodes/pass_option_node'
 require 'spy_alley_application/results/nodes/player_movement_node'
@@ -62,9 +64,25 @@ module SpyAlleyApplication
     end
 
     namespace :actions do
+      register :choose_new_spy_identity do
+        get_new_spy_identity_chosen_node = SpyAlleyApplication::DependencyContainer
+          .resolve('results.get.new_spy_identity_chosen_node')
+        get_result_game_board_node = SpyAlleyApplication::DependencyContainer
+          .resolve('results.get.result_game_board_node')
+        new_spy_identity_chosen = SpyAlleyApplication::DependencyContainer
+          .resolve('game_board_effects.new_spy_identity_chosen')
+        process_next_turn_options = SpyAlleyApplication::DependencyContainer
+          .resolve('results.process_next_turn_options')
+        SpyAlleyApplication::Actions::ChooseNewSpyIdentity::new(
+          get_new_spy_identity_chosen_node: get_new_spy_identity_chosen_node,
+          get_result_game_board_node: get_result_game_board_node,
+          new_spy_identity_chosen: new_spy_identity_chosen,
+          process_next_turn_options: process_next_turn_options)
+      end
+
       register :choose_space_to_move do
-        process_landing_on_space =
-          SpyAlleyApplication::DependencyContainer.resolve('results.process_landing_on_space')
+        process_landing_on_space = SpyAlleyApplication::DependencyContainer
+          .resolve('results.process_landing_on_space')
         SpyAlleyApplication::Actions::ChooseSpaceToMove::new(
           process_landing_on_space: process_landing_on_space).method(:call)
       end
@@ -304,6 +322,13 @@ module SpyAlleyApplication
           ->(options:) do
             SpyAlleyApplication::Results::Nodes::MoveOptionNode::new(
               options: options)
+          end
+        end
+
+        register :new_spy_identity_chosen_node do
+          ->(nationality:) do
+            SpyAlleyApplication::Results::Nodes::NewSpyIdentityChosenNode::new(
+              nationality: nationality)
           end
         end
 
