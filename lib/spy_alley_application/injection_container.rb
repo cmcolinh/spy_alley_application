@@ -7,6 +7,7 @@ require 'game_validator'
 require 'spy_alley_application/actions/buy_equipment'
 require 'spy_alley_application/actions/choose_new_spy_identity'
 require 'spy_alley_application/actions/choose_space_to_move'
+require 'spy_alley_application/actions/confiscate_materials'
 require 'spy_alley_application/actions/generate_new_game'
 require 'spy_alley_application/actions/make_accusation'
 require 'spy_alley_application/actions/pass'
@@ -104,6 +105,22 @@ module SpyAlleyApplication
           process_landing_on_space: process_landing_on_space).method(:call)
       end
 
+      register :confiscate_materials do
+        equipment_confiscated = SpyAlleyApplication::DependencyContainer
+          .resolve('game_board_effects.equipment_confiscated')
+        get_equipment_gained_node = SpyAlleyApplication::DependencyContainer
+          .resolve('results.get.equipment_gained_node')
+        get_wild_card_gained_node = SpyAlleyApplication::DependencyContainer
+          .resolve('results.get.wild_card_gained_node')
+        process_proceeding_to_next_state = SpyAlleyApplication::DependencyContainer
+          .resolve('results.process_proceeding_to_next_state')
+        SpyAlleyApplication::Actions::ConfiscateMaterials::new(
+          equipment_confiscated: equipment_confiscated,
+          get_equipment_gained_node: get_equipment_gained_node,
+          get_wild_card_gained_node: get_wild_card_gained_node,
+          process_proceeding_to_next_state: process_proceeding_to_next_state)
+      end
+
       register :generate_new_game do
         get_result_game_board_node = SpyAlleyApplication::DependencyContainer
           .resolve('results.get.result_game_board_node')
@@ -191,13 +208,12 @@ module SpyAlleyApplication
           next_game_state: resolve(:next_game_state)).method(:call)
       end
 
-      register :embassy_victory do
-        SpyAlleyApplication::Models::GameBoard::EmbassyVictory::new.method(:call)
+      register :equipment_confiscated do
+        SpyAlleyApplication::Models::GameBoard::EquipmentConfiscated::new.method(:call)
       end
 
-      register :equipment_confiscated do
-        SpyAlleyApplication::Models::GameBoard::EquipmentConfiscated::new(
-          next_game_state: resolve(:next_game_state)).method(:call)
+      register :embassy_victory do
+        SpyAlleyApplication::Models::GameBoard::EmbassyVictory::new.method(:call)
       end
 
       register :free_gift_drawn do
