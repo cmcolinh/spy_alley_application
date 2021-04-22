@@ -1,6 +1,5 @@
 # frozen string_literal: true
 
-require 'dry-initializer'
 require 'dry-struct'
 require 'spy_alley_application/types/game_board'
 
@@ -8,10 +7,6 @@ module SpyAlleyApplication
   module Models
     class GameBoard < Dry::Struct
       class MoveOptions
-        include Dry::Initializer.define -> do
-          option :next_game_state, type: ::Types::Callable, reader: :private
-        end
-
         def call(game_board:, options:)
           game_state = {
             name: 'move_option',

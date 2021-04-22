@@ -10,7 +10,6 @@ module SpyAlleyApplication
     class GameBoard < Dry::Struct
       class EquipmentBought
         include Dry::Initializer.define -> do
-          option :next_game_state, type: ::Types::Callable, reader: :private
           option :equipment_cost,
             default: ->{{password: 1, disguise: 5, codebook: 15, key: 30}},
             type: ::Types::Hash.schema(
@@ -33,9 +32,8 @@ module SpyAlleyApplication
             p[:money] = p[:money] - total_cost
           end
           players = unaffected_players.push(player).sort_by{|p| p[:seat]}
-          game_board = SpyAlleyApplication::Types::GameBoard.call(
+          SpyAlleyApplication::Types::GameBoard.call(
             game_board.to_h.tap{|g| g[:players] = players})
-          next_game_state.(game_board: game_board)
         end
       end
     end

@@ -8,10 +8,6 @@ module SpyAlleyApplication
   module Models
     class GameBoard < Dry::Struct
       class NewSpyIdentityChosen
-        include Dry::Initializer.define -> do
-          option :next_game_state, type: ::Types::Callable, reader: :private
-        end
-
         def call(game_board:, new_spy_identity:)
           player = game_board.current_player
           if !player.spy_identity.eql?(new_spy_identity)
@@ -33,7 +29,7 @@ module SpyAlleyApplication
             game_board = SpyAlleyApplication::Types::GameBoard.call(
               game_board.to_h.tap{|b| b[:players] = players})
           end
-          next_game_state.(game_board: game_board)
+          game_board
         end
       end
     end

@@ -54,11 +54,10 @@ module SpyAlleyApplication
           money_lost: 5))
         game_board = money_gained_or_lost.(
           game_board: game_board,
-          money_adjustment: -5,
-          &next_game_state)
-        process_next_turn_options.(
+          money_adjustment: -5)
+        process_proceeding_to_next_state.(
           game_board: game_board,
-          change_orders: change_orders.push(get_result_game_board_node.(game_board: game_board)))
+          change_orders: change_orders)
       end
 
       # ///////////////
@@ -99,9 +98,9 @@ module SpyAlleyApplication
           change_orders: change_orders,
           player_id: game_board.current_player.id)
         game_board = free_gift_drawn.(game_board: game_board)
-        process_next_turn_options.(
+        process_proceeding_to_next_state.(
           game_board: game_board,
-          change_orders: change_orders.push(get_result_game_board_node.(game_board: game_board)))
+          change_orders: change_orders)
       end
 
       def handle_equipment(equipment, change_orders:, player_id:)
@@ -125,9 +124,9 @@ module SpyAlleyApplication
           player_id: game_board.current_player.id,
           card: game_board.move_card_pile.first.value))
         game_board = move_card_drawn.(game_board: game_board)
-        process_next_turn_options.(
+        process_proceeding_to_next_state.(
           game_board: game_board,
-          change_orders: change_orders.push(get_result_game_board_node.(game_board: game_board)))
+          change_orders: change_orders)
       end
 
       # ///////////////
@@ -159,9 +158,9 @@ module SpyAlleyApplication
           player_id: game_board.current_player.id,
           space_id: board_space.move_back_space.id))
         game_board = game_board = player_moved.(game_board: game_board, new_location: board_space)
-        process_next_turn_options.(
+        process_proceeding_to_next_state.(
           game_board: game_board,
-          change_orders: change_orders.push(get_result_game_board_node.(game_board: game_board)))
+          change_orders: change_orders)
       end
 
       # ///////////////
@@ -171,17 +170,15 @@ module SpyAlleyApplication
 
         game_board = money_gained_or_lost.(
           game_board: game_board,
-          money_adjustment: board_space.money_gained,
-          &next_game_state)
+          money_adjustment: board_space.money_gained)
 
-        process_next_turn_options.(
+        process_proceeding_to_next-state.(
           game_board: game_board,
           change_orders: change_orders
             .push(get_money_gained_node.(
               player_id: current_player.id,
               money_gained: board_space.money_gained,
-              reason: {name: 'by_selling_top_secret_information'}))
-            .push(get_result_game_board_node.(game_board: game_board)))
+              reason: {name: 'by_selling_top_secret_information'})))
       end
 
       # ///////////////

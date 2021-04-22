@@ -89,13 +89,13 @@ module SpyAlleyApplication
           .resolve('results.get.result_game_board_node')
         new_spy_identity_chosen = SpyAlleyApplication::DependencyContainer
           .resolve('game_board_effects.new_spy_identity_chosen')
-        process_next_turn_options = SpyAlleyApplication::DependencyContainer
-          .resolve('results.process_next_turn_options')
+        process_proceeding_to_next_state = SpyAlleyApplication::DependencyContainer
+          .resolve('results.process_proceeding_to_next_state')
         SpyAlleyApplication::Actions::ChooseNewSpyIdentity::new(
           get_new_spy_identity_chosen_node: get_new_spy_identity_chosen_node,
           get_result_game_board_node: get_result_game_board_node,
           new_spy_identity_chosen: new_spy_identity_chosen,
-          process_next_turn_options: process_next_turn_options).method(:call)
+          process_proceeding_to_next_state: process_proceeding_to_next_state).method(:call)
       end
 
       register :choose_space_to_move do
@@ -204,8 +204,7 @@ module SpyAlleyApplication
       end
 
       register :equipment_bought do
-        SpyAlleyApplication::Models::GameBoard::EquipmentBought::new(
-          next_game_state: resolve(:next_game_state)).method(:call)
+        SpyAlleyApplication::Models::GameBoard::EquipmentBought::new.method(:call)
       end
 
       register :equipment_confiscated do
@@ -217,8 +216,7 @@ module SpyAlleyApplication
       end
 
       register :free_gift_drawn do
-        SpyAlleyApplication::Models::GameBoard::FreeGiftDrawn::new(
-          next_game_state: resolve(:next_game_state)).method(:call)
+        SpyAlleyApplication::Models::GameBoard::FreeGiftDrawn::new.method(:call)
       end
 
       register :money_gained_or_lost do
@@ -226,8 +224,7 @@ module SpyAlleyApplication
       end
 
       register :move_card_drawn do
-        SpyAlleyApplication::Models::GameBoard::MoveCardDrawn::new(
-          next_game_state: resolve(:next_game_state)).method(:call)
+        SpyAlleyApplication::Models::GameBoard::MoveCardDrawn::new.method(:call)
       end
 
       register :move_card_used do
@@ -235,13 +232,11 @@ module SpyAlleyApplication
       end
 
       register :move_options do
-        SpyAlleyApplication::Models::GameBoard::MoveOptions::new(
-          next_game_state: resolve(:next_game_state)).method(:call)
+        SpyAlleyApplication::Models::GameBoard::MoveOptions::new.method(:call)
       end
 
       register :new_spy_identity_chosen do
-        SpyAlleyApplication::Models::GameBoard::NewSpyIdentityChosen::new(
-          next_game_state: resolve(:next_game_state)).method(:call)
+        SpyAlleyApplication::Models::GameBoard::NewSpyIdentityChosen::new.method(:call)
       end
 
       register :next_game_state do

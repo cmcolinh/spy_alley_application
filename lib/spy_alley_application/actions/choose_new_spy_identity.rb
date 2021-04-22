@@ -9,7 +9,7 @@ module SpyAlleyApplication
         option :get_new_spy_identity_chosen_node, type: ::Types::Callable, reader: :private
         option :get_result_game_board_node, type: ::Types::Callable, reader: :private
         option :new_spy_identity_chosen, type: ::Types::Callable, reader: :private
-        option :process_next_turn_options, type: ::Types::Callable, reader: :private
+        option :process_proceeding_to_next_state, type: ::Types::Callable, reader: :private
       end
 
       def call(game_board:, change_orders:, nationality:)
@@ -18,8 +18,7 @@ module SpyAlleyApplication
         game_board = new_spy_identity_chosen.(
           game_board: game_board,
           new_spy_identity: nationality)
-        process_next_turn_options.(game_board: game_board,
-          change_orders: change_orders.push(get_result_game_board_node.(game_board: game_board)))
+        process_proceeding_to_next_state.(game_board: game_board, change_orders: change_orders)
       end
     end
   end

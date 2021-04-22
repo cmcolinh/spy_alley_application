@@ -1,6 +1,5 @@
 # frozen string_literal: true
 
-require 'dry-initializer'
 require 'dry-struct'
 require 'spy_alley_application/types/game_board'
 
@@ -8,10 +7,6 @@ module SpyAlleyApplication
   module Models
     class GameBoard < Dry::Struct
       class FreeGiftDrawn
-        include Dry::Initializer.define -> do
-          option :next_game_state, type: ::Types::Callable, reader: :private
-        end
-
         def call(game_board:)
           player = game_board.players.find{|p| p.seat.eql?(game_board.game_state.seat)}
           unaffected_players = game_board.players.reject{|p| p.equal?(player)}
@@ -25,9 +20,8 @@ module SpyAlleyApplication
             free_gift_pile = free_gift_pile[1..-1].push(top_free_gift).freeze
           end
           players = unaffected_players.push(player).sort{|p, q| p[:seat] <=> q[:seat]}
-          game_board = SpyAlleyApplication::Types::GameBoard.call(
+          SpyAlleyApplication::Types::GameBoard.call(
             game_board.to_h.tap{|g| g[:players] = players; g[:free_gift_pile] = free_gift_pile})
-          next_game_state.(game_board: game_board)
         end
 
         private

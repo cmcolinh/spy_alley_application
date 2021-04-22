@@ -8,10 +8,6 @@ module SpyAlleyApplication
   module Models
     class GameBoard < Dry::Struct
       class MoveCardDrawn
-        include Dry::Initializer.define -> do
-          option :next_game_state, type: ::Types::Callable, reader: :private
-        end
-
         def call(game_board:)
           player = game_board.current_player
           unaffected_players = game_board.players.reject{|p| p.equal?(player)}
@@ -25,9 +21,8 @@ module SpyAlleyApplication
           move_card_pile = move_card_pile[1..-1].freeze
           players = unaffected_players.push(player).sort{|p, q| p[:seat] <=> q[:seat]}
 
-          game_board = SpyAlleyApplication::Types::GameBoard.call(
+          SpyAlleyApplication::Types::GameBoard.call(
             game_board.to_h.tap{|g| g[:players] = players; g[:move_card_pile] = move_card_pile})
-          next_game_state.(game_board: game_board)
         end
       end
     end
