@@ -12,6 +12,7 @@ module SpyAlleyApplication
       end
 
       def call(game_board:, change_orders:, equipment_to_buy:)
+        equipment_to_buy = equipment_to_buy.map{|e| SpyAlleyApplication::Models::Equipment.call(e)}
         player = game_board.current_player
         game_board = equipment_bought.(
           game_board: game_board,

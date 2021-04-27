@@ -31,6 +31,7 @@ require 'spy_alley_application/models/game_board/next_game_state'
 require 'spy_alley_application/models/game_board/player_moved'
 require 'spy_alley_application/models/game_board/spy_eliminator_options'
 require 'spy_alley_application/results/nodes/buy_equipment_option_node'
+require 'spy_alley_application/results/nodes/choose_new_spy_identity_option_node'
 require 'spy_alley_application/results/nodes/confiscate_materials_option_node'
 require 'spy_alley_application/results/nodes/die_rolled_node'
 require 'spy_alley_application/results/nodes/eliminated_player_node'
@@ -59,9 +60,10 @@ require 'spy_alley_application/results/process_landing_on_space'
 require 'spy_alley_application/results/process_next_turn_options'
 require 'spy_alley_application/results/process_passing_spaces'
 require 'spy_alley_application/results/process_proceeding_to_next_state'
+require 'spy_alley_application/validator/builder'
 
 module SpyAlleyApplication
-  class DependencyContainer
+  class InjectionContainer
     extend Dry::Container::Mixin
     register :change_orders_initializer do
       new_change_orders = ChangeOrders::Container::new
@@ -70,11 +72,11 @@ module SpyAlleyApplication
 
     namespace :actions do
       register :buy_equipment do
-        equipment_bought = SpyAlleyApplication::DependencyContainer
+        equipment_bought = SpyAlleyApplication::InjectionContainer
           .resolve('game_board_effects.equipment_bought')
-        get_equipment_gained_node = SpyAlleyApplication::DependencyContainer
+        get_equipment_gained_node = SpyAlleyApplication::InjectionContainer
           .resolve('results.get.equipment_gained_node')
-        process_proceeding_to_next_state = SpyAlleyApplication::DependencyContainer
+        process_proceeding_to_next_state = SpyAlleyApplication::InjectionContainer
           .resolve('results.process_proceeding_to_next_state')
         SpyAlleyApplication::Actions::BuyEquipment::new(
           equipment_bought: equipment_bought,
@@ -83,13 +85,13 @@ module SpyAlleyApplication
       end
 
       register :choose_new_spy_identity do
-        get_new_spy_identity_chosen_node = SpyAlleyApplication::DependencyContainer
+        get_new_spy_identity_chosen_node = SpyAlleyApplication::InjectionContainer
           .resolve('results.get.new_spy_identity_chosen_node')
-        get_result_game_board_node = SpyAlleyApplication::DependencyContainer
+        get_result_game_board_node = SpyAlleyApplication::InjectionContainer
           .resolve('results.get.result_game_board_node')
-        new_spy_identity_chosen = SpyAlleyApplication::DependencyContainer
+        new_spy_identity_chosen = SpyAlleyApplication::InjectionContainer
           .resolve('game_board_effects.new_spy_identity_chosen')
-        process_proceeding_to_next_state = SpyAlleyApplication::DependencyContainer
+        process_proceeding_to_next_state = SpyAlleyApplication::InjectionContainer
           .resolve('results.process_proceeding_to_next_state')
         SpyAlleyApplication::Actions::ChooseNewSpyIdentity::new(
           get_new_spy_identity_chosen_node: get_new_spy_identity_chosen_node,
@@ -99,20 +101,20 @@ module SpyAlleyApplication
       end
 
       register :choose_space_to_move do
-        process_landing_on_space = SpyAlleyApplication::DependencyContainer
+        process_landing_on_space = SpyAlleyApplication::InjectionContainer
           .resolve('results.process_landing_on_space')
         SpyAlleyApplication::Actions::ChooseSpaceToMove::new(
           process_landing_on_space: process_landing_on_space).method(:call)
       end
 
       register :confiscate_materials do
-        equipment_confiscated = SpyAlleyApplication::DependencyContainer
+        equipment_confiscated = SpyAlleyApplication::InjectionContainer
           .resolve('game_board_effects.equipment_confiscated')
-        get_equipment_gained_node = SpyAlleyApplication::DependencyContainer
+        get_equipment_gained_node = SpyAlleyApplication::InjectionContainer
           .resolve('results.get.equipment_gained_node')
-        get_wild_card_gained_node = SpyAlleyApplication::DependencyContainer
+        get_wild_card_gained_node = SpyAlleyApplication::InjectionContainer
           .resolve('results.get.wild_card_gained_node')
-        process_proceeding_to_next_state = SpyAlleyApplication::DependencyContainer
+        process_proceeding_to_next_state = SpyAlleyApplication::InjectionContainer
           .resolve('results.process_proceeding_to_next_state')
         SpyAlleyApplication::Actions::ConfiscateMaterials::new(
           equipment_confiscated: equipment_confiscated,
@@ -122,9 +124,9 @@ module SpyAlleyApplication
       end
 
       register :generate_new_game do
-        get_result_game_board_node = SpyAlleyApplication::DependencyContainer
+        get_result_game_board_node = SpyAlleyApplication::InjectionContainer
           .resolve('results.get.result_game_board_node')
-        process_next_turn_options = SpyAlleyApplication::DependencyContainer
+        process_next_turn_options = SpyAlleyApplication::InjectionContainer
           .resolve('results.process_next_turn_options')
         SpyAlleyApplication::Actions::GenerateNewGame::new(
           get_result_game_board_node: get_result_game_board_node,
@@ -132,9 +134,9 @@ module SpyAlleyApplication
       end
 
       register :make_accusation do
-        process_eliminating_player = SpyAlleyApplication::DependencyContainer
+        process_eliminating_player = SpyAlleyApplication::InjectionContainer
           .resolve('results.process_eliminating_player')
-        process_proceeding_to_next_state = SpyAlleyApplication::DependencyContainer
+        process_proceeding_to_next_state = SpyAlleyApplication::InjectionContainer
           .resolve('results.process_proceeding_to_next_state')
         SpyAlleyApplication::Actions::MakeAccusation::new(
           process_eliminating_player: process_eliminating_player,
@@ -142,9 +144,9 @@ module SpyAlleyApplication
       end
 
       register :pass do
-        get_player_passed_node = SpyAlleyApplication::DependencyContainer
+        get_player_passed_node = SpyAlleyApplication::InjectionContainer
           .resolve('results.get.player_passed_node')
-        process_proceeding_to_next_state = SpyAlleyApplication::DependencyContainer
+        process_proceeding_to_next_state = SpyAlleyApplication::InjectionContainer
           .resolve('results.process_proceeding_to_next_state')
         SpyAlleyApplication::Actions::Pass::new(
           get_player_passed_node: get_player_passed_node,
@@ -152,11 +154,11 @@ module SpyAlleyApplication
       end
 
       register :roll_die do
-        execute_die_roll = SpyAlleyApplication::DependencyContainer
+        execute_die_roll = SpyAlleyApplication::InjectionContainer
           .resolve('results.execute_die_roll')
-        get_die_rolled_node = SpyAlleyApplication::DependencyContainer
+        get_die_rolled_node = SpyAlleyApplication::InjectionContainer
           .resolve('results.get.die_rolled_node')
-        process_passing_spaces = SpyAlleyApplication::DependencyContainer
+        process_passing_spaces = SpyAlleyApplication::InjectionContainer
           .resolve('results.process_passing_spaces')
         SpyAlleyApplication::Actions::RollDie::new(
           execute_die_roll: execute_die_roll,
@@ -165,12 +167,12 @@ module SpyAlleyApplication
       end
 
       register :use_move_card do
-        get_move_card_used_node = SpyAlleyApplication::DependencyContainer
+        get_move_card_used_node = SpyAlleyApplication::InjectionContainer
           .resolve('results.get.move_card_used_node')
-        move_card_used = SpyAlleyApplication::DependencyContainer
+        move_card_used = SpyAlleyApplication::InjectionContainer
           .resolve('game_board_effects.move_card_used')
         process_passing_spaces =
-          SpyAlleyApplication::DependencyContainer.resolve('results.process_passing_spaces')
+          SpyAlleyApplication::InjectionContainer.resolve('results.process_passing_spaces')
         SpyAlleyApplication::Actions::UseMoveCard::new(
           get_move_card_used_node: get_move_card_used_node,
           move_card_used: move_card_used,
@@ -264,6 +266,13 @@ module SpyAlleyApplication
             SpyAlleyApplication::Results::Nodes::BuyEquipmentOptionNode::new(
               options: options,
               limit: limit)
+          end
+        end
+
+        register :choose_new_spy_identity_option_node do
+          ->(options:) do
+            SpyAlleyApplication::Results::Nodes::ChooseNewSpyIdentityOptionNode::new(
+              options: options)
           end
         end
 
@@ -428,7 +437,7 @@ module SpyAlleyApplication
       end
 
       register :process_eliminating_player do
-        eliminate_player = SpyAlleyApplication::DependencyContainer
+        eliminate_player = SpyAlleyApplication::InjectionContainer
           .resolve('game_board_effects.eliminate_player')
         SpyAlleyApplication::Results::ProcessEliminatingPlayer::new(
           get_eliminated_player_node: resolve('get.eliminated_player_node'),
@@ -439,27 +448,27 @@ module SpyAlleyApplication
       end
 
       register :process_landing_on_space do
-        black_market_option_state = SpyAlleyApplication::DependencyContainer
+        black_market_option_state = SpyAlleyApplication::InjectionContainer
           .resolve('game_board_effects.black_market_option_state')
-        buy_equipment_option_state = SpyAlleyApplication::DependencyContainer
+        buy_equipment_option_state = SpyAlleyApplication::InjectionContainer
           .resolve('game_board_effects.buy_equipment_option_state')
-        buy_password_option_state = SpyAlleyApplication::DependencyContainer
+        buy_password_option_state = SpyAlleyApplication::InjectionContainer
           .resolve('game_board_effects.buy_password_option_state')
-        confiscate_materials_option_state = SpyAlleyApplication::DependencyContainer
+        confiscate_materials_option_state = SpyAlleyApplication::InjectionContainer
           .resolve('game_board_effects.confiscate_materials_option_state')
-        embassy_victory = SpyAlleyApplication::DependencyContainer
+        embassy_victory = SpyAlleyApplication::InjectionContainer
           .resolve('game_board_effects.embassy_victory')
-        free_gift_drawn = SpyAlleyApplication::DependencyContainer
+        free_gift_drawn = SpyAlleyApplication::InjectionContainer
           .resolve('game_board_effects.free_gift_drawn')
-        money_gained_or_lost = SpyAlleyApplication::DependencyContainer
+        money_gained_or_lost = SpyAlleyApplication::InjectionContainer
           .resolve('game_board_effects.money_gained_or_lost')
-        move_card_drawn = SpyAlleyApplication::DependencyContainer
+        move_card_drawn = SpyAlleyApplication::InjectionContainer
           .resolve('game_board_effects.move_card_drawn')
-        next_game_state = SpyAlleyApplication::DependencyContainer
+        next_game_state = SpyAlleyApplication::InjectionContainer
           .resolve('game_board_effects.next_game_state')
-        player_moved = SpyAlleyApplication::DependencyContainer
+        player_moved = SpyAlleyApplication::InjectionContainer
           .resolve('game_board_effects.player_moved')
-        spy_eliminator_options = SpyAlleyApplication::DependencyContainer
+        spy_eliminator_options = SpyAlleyApplication::InjectionContainer
           .resolve('game_board_effects.spy_eliminator_options')
         SpyAlleyApplication::Results::ProcessLandingOnSpace::new(
           black_market_option_state: black_market_option_state,
@@ -486,7 +495,7 @@ module SpyAlleyApplication
       end
 
       register :process_move_options do
-        move_options = SpyAlleyApplication::DependencyContainer
+        move_options = SpyAlleyApplication::InjectionContainer
           .resolve('game_board_effects.move_options')
         SpyAlleyApplication::Results::ProcessMoveOptions::new(
           move_options: move_options,
@@ -495,8 +504,10 @@ module SpyAlleyApplication
       end
 
       register :process_next_turn_options do
+        choose_new_spy_identity_option_node = resolve('get.choose_new_spy_identity_option_node')
         SpyAlleyApplication::Results::ProcessNextTurnOptions::new(
           get_buy_equipment_option_node: resolve('get.buy_equipment_option_node'),
+          get_choose_new_spy_identity_option_node: choose_new_spy_identity_option_node,
           get_confiscate_materials_option_node: resolve('get.confiscate_materials_option_node'),
           get_make_accusation_option_node: resolve('get.make_accusation_option_node'),
           get_next_player_node: resolve('get.next_player_node'),
@@ -507,7 +518,7 @@ module SpyAlleyApplication
       end
 
       register :process_passing_spaces do
-        money_gained_or_lost = SpyAlleyApplication::DependencyContainer
+        money_gained_or_lost = SpyAlleyApplication::InjectionContainer
           .resolve('game_board_effects.money_gained_or_lost')
         SpyAlleyApplication::Results::ProcessPassingSpaces::new(
           get_money_gained_node: resolve('get.money_gained_node'),
@@ -517,13 +528,42 @@ module SpyAlleyApplication
       end
 
       register :process_proceeding_to_next_state do
-        next_game_state = SpyAlleyApplication::DependencyContainer
+        next_game_state = SpyAlleyApplication::InjectionContainer
           .resolve('game_board_effects.next_game_state')
         SpyAlleyApplication::Results::ProcessProceedingToNextState::new(
           get_result_game_board_node: resolve('get.result_game_board_node'),
           next_game_state: next_game_state,
           process_next_turn_options: resolve(:process_next_turn_options)).method(:call)
       end
+    end
+
+    register :build_validator do
+      SpyAlleyApplication::Validator::Builder::new(
+        process_next_turn_options: resolve('results.process_next_turn_options'),
+        change_orders_initializer: resolve(:change_orders_initializer),
+        wrap_result: resolve(:wrap_result))
+    end
+
+    register :wrap_result do
+      dc = SpyAlleyApplication::InjectionContainer
+      wrap_result = ->(execute) do
+        ->(successful_result) do
+          GameValidator::Validator::Result::new(
+            result: successful_result,
+            execute: execute)
+        end
+      end
+
+      {
+        buy_equipment: wrap_result.(dc.resolve('actions.buy_equipment')),
+        choose_new_spy_identity: wrap_result.(dc.resolve('actions.choose_new_spy_identity')),
+        confiscate_materials: wrap_result.(dc.resolve('actions.confiscate_materials')),
+        make_accusation: wrap_result.(dc.resolve('actions.make_accusation')),
+        move: wrap_result.(dc.resolve('actions.choose_space_to_move')),
+        pass: wrap_result.(dc.resolve('actions.pass')),
+        roll_die: wrap_result.(dc.resolve('actions.roll_die')),
+        use_move_card: wrap_result.(dc.resolve('actions.use_move_card'))
+      }
     end
   end
 end

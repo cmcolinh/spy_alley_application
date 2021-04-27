@@ -9,7 +9,7 @@ module SpyAlleyApplication
     module GameState
       class ChooseNewSpyIdentity < Dry::Struct
         new_spy_identity_type = ::Types::Array::of(SpyAlleyApplication::Types::Nationality)
-          .constrained(min_size: 2, max_size: 2)
+          .constrained(size: 2)
         @@can_handle_choose_new_spy_identity =
           ::Types.Interface(:handle_choose_new_spy_identity)
 

@@ -4,10 +4,10 @@ module SpyAlleyApplication
   module Results
     module Nodes
       class RollDieOptionNode
-        @@can_handle_pass_option = ::Types.Interface(:handle_pass_option)
+        @@can_handle_roll_die_option = ::Types.Interface(:handle_roll_die_option)
         def accept(visitor, **args)
-          @@can_handle_pass_option.(visitor)
-          visitor.handle_pass_option(self, args)
+          @@can_handle_roll_die_option.(visitor)
+          visitor.handle_roll_die_option(self, args)
         end
       end
     end

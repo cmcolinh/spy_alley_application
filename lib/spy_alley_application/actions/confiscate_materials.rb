@@ -14,6 +14,7 @@ module SpyAlleyApplication
       end
 
       def call(game_board:, change_orders:, target_player_id:, equipment_to_confiscate:)
+        equipment_to_confiscate = SpyAlleyApplication::Models::Equipment.(equipment_to_confiscate)
         player = game_board.current_player
         target_player = game_board.players.find{|p| p.id.eql?(target_player_id)}
         equipment = SpyAlleyApplication::Types::FreeGift.call(equipment_to_confiscate)

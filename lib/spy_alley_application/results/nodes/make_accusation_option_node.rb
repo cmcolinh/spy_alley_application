@@ -10,7 +10,7 @@ module SpyAlleyApplication
         attribute :player_id_list, ::Types::ArrayOfStrictInteger
 
         def accept(visitor, **args)
-          @can_handle_make_accusation_option.(visitor)
+          @@can_handle_make_accusation_option.(visitor)
           visitor.handle_make_accusation_option(self, args)
         end
       end

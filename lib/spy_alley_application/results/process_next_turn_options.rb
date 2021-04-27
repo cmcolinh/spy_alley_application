@@ -7,6 +7,7 @@ module SpyAlleyApplication
     class ProcessNextTurnOptions
       include Dry::Initializer.define -> do
         option :get_buy_equipment_option_node, type: ::Types::Callable, reader: :private
+        option :get_choose_new_spy_identity_option_node, type: ::Types::Callable, reader: :private
         option :get_confiscate_materials_option_node, type: ::Types::Callable, reader: :private
         option :get_make_accusation_option_node, type: ::Types::Callable, reader: :private
         option :get_move_option_node, type: ::Types::Callable, reader: :private
@@ -29,6 +30,9 @@ module SpyAlleyApplication
       end
 
       def handle_choose_new_spy_identity(game_state, game_board:, change_orders:)
+        next_player = game_board.current_player
+        change_orders.push(get_next_player_node.(player_id: next_player.id))
+          .push(get_choose_new_spy_identity_option_node.(options: game_state.options))
       end
 
       def handle_confiscate_materials(game_state, game_board:, change_orders:)

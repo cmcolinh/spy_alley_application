@@ -12,7 +12,6 @@ module SpyAlleyApplication
           player = game_board.current_player
           if !player.spy_identity.eql?(new_spy_identity)
             eliminated_player = game_board.players.find{|p| p.spy_identity.eql?(new_spy_identity)}
-            puts eliminated_player
             unaffected_players = game_board
               .players
               .reject{|p| [player, eliminated_player].include?(p)}
