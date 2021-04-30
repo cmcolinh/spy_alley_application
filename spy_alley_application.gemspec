@@ -2,16 +2,16 @@ lib = File.expand_path("lib", __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "spy_alley_application/version"
 
-Gem::Specification.new do |spec|
-  spec.name          = "spy_alley_application"
+Gem::Specification.new 'spy_alley_application', '0.3.0' do |spec|
+  spec.name          = 'spy_alley_application'
   spec.version       = SpyAlleyApplication::VERSION
-  spec.authors       = ["Colin Horner"]
-  spec.email         = ["colin.a.horner@gmail.com"]
+  spec.authors       = ['Colin Horner']
+  spec.email         = ['25807014+cmcolinh@users.noreply.github.com']
 
-  spec.summary       = "Spy Alley Application"
-  spec.description   = "Runs the Spy Alley Application"
+  spec.summary       = 'Spy Alley Application'
+  spec.description   = 'Runs the Spy Alley Application'
   #spec.homepage      = "TODO: Put your gem's website or public repo URL here."
-  spec.license       = "MIT"
+  spec.license       = 'MIT'
 
   #spec.metadata["homepage_uri"] = spec.homepage
   #spec.metadata["source_code_uri"] = "TODO: Put your gem's public repo URL here."
