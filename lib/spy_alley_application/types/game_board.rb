@@ -40,7 +40,7 @@ i = Class.new do
   end
 
   def verify_current_seat_is_valid(players, seat)
-    seat_list = players.map(&:id)
+    seat_list = players.map(&:seat)
     if !seat_list.include?(seat)
       raise Dry::Types::ConstraintError::new(
         "The seat whose turn it is not in the player list (#{seat_list})", seat)

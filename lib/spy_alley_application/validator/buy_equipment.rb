@@ -7,18 +7,21 @@ require 'spy_alley_application/types/coercible_integer_one_to_six'
 module SpyAlleyApplication
   module Validator
     class BuyEquipment < Dry::Validation::Contract
+      t = SpyAlleyApplication::Types
+      @@equipment_regex =
+        /\A(#{t::Nationality.values.join('|')}) (#{t::EquipmentType.values.join('|')})\z/
+
       option :options, type: SpyAlleyApplication::Types::ArrayOfEquipment
       option :limit, type: SpyAlleyApplication::Types::CoercibleIntegerOneToSix
 
       params do
         required(:equipment_to_buy)
-          .filled(::Types::Array::of(SpyAlleyApplication::Types::Equipment.schema))
+          .filled(::Types::Array::of(::Types::String.constrained(format: @@equipment_regex)))
       end
 
       rule(:equipment_to_buy) do
-        if !values[:equipment_to_buy].all?{|e|
-          options.include?(SpyAlleyApplication::Models::Equipment::call(e))}
-
+        opts = options.map(&:to_s)
+        if !values[:equipment_to_buy].all?{|e| opts.include?(e)}
           key.failure({text: "non allowable equipment is included", status: 422})
         end
 

@@ -30,6 +30,8 @@ require 'spy_alley_application/models/game_board/new_spy_identity_chosen'
 require 'spy_alley_application/models/game_board/next_game_state'
 require 'spy_alley_application/models/game_board/player_moved'
 require 'spy_alley_application/models/game_board/spy_eliminator_options'
+require 'spy_alley_application/new_game/assign_seats'
+require 'spy_alley_application/new_game/assign_spy_identities'
 require 'spy_alley_application/results/nodes/buy_equipment_option_node'
 require 'spy_alley_application/results/nodes/choose_new_spy_identity_option_node'
 require 'spy_alley_application/results/nodes/confiscate_materials_option_node'
@@ -61,6 +63,8 @@ require 'spy_alley_application/results/process_next_turn_options'
 require 'spy_alley_application/results/process_passing_spaces'
 require 'spy_alley_application/results/process_proceeding_to_next_state'
 require 'spy_alley_application/validator/builder'
+require 'spy_alley_application/validator/new_game'
+require 'spy_alley_application/validator/new_game_builder'
 
 module SpyAlleyApplication
   class InjectionContainer
@@ -252,6 +256,20 @@ module SpyAlleyApplication
       register :spy_eliminator_options do
         SpyAlleyApplication::Models::GameBoard::SpyEliminatorOptions::new(
           next_game_state: resolve(:next_game_state)).method(:call)
+      end
+    end
+
+    namespace :new_game do
+      register :assign_seats do
+        SpyAlleyApplication::NewGame::AssignSeats::new
+      end
+
+      register :assign_spy_identities do
+        SpyAlleyApplication::NewGame::AssignSpyIdentities::new
+      end
+
+      register :validate_new_game do
+        SpyAlleyApplication::Validator::NewGame::new
       end
     end
 
@@ -535,6 +553,14 @@ module SpyAlleyApplication
           next_game_state: next_game_state,
           process_next_turn_options: resolve(:process_next_turn_options)).method(:call)
       end
+    end
+
+    register :build_new_game_validator do
+      SpyAlleyApplication::Validator::NewGameBuilder::new(
+        assign_seats: resolve('new_game.assign_seats'),
+        assign_spy_identities: resolve('new_game.assign_spy_identities'),
+        generate_new_game: resolve('actions.generate_new_game'),
+        validate_new_game: resolve('new_game.validate_new_game'))
     end
 
     register :build_validator do
