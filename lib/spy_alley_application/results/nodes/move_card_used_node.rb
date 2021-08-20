@@ -13,7 +13,7 @@ module SpyAlleyApplication
 
         def accept(visitor, **args)
           @can_handle_move_card_used.(visitor)
-          visitor.handle_card_card_used(self, args)
+          visitor.handle_move_card_used(self, args)
         end
       end
     end
