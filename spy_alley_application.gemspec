@@ -2,7 +2,7 @@ lib = File.expand_path("lib", __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "spy_alley_application/version"
 
-Gem::Specification.new 'spy_alley_application', '0.3.1' do |spec|
+Gem::Specification.new 'spy_alley_application', '0.3.2' do |spec|
   spec.name          = 'spy_alley_application'
   spec.version       = SpyAlleyApplication::VERSION
   spec.authors       = ['Colin Horner']
