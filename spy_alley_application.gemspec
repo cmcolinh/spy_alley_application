@@ -2,7 +2,7 @@ lib = File.expand_path("lib", __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "spy_alley_application/version"
 
-Gem::Specification.new 'spy_alley_application', '0.3.0' do |spec|
+Gem::Specification.new 'spy_alley_application', '0.3.1' do |spec|
   spec.name          = 'spy_alley_application'
   spec.version       = SpyAlleyApplication::VERSION
   spec.authors       = ['Colin Horner']
@@ -27,14 +27,14 @@ Gem::Specification.new 'spy_alley_application', '0.3.0' do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency 'bundler', '~> 2.0'
-  spec.add_development_dependency 'change_orders', '~> 0.1.0'
-  spec.add_development_dependency 'dry-auto_inject'
-  spec.add_development_dependency 'dry-initializer'
-  spec.add_development_dependency 'dry-monads'
-  spec.add_development_dependency 'dry-struct'
-  spec.add_development_dependency 'dry-types'
-  spec.add_development_dependency 'dry-validation'
-  spec.add_development_dependency 'game_validator', '~> 0.6.0'
+  spec.add_dependency 'change_orders', '~> 0.1.0'
+  spec.add_dependency 'dry-auto_inject'
+  spec.add_dependency 'dry-initializer'
+  spec.add_dependency 'dry-monads'
+  spec.add_dependency 'dry-struct'
+  spec.add_dependency 'dry-types'
+  spec.add_dependency 'dry-validation'
+  spec.add_dependency 'game_validator', '~> 0.6.0'
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec', '~> 3.0'
 end
