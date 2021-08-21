@@ -138,7 +138,7 @@ module SpyAlleyApplication
         equipment_total += player.wild_cards
         if equipment_total >= 4
           change_orders
-            .push(get_game_over_node.(winning_player_id: player.id, reason: {name: 'by_embassy'}))
+            .push(get_game_over_node.(winning_player: player, reason: {name: 'by_embassy'}))
             .push(get_result_game_board_node.(
               game_board: embassy_victory.(game_board: game_board)))
         else

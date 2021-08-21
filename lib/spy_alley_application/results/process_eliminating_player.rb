@@ -23,7 +23,7 @@ module SpyAlleyApplication
           eliminated_player: eliminated_player)
         if game_board.players.count(&:active) < 2
           change_orders = change_orders.push(get_game_over_node.(
-            winning_player_id: eliminating_player.id,
+            winning_player: eliminating_player,
             reason: {name: 'by_elimination'}))
         end
         process_next_turn_options.(
