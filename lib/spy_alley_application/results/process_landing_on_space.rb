@@ -96,23 +96,23 @@ module SpyAlleyApplication
       def handle_draw_free_gift(board_space, game_board:, change_orders:)
         change_orders = game_board.free_gift_pile.first.accept(self,
           change_orders: change_orders,
-          player_id: game_board.current_player.id)
+          player: game_board.current_player)
         game_board = free_gift_drawn.(game_board: game_board)
         process_proceeding_to_next_state.(
           game_board: game_board,
           change_orders: change_orders)
       end
 
-      def handle_equipment(equipment, change_orders:, player_id:)
+      def handle_equipment(equipment, change_orders:, player:)
         change_orders.push(get_equipment_gained_node.(
-          player_id: player_id,
+          player: player,
           equipment: [equipment],
           reason: {name: 'by_free_gift'}))
       end
 
-      def handle_wild_card(wild_card, change_orders:, player_id:)
+      def handle_wild_card(wild_card, change_orders:, player:)
         change_orders.push(get_wild_card_gained_node.(
-          player_id: player_id,
+          player: player,
           number_gained: 1,
           reason: {name: 'by_free_gift'}))
       end

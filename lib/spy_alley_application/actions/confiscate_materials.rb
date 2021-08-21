@@ -35,7 +35,7 @@ module SpyAlleyApplication
 
       def handle_equipment(equipment, change_orders:, amount_paid:, player:, target_player:)
         change_orders.push(get_equipment_gained_node.(
-          player_id: player.id,
+          player: player,
           equipment: [equipment],
           reason: {
             name: 'by_confiscation',
@@ -45,7 +45,7 @@ module SpyAlleyApplication
 
       def handle_wild_card(equipment, change_orders:, amount_paid:, player:, target_player:)
         change_orders.push(get_wild_card_gained_node.(
-          player_id: player.id,
+          player: player,
           number_gained: 1,
           reason: {
             name: 'by_confiscation',

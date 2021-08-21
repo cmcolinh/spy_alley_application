@@ -21,7 +21,7 @@ module SpyAlleyApplication
         process_proceeding_to_next_state.(
           game_board: game_board,
           change_orders: change_orders.push(get_equipment_gained_node.(
-            player_id: player.id,
+            player: player,
             equipment: equipment_to_buy,
             reason: {name: 'by_purchase', amount_paid: total_cost})))
       end
