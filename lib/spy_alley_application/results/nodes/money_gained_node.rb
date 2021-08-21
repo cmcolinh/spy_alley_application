@@ -3,13 +3,14 @@
 require 'dry-struct'
 require 'spy_alley_application/models/acquisition_method/by_passing_start'
 require 'spy_alley_application/models/acquisition_method/by_selling_top_secret_information'
+require 'spy_alley_application/models/player'
 
 module SpyAlleyApplication
   module Results
     module Nodes
       class MoneyGainedNode < Dry::Struct
         @@can_handle_money_gained = ::Types.Interface(:handle_money_gained)
-        attribute :player_id, ::Types::Coercible::Integer
+        attribute :player, SpyAlleyApplication::Models::Player
         attribute :money_gained, ::Types::CoercibleNonnegativeInteger
         attribute :reason, SpyAlleyApplication::Models::AcquisitionMethod::ByPassingStart |
           SpyAlleyApplication::Models::AcquisitionMethod::BySellingTopSecretInformation

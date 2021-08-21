@@ -176,7 +176,7 @@ module SpyAlleyApplication
           game_board: game_board,
           change_orders: change_orders
             .push(get_money_gained_node.(
-              player_id: current_player.id,
+              player: current_player,
               money_gained: board_space.money_gained,
               reason: {name: 'by_selling_top_secret_information'})))
       end
@@ -213,7 +213,7 @@ module SpyAlleyApplication
           game_board: game_board,
           change_orders: change_orders
             .push(get_money_gained_node.(
-              player_id: current_player.id,
+              player: current_player,
               money_gained: 15,
               reason: {name: 'by_passing_start'}))
             .push(get_result_game_board_node.(game_board: game_board)))

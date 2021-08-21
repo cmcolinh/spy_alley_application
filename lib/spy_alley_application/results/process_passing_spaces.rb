@@ -31,7 +31,7 @@ module SpyAlleyApplication
           board_space: board_space,
           spaces_remaining: spaces_remaining - 1,
           change_orders: change_orders.push(get_money_gained_node.(
-            player_id: game_board.players.find{|p| p.seat.eql?(game_board.game_state.seat)}.id,
+            player: game_board.players.find{|p| p.seat.eql?(game_board.game_state.seat)},
             money_gained: 15,
             reason: {name: 'by_passing_start'})))
       end
