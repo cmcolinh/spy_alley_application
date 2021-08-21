@@ -22,7 +22,7 @@ module SpyAlleyApplication
 
       def handle_buy_equipment(game_state, game_board:, change_orders:)
         next_player = game_board.current_player
-        change_orders.push(get_next_player_node.(player_id: next_player.id))
+        change_orders.push(get_next_player_node.(player: next_player))
           .push(get_buy_equipment_option_node.(
             options: game_state.options,
             limit: game_state.limit))
@@ -31,7 +31,7 @@ module SpyAlleyApplication
 
       def handle_choose_new_spy_identity(game_state, game_board:, change_orders:)
         next_player = game_board.current_player
-        change_orders.push(get_next_player_node.(player_id: next_player.id))
+        change_orders.push(get_next_player_node.(player: next_player))
           .push(get_choose_new_spy_identity_option_node.(options: game_state.options))
       end
 
@@ -51,7 +51,7 @@ module SpyAlleyApplication
 
       def handle_move_option(game_state, game_board:, change_orders:)
         next_player = game_board.current_player
-        change_orders.push(get_next_player_node.(player_id: next_player.id))
+        change_orders.push(get_next_player_node.(player: next_player))
           .push(get_move_option_node.(options: game_state.options))
       end
 
@@ -61,7 +61,7 @@ module SpyAlleyApplication
           .select{|p| game_state.targetable_seats.include?(p.seat)}
           .map(&:id)
           .sort
-        change_orders.push(get_next_player_node.(player_id: next_player.id))
+        change_orders.push(get_next_player_node.(player: next_player))
           .push(get_make_accusation_option_node.(player_id_list: target_ids))
           .push(get_pass_option_node.())
       end
@@ -71,7 +71,7 @@ module SpyAlleyApplication
         move_cards = next_player.move_cards.map(&:value).sort.uniq
         target_ids = game_board.players.reject{|p| p.id.eql?(next_player.id)}.map(&:id).sort
 
-        change_orders = change_orders.push(get_next_player_node.(player_id: next_player.id))
+        change_orders = change_orders.push(get_next_player_node.(player: next_player))
           .push(get_roll_die_option_node.())
           .push(get_make_accusation_option_node.(player_id_list: target_ids))
 
