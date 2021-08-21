@@ -57,26 +57,25 @@ module SpyAlleyApplication
 
       def handle_spy_eliminator(game_state, game_board:, change_orders:)
         next_player = game_board.current_player
-        target_ids = game_board.players
+        player_list = game_board.players
           .select{|p| game_state.targetable_seats.include?(p.seat)}
-          .map(&:id)
           .sort
         change_orders.push(get_next_player_node.(player: next_player))
-          .push(get_make_accusation_option_node.(player_id_list: target_ids))
+          .push(get_make_accusation_option_node.(player_list: player_list))
           .push(get_pass_option_node.())
       end
 
       def handle_start_of_turn(game_state, game_board:, change_orders:)
         next_player = game_board.current_player
         move_cards = next_player.move_cards.map(&:value).sort.uniq
-        target_ids = game_board.players.reject{|p| p.id.eql?(next_player.id)}.map(&:id).sort
+        player_list = game_board.players.reject{|p| p.id.eql?(next_player.id)}.sort
 
         change_orders = change_orders.push(get_next_player_node.(player: next_player))
           .push(get_roll_die_option_node.())
-          .push(get_make_accusation_option_node.(player_id_list: target_ids))
+          .push(get_make_accusation_option_node.(player_list: player_list))
 
         if !move_cards.empty?
-          change_orders = change_orders.push(get_use_move_card_option_node.(card_list:move_cards))
+          change_orders = change_orders.push(get_use_move_card_option_node.(card_list: move_cards))
         end
 
         change_orders
