@@ -50,7 +50,7 @@ module SpyAlleyApplication
 
       def handle_border_crossing(board_space, game_board:, change_orders:)
         change_orders = change_orders.push(get_money_lost_node.(
-          player_id: game_board.current_player.id,
+          player: game_board.current_player,
           money_lost: 5))
         game_board = money_gained_or_lost.(
           game_board: game_board,
