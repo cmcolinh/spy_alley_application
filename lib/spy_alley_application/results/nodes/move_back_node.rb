@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 require 'dry-struct'
+require 'spy_alley_application/models/player'
 
 module SpyAlleyApplication
   module Results
     module Nodes
       class MoveBackNode < Dry::Struct
-        @@can_handle_money_gained = ::Types.Interface(:handle_move_back)
-        attribute :player_id, ::Types::Coercible::Integer
+        @@can_handle_move_back = ::Types.Interface(:handle_move_back)
+        attribute :player, SpyAlleyApplication::Models::Player
         attribute :player_moved, ::Types.Interface(:accept)
 
         def accept(visitor, **args)

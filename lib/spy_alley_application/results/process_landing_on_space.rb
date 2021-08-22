@@ -121,7 +121,7 @@ module SpyAlleyApplication
 
       def handle_draw_move_card(board_space, game_board:, change_orders:)
         change_orders = change_orders.push(get_move_card_drawn_node.(
-          player_id: game_board.current_player.id,
+          player: game_board.current_player,
           card: game_board.move_card_pile.first.value))
         game_board = move_card_drawn.(game_board: game_board)
         process_proceeding_to_next_state.(

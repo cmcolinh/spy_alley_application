@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'dry-struct'
+require 'spy_alley_application/models/player'
 require 'spy_alley_application/types/coercible_integer_one_to_six'
 
 module SpyAlleyApplication
@@ -8,7 +9,7 @@ module SpyAlleyApplication
     module Nodes
       class MoveCardDrawnNode < Dry::Struct
         @@can_handle_move_card_drawn = ::Types.Interface(:handle_move_card_drawn)
-        attribute :player_id, ::Types::Coercible::Integer
+        attribute :player, SpyAlleyApplication::Models::Player
         attribute :card, SpyAlleyApplication::Types::CoercibleIntegerOneToSix
 
         def accept(visitor, **args)
