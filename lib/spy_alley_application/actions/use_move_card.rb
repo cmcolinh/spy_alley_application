@@ -13,7 +13,7 @@ module SpyAlleyApplication
 
       def call(game_board:, change_orders:, card_to_use:)
         change_orders = change_orders.push(get_move_card_used_node.(
-          player_id: game_board.current_player.id,
+          player: game_board.current_player,
           card: card_to_use))
         game_board = move_card_used.(game_board: game_board, move_card_used: card_to_use)
         process_passing_spaces.(
