@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'dry-struct'
+require 'spy_alley_application/models/player'
 require 'spy_alley_application/models/acquisition_method/by_confiscation'
 require 'spy_alley_application/models/acquisition_method/by_free_gift'
 require 'spy_alley_application/models/acquisition_method/by_purchase'
@@ -10,7 +11,7 @@ module SpyAlleyApplication
     module Nodes
       class WildCardGainedNode < Dry::Struct
         @@can_handle_wild_card_gained = ::Types.Interface(:handle_wild_card_gained)
-        attribute :player_id, ::Types::Coercible::Integer
+        attribute :player, SpyAlleyApplication::Models::Player
         attribute :number_gained, ::Types::CoercibleNonnegativeInteger
         attribute :reason, SpyAlleyApplication::Models::AcquisitionMethod::ByConfiscation |
           SpyAlleyApplication::Models::AcquisitionMethod::ByFreeGift |
