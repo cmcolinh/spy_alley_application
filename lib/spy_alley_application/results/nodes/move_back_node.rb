@@ -9,7 +9,7 @@ module SpyAlleyApplication
       class MoveBackNode < Dry::Struct
         @@can_handle_move_back = ::Types.Interface(:handle_move_back)
         attribute :player, SpyAlleyApplication::Models::Player
-        attribute :player_moved, ::Types.Interface(:accept)
+        attribute :space_id, ::Types::Strict::Integer
 
         def accept(visitor, **args)
           @can_handle_move_back.(visitor)

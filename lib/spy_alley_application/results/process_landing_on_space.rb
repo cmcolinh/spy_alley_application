@@ -15,6 +15,7 @@ module SpyAlleyApplication
         option :get_money_gained_node, type: ::Types::Callable, reader: :private
         option :get_money_lost_node, type: ::Types::Callable, reader: :private
         option :get_move_card_drawn_node, type: ::Types::Callable, reader: :private
+        option :get_move_back_node, type: ::Types::Callable, reader: :private
         option :get_player_movement_node, type: ::Types::Callable, reader: :private
         option :get_result_game_board_node, type: ::Types::Callable, reader: :private
         option :get_wild_card_gained_node, type: ::Types::Callable, reader: :private
@@ -30,7 +31,7 @@ module SpyAlleyApplication
       def call(game_board:, change_orders:, space_id:)
         player = game_board.current_player
         change_orders = change_orders.push(get_player_movement_node.(
-          player_id: player.id,
+          player: player,
           space_id: space_id))
         game_board = player_moved.(game_board: game_board, new_location: {id: space_id})
         board_space = game_board.current_player.location
@@ -155,9 +156,12 @@ module SpyAlleyApplication
           game_board: game_board,
           new_location: board_space.move_back_space)
         change_orders = change_orders.push(get_player_movement_node.(
-          player_id: game_board.current_player.id,
-          space_id: board_space.move_back_space.id))
+          player: game_board.current_player,
+          space_id: board_space.id))
         game_board = game_board = player_moved.(game_board: game_board, new_location: board_space)
+        change_orders = change_orders.push(get_move_back_node.(
+          player: game_board.current_player,
+          space_id: board_space.move_back_space.id
         process_proceeding_to_next_state.(
           game_board: game_board,
           change_orders: change_orders)
